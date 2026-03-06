@@ -178,7 +178,6 @@ CREATE TABLE history (
                          FOREIGN KEY (user_id) REFERENCES users(ID),
                          FOREIGN KEY (bill_id) REFERENCES bill(ID)
 );
-
 -- thêm bảng cho trang giới thiệu (about) 27/12/2025
 CREATE TABLE about (
                        id INT PRIMARY KEY AUTO_INCREMENT,
@@ -189,6 +188,279 @@ CREATE TABLE about (
                        icon VARCHAR(100),
                        sort_order INT
 );
+-- them bang gallary cho product
+create table gallary(
+                        ID int PRIMARY KEY AUTO_INCREMENT,
+                        product_id int,
+                        metatitle varchar(255),
+                        img varchar(255)
+);
+
+insert into gallary VALUES(null, 1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
+                          (null, 1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
+                          (null, 1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
+
+                          (null, 2, 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg'),
+                          (null, 2, 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg'),
+                          (null, 2, 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg'),
+
+                          (null, 3,  'https://www.droidshop.vn/wp-content/uploads/2025/09/tay-cam-Nintendo-Switch-Pro-Controller-Super-Smash-Bros.jpg'),
+                          (null, 3,  'https://www.droidshop.vn/wp-content/uploads/2025/09/tay-cam-Nintendo-Switch-Pro-Controller-Super-Smash-Bros.jpg'),
+                          (null, 3,  'https://www.droidshop.vn/wp-content/uploads/2025/09/tay-cam-Nintendo-Switch-Pro-Controller-Super-Smash-Bros.jpg'),
+
+                          (null, 4,  'https://bizweb.dktcdn.net/thumb/large/100/445/365/products/sg-11134201-22120-27d835cgiykvaf-1672731786694.jpg?v=1672731803223'),
+                          (null, 4,  'https://bizweb.dktcdn.net/thumb/large/100/445/365/products/sg-11134201-22120-27d835cgiykvaf-1672731786694.jpg?v=1672731803223'),
+                          (null, 4,  'https://bizweb.dktcdn.net/thumb/large/100/445/365/products/sg-11134201-22120-27d835cgiykvaf-1672731786694.jpg?v=1672731803223'),
+
+                          (null, 5,  'https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-6.jpg?v=1716652873040'),
+                          (null, 5,  'https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-6.jpg?v=1716652873040'),
+                          (null, 5,  'https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-6.jpg?v=1716652873040'),
+
+                          (null, 6,  'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-Wireless-Controller.jpg'),
+                          (null, 6,  'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-Wireless-Controller.jpg'),
+                          (null, 6,  'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-Wireless-Controller.jpg'),
+
+                          (null, 7, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3.jpg'),
+                          (null, 7, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3.jpg'),
+                          (null, 7, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3.jpg'),
+
+                          (null, 8,  'https://shoptaycam.com/wp-content/uploads/2024/07/bandicam-2025-06-21-17-32-42-547.jpg'),
+                          (null, 8,  'https://shoptaycam.com/wp-content/uploads/2024/07/bandicam-2025-06-21-17-32-42-547.jpg'),
+                          (null, 8,  'https://shoptaycam.com/wp-content/uploads/2024/07/bandicam-2025-06-21-17-32-42-547.jpg'),
+
+                          (null, 9,  'https://masta.vn/wp-content/uploads/2024/12/tay-cam-flydigi-apex-4-elite-controller-masta-5.jpg'),
+                          (null, 9,  'https://masta.vn/wp-content/uploads/2024/12/tay-cam-flydigi-apex-4-elite-controller-masta-5.jpg'),
+                          (null, 9,  'https://masta.vn/wp-content/uploads/2024/12/tay-cam-flydigi-apex-4-elite-controller-masta-5.jpg'),
+
+                          (null, 10,'https://product.hstatic.net/200000272737/product/retro_mini_ver2_fbadace7882574321a62e148776d01c38_master.jpg'),
+                          (null, 10,'https://product.hstatic.net/200000272737/product/retro_mini_ver2_fbadace7882574321a62e148776d01c38_master.jpg'),
+                          (null, 10,'https://product.hstatic.net/200000272737/product/retro_mini_ver2_fbadace7882574321a62e148776d01c38_master.jpg'),
+
+                          (null, 11, 'https://izzystore.com/wp-content/uploads/2025/03/gkd-pixel-2-kim-loai-cao-cap-2-300x300.jpg'),
+                          (null, 11, 'https://izzystore.com/wp-content/uploads/2025/03/gkd-pixel-2-kim-loai-cao-cap-2-300x300.jpg'),
+                          (null, 11, 'https://izzystore.com/wp-content/uploads/2025/03/gkd-pixel-2-kim-loai-cao-cap-2-300x300.jpg'),
+
+                          (null, 12, 'https://vhost53003.vhostcdn.com/wp-content/uploads/2025/05/g5_retro_1.jpg'),
+                          (null, 12, 'https://vhost53003.vhostcdn.com/wp-content/uploads/2025/05/g5_retro_1.jpg'),
+                          (null, 12, 'https://vhost53003.vhostcdn.com/wp-content/uploads/2025/05/g5_retro_1.jpg'),
+
+                          (null, 13, 'https://cohotech.vn/wp-content/uploads/2025/04/Acer-Nitro-NGR300-1.jpg'),
+                          (null, 13, 'https://cohotech.vn/wp-content/uploads/2025/04/Acer-Nitro-NGR300-1.jpg'),
+                          (null, 13, 'https://cohotech.vn/wp-content/uploads/2025/04/Acer-Nitro-NGR300-1.jpg'),
+
+                          (null, 14, 'https://shoptaycam.com/wp-content/uploads/2025/06/bandicam-2025-06-27-19-46-47-772.jpg'),
+                          (null, 14, 'https://shoptaycam.com/wp-content/uploads/2025/06/bandicam-2025-06-27-19-46-47-772.jpg'),
+                          (null, 14, 'https://shoptaycam.com/wp-content/uploads/2025/06/bandicam-2025-06-27-19-46-47-772.jpg'),
+
+                          (null, 15, 'https://shoptaycam.com/wp-content/uploads/2025/09/bandicam-2025-12-11-17-26-18-713.jpg'),
+                          (null, 15, 'https://shoptaycam.com/wp-content/uploads/2025/09/bandicam-2025-12-11-17-26-18-713.jpg'),
+                          (null, 15, 'https://shoptaycam.com/wp-content/uploads/2025/09/bandicam-2025-12-11-17-26-18-713.jpg'),
+
+                          (null, 16, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_4QGsT7Y5BNbYrhu4ioMWa4SQgsGe6dGfEQ&s'),
+                          (null, 16, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_4QGsT7Y5BNbYrhu4ioMWa4SQgsGe6dGfEQ&s'),
+                          (null, 16, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_4QGsT7Y5BNbYrhu4ioMWa4SQgsGe6dGfEQ&s');
+
+
+
+
+select * from categories join products on products.categories_id = categories.ID where products.ID = 1;
+-- them cot endow vao bang products
+
+ALTER TABLE products
+    ADD COLUMN endow VARCHAR(255);
+-- insert du lieu vao bang products
+UPDATE products
+SET endow = 'Bảo hành 12 tháng\nTặng dây cáp USB-C\nMiễn phí giao hàng toàn quốc'
+WHERE categories_id = 1;
+
+UPDATE products
+SET endow = 'Bảo hành 6 tháng\nTặng dây cáp USB-C\nMiễn phí giao hàng toàn quốc'
+WHERE categories_id = 2;
+
+-- update shortdescription
+update products
+set short_description = 'là phiên bản nâng cấp với độ trễ cực thấp và độ bền vượt trội.\n<b>Cảm biến Hall Effect chống drift</b>\n<b>Khoá Trigger đa chế độ</b>\n<b>Kết nối 3 chế độ</b>\n<b>Tương thích PC / Android / iOS</b>'
+WHERE categories_id = 1;
+
+update products
+set short_description = 'là phiên bản nâng cấp với độ trễ cực thấp và độ bền vượt trội.\n<b>Cảm biến Hall Effect chống drift</b>\n<b>Khoá Trigger đa chế độ</b>\n<b>Kết nối 3 chế độ</b>\n<b>Tương thích PC / Android / iOS</b>'
+WHERE categories_id = 2;
+
+
+update products
+set full_description = 'Tay cầm chơi game Flydigi Vader 4 Pro Controller là phiên bản cao cấp với hiệu năng vượt trội, đáp ứng nhu cầu chơi game chuyên nghiệp.
+Trang bị cảm biến Hall Effect giúp chống drift hiệu quả, tăng độ bền và độ chính xác trong quá trình sử dụng lâu dài.
+Hỗ trợ kết nối đa chế độ gồm Bluetooth, 2.4G Wireless và cổng có dây, tương thích linh hoạt với PC, Android và iOS.
+Hệ thống trigger và joystick có thể tùy chỉnh, mang lại khả năng điều khiển mượt mà và phản hồi nhanh trong từng thao tác.
+Thiết kế công thái học hiện đại kết hợp pin dung lượng cao, giúp game thủ thoải mái chơi game liên tục trong nhiều giờ.
+'
+WHERE ID = 6;
+
+update products
+set full_description = 'Tay Cầm Chơi Game Flydigi Nova 3 Controller sở hữu thiết kế hiện đại, mang lại cảm giác cầm nắm chắc tay và thoải mái khi chơi lâu.
+Trang bị joystick và nút bấm có độ nhạy cao, giúp thao tác chính xác và phản hồi nhanh trong mọi tựa game.
+Hỗ trợ kết nối Bluetooth và USB, tương thích tốt với PC, Android và iOS, dễ dàng sử dụng trên nhiều nền tảng.
+Pin dung lượng lớn cho thời gian chơi liên tục dài, hạn chế gián đoạn trong quá trình giải trí.
+Flydigi Nova 3 là lựa chọn phù hợp cho game thủ phổ thông cần một tay cầm ổn định, bền bỉ và dễ sử dụng.
+
+'
+WHERE ID = 7;
+
+update products
+set full_description = 'Tay cầm chơi game Flydigi Orion 2 Controller mang thiết kế hiện đại, tối ưu cho trải nghiệm chơi game mượt mà.
+Joystick và nút bấm có độ nhạy cao, cho phản hồi nhanh và chính xác trong từng thao tác.
+Hỗ trợ kết nối linh hoạt với PC và thiết bị di động, dễ dàng sử dụng trên nhiều nền tảng.
+Thiết kế công thái học giúp cầm nắm thoải mái khi chơi game trong thời gian dài.
+Flydigi Orion 2 là lựa chọn phù hợp cho game thủ cần một tay cầm ổn định và bền bỉ.
+'
+WHERE ID = 8;
+
+update products
+set full_description = 'Flydigi Galaxy 4 Pro Controller là dòng tay cầm cao cấp với hiệu năng vượt trội cho game thủ chuyên nghiệp.
+Trang bị joystick chính xác và trigger phản hồi nhanh, hỗ trợ tốt các tựa game hành động và bắn súng.
+Kết nối đa chế độ giúp tương thích linh hoạt với PC, Android và iOS.
+Thiết kế chắc chắn, vật liệu cao cấp mang lại độ bền cao trong quá trình sử dụng.
+Galaxy 4 Pro mang đến trải nghiệm điều khiển mượt mà và ổn định.
+'
+WHERE ID = 9;
+
+update products
+set full_description = 'Máy Game Retro Mini Q8 sở hữu màn hình 3.5 inch rõ nét, tái hiện trọn vẹn các tựa game cổ điển.
+Tích hợp sẵn hơn 10.000 trò chơi retro từ nhiều hệ máy huyền thoại.
+Thiết kế nhỏ gọn, dễ dàng mang theo để giải trí mọi lúc mọi nơi.
+Hỗ trợ pin sạc tiện lợi, cho thời gian chơi ổn định.
+Mini Q8 là lựa chọn lý tưởng cho người yêu thích game retro hoài niệm.
+'
+WHERE ID = 10;
+
+update products
+set full_description = 'Máy Game Retro Pixel X2 được trang bị màn hình 3.0 inch nhỏ gọn, phù hợp chơi game di động.
+Kho game hơn 8.000 tựa game cổ điển giúp người chơi thoải mái lựa chọn.
+Giao diện đơn giản, dễ sử dụng cho mọi đối tượng.
+Thiết kế nhẹ, tiện lợi mang theo khi di chuyển.
+Pixel X2 mang lại trải nghiệm giải trí retro đơn giản và hiệu quả.
+'
+WHERE ID = 11;
+
+update products
+set full_description = 'Máy Game Retro Turbo G5 sở hữu màn hình 3.2 inch sắc nét cho trải nghiệm chơi game sống động.
+Tích hợp hơn 15.000 tựa game retro kinh điển, không cần cài đặt thêm.
+Thiết kế nhỏ gọn, tiện lợi mang theo bên mình.
+Pin dung lượng tốt, đáp ứng nhu cầu chơi game liên tục.
+Turbo G5 là lựa chọn hoàn hảo cho fan game retro lâu năm.
+'
+WHERE ID = 12;
+
+update products
+set full_description = 'Tay cầm chơi game Nitro V3 Controller có thiết kế chắc chắn, mang lại cảm giác cầm nắm thoải mái.
+Joystick và nút bấm phản hồi nhanh, hỗ trợ tốt các tựa game phổ biến.
+Kết nối ổn định với PC và các thiết bị chơi game thông dụng.
+Độ bền cao, phù hợp sử dụng lâu dài.
+Nitro V3 là lựa chọn hợp lý cho game thủ phổ thông.
+'
+WHERE ID = 13;
+
+update products
+set full_description = 'Apex Nova 5 Controller mang phong cách thiết kế hiện đại, đậm chất gaming.
+Hệ thống nút bấm nhạy bén, giúp thao tác chính xác trong từng pha xử lý.
+Hỗ trợ kết nối linh hoạt với nhiều nền tảng khác nhau.
+Thiết kế công thái học giúp giảm mỏi tay khi chơi lâu.
+Nova 5 phù hợp cho cả giải trí và luyện tập game hàng ngày.
+'
+WHERE ID = 14;
+
+update products
+set full_description = 'Direwolf 4 Controller sở hữu thiết kế mạnh mẽ, phù hợp với game thủ yêu thích phong cách hầm hố.
+Joystick chính xác, hỗ trợ tốt các tựa game hành động và thể thao.
+Kết nối ổn định, dễ dàng sử dụng trên nhiều thiết bị.
+Chất liệu bền bỉ, đáp ứng nhu cầu sử dụng lâu dài.
+Direwolf 4 mang đến trải nghiệm chơi game mượt mà và đáng tin cậy.
+'
+WHERE ID = 15;
+update products
+set full_description = 'Máy Game Retro Mini Z3 được trang bị màn hình 3.0 inch nhỏ gọn, hiển thị rõ nét.
+Kho game hơn 12.000 trò chơi retro mang lại trải nghiệm giải trí đa dạng.
+Thiết kế tiện lợi, dễ dàng mang theo khi di chuyển.
+Pin sạc dung lượng ổn định cho thời gian chơi liên tục.
+Mini Z3 là lựa chọn phù hợp cho người yêu thích game cổ điển.
+'
+WHERE ID = 16;
+
+-- update cho category
+UPDATE products
+SET categories_id = 1
+WHERE name IN (
+               'PlayStation 5',
+               'Xbox Series X',
+               'Nintendo Switch',
+               'Sony PlayStation VR2',
+               'Máy Game Retro Mini Q8 – 3.5 Inch – 10.000+ Games',
+               'Máy Game Retro Pixel X2 – 3.0 Inch – 8.000+ Games',
+               'Máy Game Retro Turbo G5 – 3.2 Inch – 15.000+ Games',
+               'Máy Game Retro Mini Z3 – 3.0 Inch – 12.000+ Games'
+    );
+
+
+
+UPDATE products
+SET categories_id = 2
+WHERE name IN (
+               'Xbox Wireless Controller',
+               'Tay Cầm Chơi Game Flydigi Vader 4 Pro Controller',
+               'Tay Cầm Chơi Game Flydigi Nova 3 Controller',
+               'Tay Cầm Chơi Game Flydigi Orion 2 Controller',
+               'Tay Cầm Chơi Game Flydigi Galaxy 4 Pro Controller',
+               'Tay Cầm Chơi Game Nitro V3 Controller',
+               'Tay Cầm Chơi Game Apex Nova 5 Controller',
+               'Tay Cầm Chơi Game Direwolf 4 Controller'
+    );
+
+-- update cho brand
+UPDATE products
+SET brand_id = CASE
+    -- SONY
+                   WHEN name IN (
+                                 'PlayStation 5',
+                                 'Sony PlayStation VR2'
+                       ) THEN 1
+
+    -- XBOX
+                   WHEN name IN (
+                                 'Xbox Series X',
+                                 'Xbox Wireless Controller'
+                       ) THEN 2
+
+    -- NINTENDO
+                   WHEN name = 'Nintendo Switch' THEN 3
+
+    -- FLYDIGI (GDP)
+                   WHEN name IN (
+                                 'Tay Cầm Chơi Game Flydigi Vader 4 Pro Controller',
+                                 'Tay Cầm Chơi Game Flydigi Nova 3 Controller',
+                                 'Tay Cầm Chơi Game Flydigi Orion 2 Controller',
+                                 'Tay Cầm Chơi Game Flydigi Galaxy 4 Pro Controller'
+                       ) THEN 8
+
+    -- MIYOO (máy retro)
+                   WHEN name IN (
+                                 'Máy Game Retro Mini Q8 – 3.5 Inch – 10.000+ Games',
+                                 'Máy Game Retro Pixel X2 – 3.0 Inch – 8.000+ Games',
+                                 'Máy Game Retro Turbo G5 – 3.2 Inch – 15.000+ Games',
+                                 'Máy Game Retro Mini Z3 – 3.0 Inch – 12.000+ Games'
+                       ) THEN 5
+
+    -- NITRO / APEX / DIREWOLF (MSI)
+                   WHEN name IN (
+                                 'Tay Cầm Chơi Game Nitro V3 Controller',
+                                 'Tay Cầm Chơi Game Apex Nova 5 Controller',
+                                 'Tay Cầm Chơi Game Direwolf 4 Controller'
+                       ) THEN 7
+
+                   ELSE brand_id
+    END;
+
+
+
 -- them du lieu cho bang brand emdatdepzai (3/1)
 INSERT INTO brands VALUES
                        (null, 'Nintendo', 1, NOW()),
@@ -290,6 +562,18 @@ INSERT INTO about(section, description, title, sort_order) VALUES
                                                                ('FINAL','Đội ngũ luôn sẵn sàng hỗ trợ bạn bất cứ khi nào.','Nhóm 17',2),
                                                                ('FINAL','Cửa hàng luôn vui vẻ phục vụ bạn, đừng ngần ngại ghé thăm khi có nhu cầu.','Nhóm 17',3);
 
+
+-- bảng cho mã OTP (7/1 Châu)
+CREATE TABLE otp_tokens (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            user_id INT NOT NULL,
+                            otp_hash VARCHAR(255) NOT NULL,
+                            expired_at DATETIME NOT NULL,
+                            used BOOLEAN DEFAULT FALSE,
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+ALTER TABLE otp_tokens
+    MODIFY used BOOLEAN NOT NULL DEFAULT FALSE;
+UPDATE otp_tokens SET used = FALSE WHERE used IS NULL;
 -- Đã insert
 INSERT INTO logo VALUES ('Logo Shop', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaVtA9aH8iRQnDsQmBTt9yyB5mCIaYp8T0Qg&s');
 INSERT INTO logo VALUES (null, 'Logo2 Shop', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNhDsdA_PWXkUZ3ijwSU_9rpenL-Dsu_wuFQ&s');
@@ -328,14 +612,7 @@ INSERT INTO users VALUES
 INSERT INTO categories VALUES
     (1, 'Điện tử', 'Sản phẩm điện tử', 1, 1);
 
-
-
-
-
-
-
-INSERT INTO endow VALUES
-    (1, 'Tặng hộp đựng', 1, 1);
+drop table endow;
 
 INSERT INTO video VALUES
     (1, 1, 'Video giới thiệu');

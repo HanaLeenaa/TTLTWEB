@@ -12,10 +12,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cart</title>
-    <link rel="stylesheet" href="../../css/cart_payment/cart.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/cart_payment/cart.css">
     <link rel="stylesheet" href="/Assets/css/same_style/style.css" />
-    <link rel="stylesheet" href="/Assets/css/recycleFilecss/header.css" />
-    <link rel="stylesheet" href="/Assets/css/recycleFilecss/footer.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -27,7 +27,7 @@
 </head>
 <body>
 <!-- <div id="header"></div> -->
-<%@ include file="../recycleFiles/header.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 
 <div class="container" id="cart-item">
     <div class="title">
@@ -64,7 +64,7 @@
 
     <a href=""><button class="checkout-btn">ĐẶT HÀNG</button></a>
 </div>
-<%@ include file="../recycleFiles/footer.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 </body>
 </html>
 

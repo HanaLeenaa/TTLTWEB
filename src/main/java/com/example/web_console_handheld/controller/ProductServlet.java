@@ -36,10 +36,21 @@ public class ProductServlet extends HttpServlet {
         List<Product> productEnergyList = productDao.getEnergyProductList();
         List<Product> premiumproductList = productDao.getPremiumProductList();
 
+        // chức năng sắp xếp sản phẩm theo giá tăng, giảm dần
+        String sort = request.getParameter("sort");
+        List<Product> products;
+
+        if (sort == null || sort.isEmpty()){
+            products = productDao.getProductList();//ds mặc định
+        }else{
+            products = productDao.getProductListForSort(sort);// đã sort
+        }
+
+
         request.setAttribute("energy", productEnergyList);
         request.setAttribute("premium", premiumproductList);
-        request.setAttribute("products", productDao.getProductList());
 
+        request.setAttribute("products", products);
         request.getRequestDispatcher("/products.jsp").forward(request, resp);
     }
 }

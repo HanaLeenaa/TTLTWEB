@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -39,14 +41,14 @@
                     <i class="bi bi-search" style="font-size: 26px"></i>
                 </div>
                 <div class="menu-small-frame" style="display: none" id="menu-small">
-                    <div title="menu" class="menu3" onclick="goHome()">TRANG CHỦ</div>
+                    <div title="menu" class="menu3">TRANG CHỦ</div>
 
-                    <div title="menu" class="menu3" onclick="goProducts()">SẢN PHẨM</div>
+                    <div title="menu" class="menu3">SẢN PHẨM</div>
 
 
-                    <div title="menu" class="menu3" onclick="goAbout()">GIỚI THIỆU</div>
+                    <div title="menu" class="menu3">GIỚI THIỆU</div>
 
-                    <div title="menu" class="menu3" onclick="goContact()">LIÊN HỆ</div>
+                    <div title="menu" class="menu3">LIÊN HỆ</div>
                 </div>
                 <!-- them vao day -->
                 <div
@@ -57,11 +59,13 @@
                     <input type="text" placeholder="Tìm kiếm sản phẩm..." />
                 </div>
                 <!-- ------ -->
-                <div class="logo" onclick="goHome()" style="cursor:pointer">
+                <div class="logo" style="cursor:pointer">
+                    <a href="${pageContext.request.contextPath}/home">
                     <img
                             title="${logo.titleLogo}"
                             src="${logo.linkLogo}"
                     />
+                    </a>
                 </div>
 
                 <div class="center">
@@ -87,69 +91,138 @@
                 </div>
 
                 <div class="right1">
-                    <div class="icon icon2" id="icon3">
+<%--                    <div class="icon icon2" id="icon3">--%>
+<%--                        <i class="bi bi-person-circle"></i>--%>
+<%--                        <p style="margin: 0">TÀI KHOẢN</p>--%>
+<%--                    </div>--%>
+
+<%--                    <div class="register-login" id="loginForm" class="a-same-nodecoration"--%>
+<%--                        ><div style="cursor: pointer" class="no-margin" onclick="goLogin()">--%>
+<%--                            <svg--%>
+<%--                                    xmlns="http://www.w3.org/2000/svg"--%>
+<%--                                    width="16"--%>
+<%--                                    height="16"--%>
+<%--                                    fill="currentColor"--%>
+<%--                                    class="bi bi-box-arrow-in-right"--%>
+<%--                                    viewBox="0 0 16 16"--%>
+<%--                            >--%>
+<%--                                <path--%>
+<%--                                        fill-rule="evenodd"--%>
+<%--                                        d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"--%>
+<%--                                />--%>
+<%--                                <path--%>
+<%--                                        fill-rule="evenodd"--%>
+<%--                                        d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"--%>
+<%--                                />--%>
+<%--                            </svg>--%>
+<%--                            <p>Đăng nhập</p>--%>
+<%--                        </div>--%>
+
+
+<%--                        <div class="no-margin" onclick="goRegister()" style="cursor: pointer">--%>
+<%--                            <svg--%>
+<%--                                    xmlns="http://www.w3.org/2000/svg"--%>
+<%--                                    width="16"--%>
+<%--                                    height="16"--%>
+<%--                                    fill="currentColor"--%>
+<%--                                    class="bi bi-person-plus"--%>
+<%--                                    viewBox="0 0 16 16"--%>
+<%--                            >--%>
+<%--                                <path--%>
+<%--                                        d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"--%>
+<%--                                />--%>
+<%--                                <path--%>
+<%--                                        fill-rule="evenodd"--%>
+<%--                                        d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"--%>
+<%--                                />--%>
+<%--                            </svg>--%>
+<%--                            <p>Đăng ký</p>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+
+
+    <%--                    <div class="personal_logout" id="personal_logout">--%>
+    <%--                        <a--%>
+    <%--                                href="./Assets/component/cart_payment/Order.html"--%>
+    <%--                                class="a-same-nodecoration1"--%>
+    <%--                        ><div class="no-margin1">--%>
+    <%--                            <p>Trang cá nhân</p>--%>
+    <%--                        </div></a--%>
+    <%--                        >--%>
+    <%--                        <div class="no-margin1 no-margin2">--%>
+    <%--                            <span class="logoutbtn" id="logoutbtn">Đăng xuất</span>--%>
+    <%--                        </div>--%>
+    <%--                    </div>--%>
+
+
+
+    <%--  ====================================================--%>
+
+            <%--Sửa để xử lý đăng nhập--%>
+                <div class="account-wrapper">
+
+                    <!-- ICON -->
+                    <div class="icon icon2">
                         <i class="bi bi-person-circle"></i>
-                        <p style="margin: 0">TÀI KHOẢN</p>
-                    </div>
-
-                    <div class="register-login" id="loginForm" class="a-same-nodecoration"
-                        ><div style="cursor: pointer" class="no-margin" onclick="goLogin()">
-                            <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-box-arrow-in-right"
-                                    viewBox="0 0 16 16"
-                            >
-                                <path
-                                        fill-rule="evenodd"
-                                        d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"
-                                />
-                                <path
-                                        fill-rule="evenodd"
-                                        d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"
-                                />
-                            </svg>
-                            <p>Đăng nhập</p>
-                        </div>
-
-
-                        <div class="no-margin" onclick="goRegister()" style="cursor: pointer">
-                            <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-person-plus"
-                                    viewBox="0 0 16 16"
-                            >
-                                <path
-                                        d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"
-                                />
-                                <path
-                                        fill-rule="evenodd"
-                                        d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"
-                                />
-                            </svg>
-                            <p>Đăng ký</p>
-                        </div>
-                    </div>
-
-                    <div class="personal_logout" id="personal_logout">
-                        <a
-                                href="./Assets/component/cart_payment/Order.html"
-                                class="a-same-nodecoration1"
-                        ><div class="no-margin1">
-                            <p>Trang cá nhân</p>
-                        </div></a
-                        >
-                        <div class="no-margin1 no-margin2">
-                            <span class="logoutbtn" id="logoutbtn">Đăng xuất</span>
-                        </div>
+                        <p style="margin:0">TÀI KHOẢN</p>
                     </div>
 
 
+                    <div class="account-dropdown">
+
+                        <c:choose>
+                            <c:when test="${empty sessionScope.auth}">
+                                <a href="${pageContext.request.contextPath}/login" class="a-same-nodecoration"><div class="dropdown-item" onclick="goLogin()">Đăng nhập</div></a>
+                                <a href="${pageContext.request.contextPath}/register" class="a-same-nodecoration"><div class="dropdown-item" onclick="goRegister()">Đăng ký</div></a>
+                            </c:when>
+
+                            <c:otherwise>
+                                <div class="dropdown-item">
+                                    Xin chào, <b>${sessionScope.auth.username}</b>
+                                </div>
+
+                                <div class="dropdown-item"
+                                     onclick="window.location.href='${pageContext.request.contextPath}/profile.jsp'">
+                                    Trang cá nhân
+                                </div>
+
+                                <div class="dropdown-item logout"
+                                     onclick="window.location.href='${pageContext.request.contextPath}/logout'">
+                                    Đăng xuất
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+
+
+<%--                    <div class="register-login" id="loginForm" class="a-same-nodecoration"--%>
+<%--                        >--%>
+<%--                        <a href="${pageContext.request.contextPath}/login" class="a-same-nodecoration">--%>
+<%--                        <div style="cursor: pointer" class="no-margin">--%>
+<%--                            <i class="bi bi-door-open"></i>--%>
+<%--                            <p>Đăng nhập</p>--%>
+<%--                        </div>--%>
+<%--                        </a>--%>
+
+<%--                        <a href="${pageContext.request.contextPath}/register" class="a-same-nodecoration">--%>
+<%--                        <div class="no-margin" onclick="goRegister()" style="cursor: pointer">--%>
+<%--                            <i class="bi bi-person-plus"></i>--%>
+<%--                            <p>Đăng ký</p>--%>
+<%--                        </div>--%>
+<%--                        </a>--%>
+<%--                    </div>--%>
+
+                    </div>
+                </div>
+
+
+<%--==========================================================================--%>
+
+
+
+
+
+
+                    <a href="${pageContext.request.contextPath}/cart">
                     <div class="icon" style="cursor: pointer" onclick="goCart()">
                         <div class="cart">
                             <i class="bi bi-cart2" title="cart"></i>
@@ -169,7 +242,7 @@
                         </div>
                         <p class="cart3">GIỎ HÀNG</p>
                     </div>
-
+                    </a>
                 </div>
             </div>
         </div>
@@ -177,42 +250,21 @@
         <div class="menu">
             <div class="container">
                 <div class="menu2">
-                    <div title="menu" class="menu3" onclick="goHome()">TRANG CHỦ</div>
 
-                    <div title="menu" class="menu3" onclick="goProducts()">SẢN PHẨM</div>
+                    <a href="${pageContext.request.contextPath}/home"><div title="menu" class="menu3" >TRANG CHỦ</div></a>
+
+                    <a href="${pageContext.request.contextPath}/product"><div title="menu" class="menu3" >SẢN PHẨM</div></a>
 
 
-                    <div title="menu" class="menu3" onclick="goAbout()">GIỚI THIỆU</div>
+                    <a href="${pageContext.request.contextPath}/about"><div title="menu" class="menu3" >GIỚI THIỆU</div></a>
 
-                    <div title="menu" class="menu3" onclick="goContact()">LIÊN HỆ</div>
+                    <a href="${pageContext.request.contextPath}/#"><div title="menu" class="menu3" >LIÊN HỆ</div></a>
 
                 </div>
             </div>
         </div>
     </div>
 </header>
-<script>
-    function goHome() {
-        window.location.href = "<%= request.getContextPath() %>/index.jsp";
-    }
-    function goLogin(){
-        window.location.href = "<%= request.getContextPath() %>/Assets/component/login_logout/login.jsp";
-    }
-    function goRegister(){
-        window.location.href = "<%= request.getContextPath() %>/Assets/component/login_logout/register.jsp";
-    }
-    function goProducts(){
-        window.location.href = "<%= request.getContextPath() %>/products.jsp";
-    }
-    function goAbout(){
-        window.location.href = "<%= request.getContextPath() %>/about.jsp";
-    }
-    function goContact(){
-        window.location.href = "<%= request.getContextPath() %>/contact.jsp";
-    }function goCart(){
-        window.location.href = "<%= request.getContextPath() %>/Assets/component/cart_payment/cart.jsp";
-    }
-</script>
 </body>
 </html>
 

@@ -13,8 +13,8 @@
     <title>Login</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/login_logout/login.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css">
-    <link rel="stylesheet" href="/Assets/css/recycleFilecss/header.css">
-    <link rel="stylesheet" href="/Assets/css/recycleFilecss/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -25,19 +25,33 @@
     />
 </head>
 <body>
-<!-- <div id="header"></div> -->
 <%@ include file="../recycleFiles/header.jsp" %>
-<form action="" class="form-login" id="loginForm2">
+<form action="${pageContext.request.contextPath}/login" method="post">
     <div class="container1">
+        <span>${error}</span>
         <h2 class="title">ĐĂNG NHẬP</h2>
-        <input class="input" type="text" type="email" id="username" placeholder="Tên đăng nhập/Email"><br>
-        <input class="input" type="password" id="password" placeholder="Mật Khẩu"><br>
+        <input class="input"
+               type="text"
+               type="email"
+               name="username"
+               id="username"
+               placeholder="Tên đăng nhập/Email"><br>
+
+        <input class="input"
+               type="password"
+               name="password"
+               id="password"
+               placeholder="Mật Khẩu"><br>
+
         <button class="button" type="submit">Đăng nhập</button>
         <p id="message"></p>
         <a href="">Quên mật khẩu</a>
+        <div class="register">
+        <span>Bạn chưa có tài khoản?</span>
         <a href="" class="link1">Đăng ký tại đây</a>
+        </div>
     </div>
 </form>
-<%@ include file="../recycleFiles/footer.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 </body>
 </html>

@@ -28,7 +28,7 @@
 </head>
 <body>
 <!-- <div id="header"></div> -->
-<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
+<jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 
 <main id="content">
@@ -45,28 +45,33 @@
 
         <div class="title">CHỌN MỨC GIÁ</div>
         <div class="choice">
-            <input type="checkbox" class="check filter-price" id="check1" name="checkbox1" value="under500"><label>Giá dưới 500.000đ </label>
+            <input type="checkbox" class="check filter-price" id="check1" name="checkbox1" value="under500"><label>Giá
+            dưới 500.000đ </label>
         </div>
         <div class="choice">
-            <input type="checkbox" class="check filter-price" id="check2" name="checkbox1" value="500-1000"><label>500.000đ - 1 triệu </label>
+            <input type="checkbox" class="check filter-price" id="check2" name="checkbox1" value="500-1000"><label>500.000đ
+            - 1 triệu </label>
         </div>
 
         <div class="choice">
-            <input type="checkbox" class="check filter-price" id="check3" name="checkbox1" value="1000-2000"><label>1 - 2 triệu </label>
+            <input type="checkbox" class="check filter-price" id="check3" name="checkbox1" value="1000-2000"><label>1 -
+            2 triệu </label>
         </div>
         <div class="choice">
-            <input type="checkbox" class="check filter-price" id="check4" name="checkbox1" value="2000-3000"><label>2 - 3 triệu </label>
+            <input type="checkbox" class="check filter-price" id="check4" name="checkbox1" value="2000-3000"><label>2 -
+            3 triệu </label>
         </div>
         <div class="choice">
-            <input type="checkbox" class="check filter-price" id="check5" name="checkbox1" value="higher3000"><label>Trên 3 triệu </label>
+            <input type="checkbox" class="check filter-price" id="check5" name="checkbox1" value="higher3000"><label>Trên
+            3 triệu </label>
         </div>
 
 
         <div class="title">THƯƠNG HIỆU</div>
         <c:forEach var="c" items="${brands}">
-        <div class="choice">
-            <input type="checkbox" class="check filter-brand" id="${c.ID}" name="checkbox2" value="${c.brand_name}"><label>${c.brand_name}</label>
-        </div>
+            <div class="choice">
+                <input type="checkbox" class="check filter-brand" id="${c.ID}" name="checkbox2" value="${c.brand_name}"><label>${c.brand_name}</label>
+            </div>
         </c:forEach>
 
 
@@ -74,9 +79,10 @@
             Pin
         </div>
         <c:forEach var="c" items="${energy}">
-        <div class="choice">
-            <input type="checkbox" class="check filter-category" value="${c.useTime}"><label>${c.useTime}hours</label>
-        </div>
+            <div class="choice">
+                <input type="checkbox" class="check filter-category"
+                       value="${c.useTime}"><label>${c.useTime}hours</label>
+            </div>
         </c:forEach>
 
     </div>
@@ -87,24 +93,39 @@
 
         <div class="contain-header">
             <div class="Loai">Console</div>
-
+                <%--Chức năng sắp xếp theo giá tăng/giảm dần và mới nhất--%>
+            <form method="get" id="sortForm">
             <div class="sort">
                 <i class="fa-solid fa-arrow-down-wide-short"></i></i>
                 <label>Sắp xếp:</label>
 
-                <div class="sort-box">
-                    <span class="sort-selected">Mặc định</span>
+                <div class="sort-box" onclick="toggleSortMenu()">
+                    <span class="sort-selected">
+                        <c:choose>
+                            <c:when test="${param.sort == 'price_asc'}">Giá tăng dần</c:when>
+                            <c:when test="${param.sort == 'price_desc'}">Giá giảm dần</c:when>
+                            <c:when test="${param.sort == 'newest'}">Hàng mới nhất</c:when>
+                            <c:otherwise>Mặc định</c:otherwise>
+                        </c:choose>
+                    </span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
+                    <%--hidden input gui len servlet--%>
+                    <input type="hidden" name="sort" id="sortInput" value="${param.sort}">
 
-                <ul class="sort-menu">
-                    <li>Giá tăng dần</li>
-                    <li>Giá giảm dần</li>
-                    <li>Hàng mới nhất</li>
-                </ul>
-
-            </div>
+                    <ul class="sort-menu" id="sortMenu">
+                        <li onclick="selectSort('')">Mặc định</li>
+                        <li onclick="selectSort('price_asc')">Giá tăng dần</li>
+                        <li onclick="selectSort('price_desc')">Giá giảm dần</li>
+                        <li onclick="selectSort('newest')">Hàng mới nhất</li>
+                    </ul>
+                </div>
+            </form>
         </div>
+
+
+
+
 
         <button id="filter-btn" class="filter-toggle">
             <i class="fa-solid fa-sliders"></i> Bộ lọc
@@ -115,28 +136,32 @@
         <div id="product-list">
             <!--SP1 -->
             <c:forEach var="c" items="${premium}">
-            <div class="product-item sony remotehandheld" data-id="C001">
-                <img src="${c.image}" alt="">
-                <div class="tag">Premium</div>
+                <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
+                    <div class="product-item sony remotehandheld">
+                        <img src="${c.image}" alt="">
+                        <div class="tag">Premium</div>
 
-                <div class="product-info">
-                    <h4>${c.name}</h4>
-                    <p class="price">${c.price}</p>
-                </div>
-            </div>
+                        <div class="product-info">
+                            <h4>${c.name}</h4>
+                            <p class="price">${c.price}đ</p>
+                        </div>
+                    </div>
+                </a>
             </c:forEach>
 
 
             <!--SP2.1 -->
             <c:forEach var="c" items="${products}">
-            <div class="product-item sony handheldpc" data-id="C005">
-                <img src="${c.image}" alt="">
+                <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
+                    <div class="product-item sony handheldpc">
+                        <img src="${c.image}" alt="">
 
-                <div class="product-info">
-                    <h4>${c.name}</h4>
-                    <p class="price">${c.price}</p>
-                </div>
-            </div>
+                        <div class="product-info">
+                            <h4>${c.name}</h4>
+                            <p class="price">${c.price}đ</p>
+                        </div>
+                    </div>
+                </a>
             </c:forEach>
 
 
@@ -165,13 +190,26 @@
 
 
 </main>
-<div id="main-content"></div>
 
-<!-- <div id="footer"></div>
-<script src="/Assets/js/main.js"></script>-->
-<!--    <script src="./Assets/js/logic_main/products.js"></script> -->
+<%-- chức năng sắp xếp sản phẩm theo giá tăng, giảm dần--%>
+<script>
+    function toggleSortMenu(){
+        document.getElementById("sortMenu").classList.toggle("active");
+    }
 
+    function selectSort(value){
+        document.getElementById("sortInput").value = value;
+        document.getElementById("sortForm").submit();
+    }
 
-<jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
+    // đóng menu khi click ra ngoài
+    document.addEventListener("click", function (e){
+        if (!e.target.closest(".sort")){
+            document.getElementById("sortMenu").classList.remove("active");
+
+        }
+    });
+</script>
+<jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 </body>
 </html>

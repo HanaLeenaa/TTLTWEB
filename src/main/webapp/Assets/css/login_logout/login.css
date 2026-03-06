@@ -1,3 +1,10 @@
+body {
+    background-color: white;
+    color: #545759;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
 .container1{
     width: 400px;
     border-radius: 10px;
@@ -23,7 +30,7 @@
     width: 100%;
     padding-top: 15px;
     padding-bottom: 15px;
-    color: #fff;
+    color: #ffffff;
     background-color: #e95221;
     cursor: pointer;
     border: 1px solid #e95221;
@@ -37,10 +44,14 @@
 }
 a{
     text-decoration: none;
+    color: #3B82f6;
 }
 .link1{
     color: #e95221;
 }
 .link1:hover{
     color: #ff784b;
+}
+.register p{
+    color: darkgray ;
 }

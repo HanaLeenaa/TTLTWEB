@@ -15,4 +15,18 @@ public class BrandDao extends BaseDao{
                         .list()
         );
     }
+
+    public Brand getBrandByProductId(int productId) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+            SELECT b.*
+            FROM brands b
+            JOIN products p ON p.brand_id = b.ID
+            WHERE p.ID = :id
+        """)
+                        .bind("id", productId)
+                        .mapToBean(Brand.class)
+                        .first()
+        );
+    }
 }
