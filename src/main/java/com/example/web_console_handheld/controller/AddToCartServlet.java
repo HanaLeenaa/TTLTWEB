@@ -61,7 +61,8 @@ public class AddToCartServlet extends HttpServlet {
 
         session.setAttribute("cart", cart);
 
-        response.sendRedirect(request.getContextPath() + "/cart");
+        session.setAttribute("addSuccess", true);
+        response.sendRedirect(request.getHeader("Referer"));
     }
 }
 

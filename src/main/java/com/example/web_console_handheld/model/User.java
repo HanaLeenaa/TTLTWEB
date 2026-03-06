@@ -9,7 +9,7 @@ public class User {
     private Date dateOfBirth;
     private Timestamp createdAt, updatedAt, lastLogin;
     private boolean active;
-
+private String role;
     public int getId() {
         return id;
     }
@@ -87,5 +87,13 @@ public class User {
     }
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

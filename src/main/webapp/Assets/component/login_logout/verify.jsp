@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css">
 </head>
 <body>
-<%@ include file="../recycleFiles/header.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 
 <div class="container1">
     <h2 class="title">Xác thực tài khoản</h2>
@@ -39,6 +39,6 @@
     <p>Nếu bạn không nhận được email OTP, vui lòng kiểm tra hộp thư spam hoặc thử đăng ký lại.</p>
 </div>
 
-<%@ include file="../recycleFiles/footer.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 </body>
 </html>

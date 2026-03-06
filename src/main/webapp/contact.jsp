@@ -58,10 +58,13 @@
                     Chúng tôi luôn sẵn sàng lắng nghe
                 </h3>
 
-                <form method="post" action="#">
-                <textarea class="feedback-input"
-                          placeholder="Viết phản hồi của bạn..."></textarea>
-                    <button class="feedback-btn">Gửi</button>
+                <form method="post" action="${pageContext.request.contextPath}/feedback">
+    <textarea class="feedback-input"
+              name="content"
+              placeholder="Viết phản hồi của bạn..."
+              required></textarea>
+
+                    <button type="submit" class="feedback-btn">Gửi</button>
                 </form>
             </div>
 
@@ -83,34 +86,6 @@
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 
-<script>
-    const feedbackBtn = document.querySelector('.feedback-btn');
-    const feedbackInput = document.querySelector('.feedback-input');
-    const modal = document.getElementById('feedback-modal');
-    const modalMessage = document.getElementById('modal-message');
-    const modalOk = document.getElementById('modal-ok');
-
-    feedbackBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const text = feedbackInput.value.trim();
-
-        if (text === "") {
-            modalMessage.textContent = "Vui lòng nhập phản hồi";
-            modal.classList.add('error');
-        } else {
-            modalMessage.textContent = "Phản hồi của bạn đã được gửi đi.";
-            modal.classList.remove('error');
-            feedbackInput.value = "";
-        }
-
-        modal.style.display = "flex"; // hiển thị modal
-    });
-
-    modalOk.addEventListener('click', function() {
-        modal.style.display = "none"; // ẩn modal
-    });
-</script>
 
 </body>
 </html>

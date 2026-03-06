@@ -30,6 +30,10 @@ public class AuthDao extends BaseDao {
                     user.setId(rs.getInt("id"));
                     user.setUsername(rs.getString("username"));
                     user.setPassword(rs.getString("password"));
+                    user.setEmail(rs.getString("email"));
+                    user.setFullname(rs.getString("fullname"));
+                    user.setPhoneNum(rs.getString("phoneNum"));
+                    user.setLocation(rs.getString("location"));
                     user.setActive(rs.getBoolean("active"));
                     return user;
                 }

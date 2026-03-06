@@ -27,7 +27,7 @@
     />
 </head>
 <body>
-<%@ include file="../recycleFiles/header.jsp" %>
+<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 <form action="${pageContext.request.contextPath}/login" method="post">
     <div class="container1">
 

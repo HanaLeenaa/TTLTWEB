@@ -25,7 +25,8 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
 <!-- <div id="header"></div> -->
@@ -38,10 +39,24 @@
 
             <!-- LEFT -->
             <div class="left">
-                <img src="${product.image}" alt="${product.name}" title="${product.name}"/>
+                <img id="mainImage"
+                     src="${product.image}"
+                     alt="${product.name}"
+                     title="${product.name}"
+                     class="main-img"/>
+
                 <div class="gallery">
+                        <%--Ảnh gốc--%>
+                    <img src="${product.image}"
+                    class="thumb-img active"
+                    onclick="changeImage(this)">
+
+                            <%--3 Ảnh phụ--%>
                     <c:forEach var="c" items="${gallary}">
-                        <img src="${c.img}" alt="${c.metatitle}">
+                        <img src="${c.img}"
+                             alt="${c.metatitle}"
+                             onclick="changeImage(this)"
+                             class="thumb-img">
                     </c:forEach>
                 </div>
             </div>
@@ -89,39 +104,39 @@
                     </div>
                 </div>
 
+                <!-- quantity control (dùng chung) -->
+                <div class="quantity-control">
+                    <button type="button" onclick="decrease()">−</button>
+                    <span id="qty-display">1</span>
+                    <button type="button" onclick="increase()">+</button>
+                </div>
 
-
+                <!-- ADD CART -->
                 <form action="${pageContext.request.contextPath}/AddCart" method="post">
+                    <input type="hidden" name="productId" value="${product.ID}"> <input type="hidden" name="name"
+                                                                                        value="${product.name}"> <input
+                        type="hidden" name="price" value="${product.price}"> <input type="hidden" name="image"
+                                                                                    value="${product.image}"> <input
+                        type="hidden" name="quantity" id="quantity-cart" value="1">
 
+                    <button type="submit" class="btn-add btn">
+                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                    </button>
+                </form>
+
+                <!-- BUY NOW -->
+                <form method="post" action="${pageContext.request.contextPath}/buy-now">
                     <input type="hidden" name="productId" value="${product.ID}">
-                    <input type="hidden" name="name" value="${product.name}">
-                    <input type="hidden" name="price" value="${product.price}">
-                    <input type="hidden" name="image" value="${product.image}">
-                    <input type="hidden" name="quantity" id="quantity" value="1">
-
-                    <div class="quantity-control">
-                        <button type="button" onclick="decrease()">−</button>
-                        <span id="qty-display">1</span>
-                        <button type="button" onclick="increase()">+</button>
-                    </div>
-
-                    <div class="action-row">
-                        <button type="submit" class="btn-add">
-                            <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
-                        </button>
-
-                        <button type="submit" formaction="${pageContext.request.contextPath}/buy-now">
-                            Mua ngay
-                        </button>
-                    </div>
-
+                    <input type="hidden" name="quantity" id="quantity-buy" value="1">
+                    <button type="submit" class="btn-buy btn">
+                        Mua ngay
+                    </button>
                 </form>
 
 
 
-
                 <div class="back-row">
-                    <a href="../../../products_afterupdate.html">
+                    <a href="${pageContext.request.contextPath}/product" class="btn-back">
                         <button>← Quay lại</button>
                     </a>
                 </div>
@@ -203,20 +218,33 @@
 <div class="related-section">
     <div class="container">
         <h3>Sản phẩm liên quan</h3>
-        <div class="related-grid">
-            <span class="position-same position-left"><i class="bi bi-arrow-left"></i></span>
-            <span class="position-same position-right"><i class="bi bi-arrow-right"></i></span>
-            <c:forEach var="c" items="${relateProductList}">
-                <div class="related-card">
-                    <img src="${c.image}"
-                         alt="${c.metatitle}">
-                    <div class="related-name">${c.name}</div>
-                    <div class="related-price">${c.price}</div>
-                </div>
-            </c:forEach>
+
+        <div class="swiper related-swiper">
+            <div class="swiper-wrapper">
+
+                <c:forEach var="c" items="${relateProductList}">
+                    <div class="swiper-slide">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}" class="related-link">
+                            <div class="related-card">
+                                <img src="${c.image}" alt="${c.metatitle}">
+                                <div class="related-name">${c.name}</div>
+                                <div class="related-price">${c.price}</div>
+                            </div>
+                        </a>
+                    </div>
+                </c:forEach>
+
+            </div>
+
+
+            <!-- Nút điều hướng -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
+
     </div>
 </div>
+
 
 <!--
   reviews
@@ -302,23 +330,57 @@
 <script>
     let qty = 1;
 
+    function updateQuantity() {
+        document.getElementById("qty-display").innerText = qty;
+        document.getElementById("quantity-cart").value = qty;
+        document.getElementById("quantity-buy").value = qty;
+    }
+
     function increase() {
         qty++;
-        updateQty();
+        updateQuantity();
     }
 
     function decrease() {
         if (qty > 1) {
             qty--;
-            updateQty();
+            updateQuantity();
         }
     }
+</script>
 
-    function updateQty() {
-        document.getElementById("qty-display").innerText = qty;
-        document.getElementById("quantity").value = qty;
+<script>
+    function changeImage(el) {
+        document.getElementById("mainImage").src = el.src;
+
+        document.querySelectorAll('.thumb-img')
+            .forEach(img => img.classList.remove('active'));
+
+        el.classList.add('active');
     }
 </script>
 
 </body>
+<script>
+    new Swiper('.related-swiper', {
+        slidesPerView: 4,
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+        },
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+        },
+        breakpoints: {
+            0: { slidesPerView: 1 },
+            576: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            992: { slidesPerView: 4 }
+        }
+    });
+</script>
+
 </html>

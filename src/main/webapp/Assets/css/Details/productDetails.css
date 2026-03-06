@@ -115,11 +115,16 @@ ul li::before {
 
 /* Hàng 1: tăng/giảm số lượng */
 .quantity-control {
+    padding-top: 10px;
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
+.btn{
+    padding: 10px 10px;
+    margin-bottom: 10px;
+}
 .quantity-control button {
     background-color: #E95221;
     color: #fff;
@@ -349,13 +354,6 @@ ul li::before {
     color: #222;
 }
 
-.related-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    position: relative;
-}
-
 .related-card {
     background: #fff;
     border: 1px solid #eaeaea;
@@ -387,24 +385,71 @@ ul li::before {
     color: #333;
     font-weight: 500;
 }
-
 .related-price {
     margin-top: 6px;
     color: #d40000;
     font-weight: 600;
     font-size: 16px;
 }
-.position-same{
-    position: absolute;
-    top: 50%;
+.related-swiper {
+    width: 100%;
+    padding: 20px 0;
 }
-.position-left{
-    left: -50px;
 
+.related-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    transition: 0.3s;
 }
-.position-right{
-    right: -50px;
+
+.related-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
-.position-left:hover, .position-right:hover{
-    color: lightgray;
+
+.related-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+.related-name {
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+.related-price {
+    color: #e53935;
+    font-weight: bold;
+}
+.related-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    position: relative;
+    z-index: 10;
+}
+
+.thumb-img {
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    pointer-events: auto;
+}
+
+.thumb-img:hover {
+    border-color: #f4511e;
+}
+
+.thumb-img.active {
+    border-color: #f4511e;
 }

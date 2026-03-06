@@ -32,10 +32,14 @@
         <!-- CONNECT WITH US -->
         <div class="footer-section">
             <h3>Liên Hệ Với Chúng Tôi</h3>
-            <div class="subscribe">
-                <input type="email" placeholder="Nhập Email" />
-                <button><i class="fa-solid fa-paper-plane"></i>Gửi</button>
-            </div>
+            <form action="${pageContext.request.contextPath}/contact" method="post">
+                <div class="subscribe">
+                    <input type="email" name="email" placeholder="Nhập email của bạn" required />
+                    <button type="submit">
+                        <i class="fa-solid fa-paper-plane"></i> Gửi
+                    </button>
+                </div>
+            </form>
             <div class="social-icons">
                 <c:forEach var="c" items="${icon}">
                     <a src="#">${c.link_icon}</a>

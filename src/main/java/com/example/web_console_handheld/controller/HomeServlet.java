@@ -1,8 +1,10 @@
 package com.example.web_console_handheld.controller;
 
+import com.example.web_console_handheld.dao.BannerDao;
 import com.example.web_console_handheld.dao.BlogDao;
 import com.example.web_console_handheld.dao.CategoryDao;
 import com.example.web_console_handheld.dao.ProductDao;
+import com.example.web_console_handheld.model.Banner;
 import com.example.web_console_handheld.model.Blog;
 import com.example.web_console_handheld.model.Category;
 import com.example.web_console_handheld.model.Product;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
+    private BannerDao bannerDao = new BannerDao();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -31,9 +34,9 @@ public class HomeServlet extends HttpServlet {
         ProductDao productDao = new ProductDao();
         List<Product> productList = productDao.getProductListForHome();
         BlogDao blogDao = new BlogDao();
+        List<Banner> banners = bannerDao.getActiveBanners();
 
-
-
+        request.setAttribute("banners",  banners);
         request.setAttribute("categories", categories);
         request.setAttribute("products", productList);
         request.setAttribute("highest", productDao.getHighestDiscountProduct());
