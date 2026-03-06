@@ -11,8 +11,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Chi tiết sản phẩm</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/Details/productDetails.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css">
@@ -30,7 +30,7 @@
 <body>
 <!-- <div id="header"></div> -->
 
-<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
+<jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 <main>
     <section class="product-details">
@@ -89,21 +89,41 @@
                     </div>
                 </div>
 
-                <div class="quantity-row">
-                    <div class="quantity-control">
-                        <button>−</button>
-                        <span>1</span>
-                        <button>+</button>
-                    </div>
-                </div>
 
-                <div class="action-row">
-                    <a href="./notification.html"><button for="notify-toggle" class="btn-add">Thêm vào giỏ hàng</button></a>
-                    <a href="../cart_payment/payment.html"><button>Mua ngay</button></a>
-                </div>
+
+                <form action="${pageContext.request.contextPath}/AddCart" method="post">
+
+                    <input type="hidden" name="productId" value="${product.ID}">
+                    <input type="hidden" name="name" value="${product.name}">
+                    <input type="hidden" name="price" value="${product.price}">
+                    <input type="hidden" name="image" value="${product.image}">
+                    <input type="hidden" name="quantity" id="quantity" value="1">
+
+                    <div class="quantity-control">
+                        <button type="button" onclick="decrease()">−</button>
+                        <span id="qty-display">1</span>
+                        <button type="button" onclick="increase()">+</button>
+                    </div>
+
+                    <div class="action-row">
+                        <button type="submit" class="btn-add">
+                            <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                        </button>
+
+                        <button type="submit" formaction="${pageContext.request.contextPath}/buy-now">
+                            Mua ngay
+                        </button>
+                    </div>
+
+                </form>
+
+
+
 
                 <div class="back-row">
-                    <a href="../../../products_afterupdate.html"><button>← Quay lại</button></a>
+                    <a href="../../../products_afterupdate.html">
+                        <button>← Quay lại</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -186,30 +206,14 @@
         <div class="related-grid">
             <span class="position-same position-left"><i class="bi bi-arrow-left"></i></span>
             <span class="position-same position-right"><i class="bi bi-arrow-right"></i></span>
-            <div class="related-card">
-                <img src="https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png" alt="">
-                <div class="related-name">Tay cầm PS5 DualSense</div>
-                <div class="related-price">1.590.000đ</div>
-            </div>
-
-            <div class="related-card">
-                <img src="https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg" alt="">
-                <div class="related-name">Xbox Series Controller</div>
-                <div class="related-price">1.450.000đ</div>
-            </div>
-
-            <div class="related-card">
-                <img src="https://www.droidshop.vn/wp-content/uploads/2022/01/May-choi-game-Nintendo-Switch-OLED-model-with-White-Joy%E2%80%91Con.jpg" alt="">
-                <div class="related-name">Nintendo Switch OLED</div>
-                <div class="related-price">7.990.000đ</div>
-            </div>
-
-            <div class="related-card">
-                <img src="https://www.droidshop.vn/wp-content/uploads/2023/05/May-choi-game-Xbox-Series-X.jpg" alt="">
-                <div class="related-name">Xbox Series X</div>
-                <div class="related-price">12.000.000đ</div>
-            </div>
-
+            <c:forEach var="c" items="${relateProductList}">
+                <div class="related-card">
+                    <img src="${c.image}"
+                         alt="${c.metatitle}">
+                    <div class="related-name">${c.name}</div>
+                    <div class="related-price">${c.price}</div>
+                </div>
+            </c:forEach>
         </div>
     </div>
 </div>
@@ -223,49 +227,49 @@
 
         <div class="overall-rating">
             <div class="score">
-                <h3>5.0/5</h3>
+                <h3>${avg}/5</h3>
                 <div class="stars">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i>
                     <i class="fas fa-star"></i><i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
-                <p>5 đánh giá</p>
+                <p>${quantity} đánh giá</p>
             </div>
             <div class="rating-bars">
                 <div class="rating-bar">
                     5 <i class="fas fa-star"></i>
                     <div class="bar-container">
-                        <div class="bar" style="width: 100%"></div>
+                        <div class="bar" style="width: ${avg5}%"></div>
                     </div>
-                    <span>5 đánh giá</span>
+                    <span>${fiveStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
                     4 <i class="fas fa-star"></i>
                     <div class="bar-container">
-                        <div class="bar" style="width: 0%"></div>
+                        <div class="bar" style="width: ${avg4}%"></div>
                     </div>
-                    <span>0 đánh giá</span>
+                    <span>${fourStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
                     3 <i class="fas fa-star"></i>
                     <div class="bar-container">
-                        <div class="bar" style="width: 0%"></div>
+                        <div class="bar" style="width: ${avg3}%"></div>
                     </div>
-                    <span>0 đánh giá</span>
+                    <span>${threeStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
                     2 <i class="fas fa-star"></i>
                     <div class="bar-container">
-                        <div class="bar" style="width: 0%"></div>
+                        <div class="bar" style="width: ${avg2}%"></div>
                     </div>
-                    <span>0 đánh giá</span>
+                    <span>${twoStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
                     1 <i class="fas fa-star"></i>
                     <div class="bar-container">
-                        <div class="bar" style="width: 0%"></div>
+                        <div class="bar" style="width: ${avg1}%"></div>
                     </div>
-                    <span>0 đánh giá</span>
+                    <span>${oneStar} đánh giá</span>
                 </div>
             </div>
         </div>
@@ -273,27 +277,48 @@
         <a href="./reviews.html" class="review-button">Đánh giá ngay</a>
 
         <!-- List reviews -->
-        <div class="review-item">
-            <h4>Huy Phan <span class="stars">★★★★★</span></h4>
-            <p>Nhận xét: Hàng chất lắm đáng mua</p>
-            <div class="review-date">2 năm trước</div>
-        </div>
+        <c:forEach var="c" items="${reviews}">
+            <div class="review-item">
+                <h4>
+                        ${c.username}
+                    <span class="stars">
+                <c:forEach begin="1" end="${c.rating}" var="i">
+                    <i class="fas fa-star text-warning" style="font-size: 10px"></i>
+                </c:forEach>
+            </span>
+                </h4>
 
-        <div class="review-item">
-            <h4>Thanh Huy <span class="stars">★★★★★</span></h4>
-            <p>Nhận xét: Rất ngon</p>
-            <div class="review-date">3 năm trước</div>
-        </div>
+                <p>Nhận xét: ${c.review_text}</p>
+                <div class="review-date">${c.reviewDate}</div>
+            </div>
+        </c:forEach>
 
-        <div class="review-item">
-            <h4>Nguyễn Phước Thịnh <span class="stars">★★★★★</span></h4>
-            <p>Nhận xét: Chất lượng tốt, đáng mua</p>
-            <div class="review-date">3 năm trước</div>
-        </div>
 
+    </div>
 </div>
-</div>
 
-<jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
+<jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
+
+<script>
+    let qty = 1;
+
+    function increase() {
+        qty++;
+        updateQty();
+    }
+
+    function decrease() {
+        if (qty > 1) {
+            qty--;
+            updateQty();
+        }
+    }
+
+    function updateQty() {
+        document.getElementById("qty-display").innerText = qty;
+        document.getElementById("quantity").value = qty;
+    }
+</script>
+
 </body>
 </html>

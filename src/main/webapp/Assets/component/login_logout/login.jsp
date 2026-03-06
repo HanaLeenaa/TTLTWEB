@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +30,22 @@
 <%@ include file="../recycleFiles/header.jsp" %>
 <form action="${pageContext.request.contextPath}/login" method="post">
     <div class="container1">
-        <span>${error}</span>
+
+        <c:if test="${not empty sessionScope.loginMessage}">
+            <p style="color: red; text-align: center;">
+                    ${sessionScope.loginMessage}
+            </p>
+
+            <%
+                session.removeAttribute("loginMessage");
+            %>
+        </c:if>
+
+
+        <c:if test="${not empty error}">
+                    ${error}
+        </c:if>
+
         <h2 class="title">ĐĂNG NHẬP</h2>
         <input class="input"
                type="text"

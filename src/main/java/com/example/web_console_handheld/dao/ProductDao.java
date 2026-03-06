@@ -1,11 +1,23 @@
 package com.example.web_console_handheld.dao;
 
-import com.example.web_console_handheld.model.Logo;
 import com.example.web_console_handheld.model.Product;
 
 import java.util.List;
 
-public class ProductDao extends BaseDao{
+public class ProductDao extends BaseDao {
+    //lay ra tat ca san pham lien quan cung danh muc va thuong hieu cua san pham duoc click vao
+    public List<Product> getProductListByBrandAndCategory(int brandId, int categoryId, int productID) {
+        return get().withHandle(handle ->
+                handle.createQuery(
+                                "select * from products where brand_id = :brandId and categories_id = :categoryId and ID != :productID"
+                        )
+                        .bind("brandId", brandId)
+                        .bind("categoryId", categoryId)
+                        .bind("productID", productID)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
     //lay san pham theo id trang productDetails
     public Product getProductDetailByID(int id) {
         return get().withHandle(handle ->

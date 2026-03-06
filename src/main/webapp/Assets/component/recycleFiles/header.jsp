@@ -258,7 +258,7 @@
 
                     <a href="${pageContext.request.contextPath}/about"><div title="menu" class="menu3" >GIỚI THIỆU</div></a>
 
-                    <a href="${pageContext.request.contextPath}/#"><div title="menu" class="menu3" >LIÊN HỆ</div></a>
+                    <a href="${pageContext.request.contextPath}/contact"><div title="menu" class="menu3" >LIÊN HỆ</div></a>
 
                 </div>
             </div>

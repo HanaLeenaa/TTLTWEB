@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,10 +36,17 @@
         <p>Giỏ hàng của bạn: <span id="for_you">Khách</span></p>
     </div>
 
+    <c:set var="cart" value="${sessionScope.cart}" />
+
     <table class="cart-table">
-        <tbody id="cart-items"></tbody>
-        <tr>
-            <td style="text-align: center;">
+        <tbody id="cart-items">
+
+        <c:choose>
+<%--            GIO TRONG --%>
+            <c:when test="${cart == null || empty cart.cartItems}">
+
+            <tr>
+            <td colspan="4" style="text-align: center;">
 
                 <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -54,6 +63,38 @@
                 <h3>Hiện chưa có sản phẩm nào trong giỏ hàng của bạn</h3>
             </td>
         </tr>
+            </c:when>
+
+
+            <c:otherwise>
+                <c:forEach items="${cart.cartItems.values()}" var="item">
+                    <tr>
+                        <td>
+                            <img src="${item.product.image}" width="80">
+                        </td>
+                        <td>
+                            <p>${item.product.name}</p>
+                        </td>
+                        <td>
+                                ${item.product.price}đ
+                        </td>
+                        <td>
+                                ${item.quantity}
+                        </td>
+
+                        <td>
+                            <a href="${pageContext.request.contextPath}/remove-from-cart?id=${item.product.ID}">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+
+</tbody>
+
+
         <tr class="summary-row">
             <td colspan="3" style="border-bottom: none">TỔNG TIỀN:</td>
             <td class="total-amount" style="border-bottom: none">

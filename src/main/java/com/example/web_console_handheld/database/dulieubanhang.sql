@@ -149,14 +149,14 @@ CREATE TABLE payments (
 );
 
 CREATE TABLE reviews (
-                         ID VARCHAR(50) PRIMARY KEY,
+                         ID int PRIMARY KEY AUTO_INCREMENT,
                          products_id INT,
                          users_id INT,
                          rating INT,
                          review_text VARCHAR(255),
                          imgReviews VARCHAR(255),
                          reviewDate DATETIME,
-                         status VARCHAR(50),
+                         status boolean,
                          FOREIGN KEY (products_id) REFERENCES products(ID),
                          FOREIGN KEY (users_id) REFERENCES users(ID)
 );
@@ -195,6 +195,16 @@ create table gallary(
                         metatitle varchar(255),
                         img varchar(255)
 );
+
+
+-- 18/1 (emdatdepzai)
+INSERT INTO reviews VALUES
+                        (null, 1, 1, 5, 'Rất tốt', '/review/r1.png', NOW(), 1),
+                        (null, 1, 1, 5, 'Rất tốt', '/review/r1.png', NOW(), 1),
+                        (null, 1, 1, 5, 'Rất tốt', '/review/r1.png', NOW(), 1),
+                        (null, 1, 1, 4, 'Rất ok', '/review/r1.png', NOW(), 1),
+                        (null, 1, 1, 1, 'Rat te', '/review/r1.png', NOW(), 1);
+
 
 insert into gallary VALUES(null, 1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
                           (null, 1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
@@ -574,6 +584,13 @@ CREATE TABLE otp_tokens (
 ALTER TABLE otp_tokens
     MODIFY used BOOLEAN NOT NULL DEFAULT FALSE;
 UPDATE otp_tokens SET used = FALSE WHERE used IS NULL;
+
+-- thêm dữ liệu cho contact 19/1 Châu
+INSERT INTO contact (gmail, phone, address)
+VALUES
+    ('nhom17@gmail.com', '0987654321', 'Khu phố 6, Phường Linh Trung, Quận Thủ Đức, TP. Hồ Chí Minh');
+
+
 -- Đã insert
 INSERT INTO logo VALUES ('Logo Shop', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaVtA9aH8iRQnDsQmBTt9yyB5mCIaYp8T0Qg&s');
 INSERT INTO logo VALUES (null, 'Logo2 Shop', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNhDsdA_PWXkUZ3ijwSU_9rpenL-Dsu_wuFQ&s');
@@ -592,17 +609,7 @@ INSERT INTO icon VALUES (null, 'zalo', '<a href="#"--%>
 <%--                /></a>', 0);
 INSERT INTO icon VALUES (null, 'x', '<i class="fab fa-twitter"></i>', 1);
 
-
-
-
-
-
-
-
-
 INSERT INTO banner (title, link, active) VALUES ('Banner Sale', '/banner/sale.png', 1);
-
-
 
 INSERT INTO users VALUES
     (1, 'datpham', '123456', 'dat@gmail.com', 'Dat Pham',
@@ -628,8 +635,7 @@ INSERT INTO orders VALUES
 INSERT INTO payments VALUES
     (1, 1, 'COD', 'Chua thanh toan');
 
-INSERT INTO reviews VALUES
-    ('RV01', 1, 1, 5, 'Rất tốt', '/review/r1.png', NOW(), 'active');
+
 
 INSERT INTO bill VALUES
     (1, 1, NOW());

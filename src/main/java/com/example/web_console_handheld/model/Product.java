@@ -149,7 +149,7 @@ public class Product {
         this.price = price;
     }
     public void setPrice(String price) {
-        this.price = Long.parseLong(price);
+        this.price = (long)Double.parseDouble(price);
     }
 
     public String getPriceOld() {
@@ -163,7 +163,7 @@ public class Product {
         this.priceOld = priceOld;
     }
     public void setPriceOld(String priceOld){
-        this.priceOld = Long.parseLong(priceOld);
+        this.priceOld = (long)Double.parseDouble(priceOld);
     }
 
     public String getImage() {
