@@ -1,0 +1,9 @@
+/*
+    style dùng chung cho page giống nhau
+*/
+body{
+    font-family: "Nunito Sans", sans-serif;
+}
+body::-webkit-scrollbar {   /* ẩn thanh cuộn trên Chrome, Edge, Safari */
+    display: none;
+}
