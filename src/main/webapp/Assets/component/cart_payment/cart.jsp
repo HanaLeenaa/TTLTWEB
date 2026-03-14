@@ -203,9 +203,6 @@
     </div>
 
     <c:set var="cart" value="${sessionScope.cart}" />
-    <form id="mainForm"
-          action="${pageContext.request.contextPath}/payment"
-          method="get">
 
     <table class="cart-table">
         <tbody id="cart-items">
@@ -248,6 +245,7 @@
                                    name="selectedItems"
                                     value="${item.product.ID}"
                                     class="select-item"
+                                    form="mainForm"
                                     data-price="${item.product.priceValue}"
                                     data-id="${item.product.ID}">
                         </td>
@@ -311,6 +309,10 @@
     </table>
 
 
+
+    <form id="mainForm"
+          action="${pageContext.request.contextPath}/payment"
+          method="get">
         <button type="submit" class="btn-order">Đặt hàng</button>
     </form>
 
