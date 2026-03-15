@@ -6,6 +6,10 @@ import com.example.web_console_handheld.utils.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.ZoneId;
 
 public class UserDao extends BaseDao{
 
@@ -241,5 +245,75 @@ public class UserDao extends BaseDao{
             e.printStackTrace();
         }
         return list;
+    }
+    // Tìm user theo email
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                return u;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Lưu token reset password với thời hạn expireAt
+    public void saveResetToken(String email, String token, LocalDateTime expireAt) {
+        String sql = "UPDATE users SET reset_token=?, reset_token_expire=? WHERE email=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            // Chuyển LocalDateTime sang Timestamp theo múi giờ hệ thống
+            ps.setTimestamp(2, Timestamp.valueOf(expireAt.atZone(ZoneId.systemDefault()).toLocalDateTime()));
+
+            ps.setString(3, email);
+            int updated = ps.executeUpdate();
+            System.out.println("SaveResetToken - updated rows: " + updated);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }}
+
+    // Kiểm tra token còn hợp lệ
+    public boolean isResetTokenValid(String token) {
+        String sql = "SELECT 1 FROM users WHERE reset_token=? AND reset_token_expire > ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Cập nhật mật khẩu theo token và xóa token
+    public boolean updatePasswordByToken(String token, String newPassword) {
+        String sql = "UPDATE users SET password=?, reset_token=NULL, reset_token_expire=NULL, updated_at=NOW() WHERE reset_token=?";
+        String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, hashed);
+            ps.setString(2, token);
+            int updated = ps.executeUpdate();
+            return updated > 0; // true nếu update thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
