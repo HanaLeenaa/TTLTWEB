@@ -20,7 +20,7 @@ public class OrderDao {
 
         String sql =
                 "INSERT INTO orders " +
-                        "(user_id, createAt, status, price, receiver_name, receiver_phone, receiver_address, receiver_email, payment_method) " +
+                        "(user_id, order_date, status, total_amount, fullname_order, phone_order, address_order, email_order, note) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (
@@ -38,9 +38,8 @@ public class OrderDao {
             ps.setString(6, order.getReceiver_phone());
             ps.setString(7, order.getReceiver_address());
             ps.setString(8, order.getReceiver_email());
+            ps.setString(9, order.getReceiver_note());
 
-            // false = COD, true = BANK
-            ps.setBoolean(9, order.isPayment_method());
 
             ps.executeUpdate();
 
@@ -63,8 +62,8 @@ public class OrderDao {
 
         String sql =
                 "INSERT INTO order_items " +
-                        "(order_id, product_id, product_name, product_price, quantity) " +
-                        "VALUES (?, ?, ?, ?, ?)";
+                        "(order_id, product_id, quantity, price_at_purchase) " +
+                        "VALUES (?, ?, ?, ?)";
 
         try (
                 Connection conn = DBConnection.getConnection();
@@ -73,9 +72,8 @@ public class OrderDao {
             for (OrderItem item : items) {
                 ps.setInt(1, orderId);
                 ps.setInt(2, item.getProduct_id());
-                ps.setString(3, item.getProduct_name());
+                ps.setInt(3, item.getQuantity());
                 ps.setLong(4, item.getProduct_price());
-                ps.setInt(5, item.getQuantity());
                 ps.addBatch();
             }
 
@@ -325,7 +323,6 @@ public class OrderDao {
         SELECT *
         FROM orders
         WHERE user_id = ?
-        ORDER BY createAt DESC
     """;
 
         try (
@@ -341,16 +338,14 @@ public class OrderDao {
 
                 order.setID(rs.getInt("ID"));
                 order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("createAt"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
                 order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("price"));
+                order.setPrice(rs.getLong("total_amount"));
+                order.setReceiver_name(rs.getString("fullname_order"));
+                order.setReceiver_phone(rs.getString("phone_order"));
+                order.setReceiver_address(rs.getString("address_order"));
+                order.setReceiver_email(rs.getString("email_order"));
 
-                order.setReceiver_name(rs.getString("receiver_name"));
-                order.setReceiver_phone(rs.getString("receiver_phone"));
-                order.setReceiver_address(rs.getString("receiver_address"));
-                order.setReceiver_email(rs.getString("receiver_email"));
-
-                order.setPayment_method(rs.getBoolean("payment_method"));
 
                 list.add(order);
             }
