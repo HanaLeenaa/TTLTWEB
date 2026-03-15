@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 12/27/2025
-  Time: 9:05 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -31,44 +24,71 @@
 <form action="${pageContext.request.contextPath}/login" method="post">
     <div class="container1">
 
-        <c:if test="${not empty sessionScope.loginMessage}">
-            <p style="color: red; text-align: center;">
-                    ${sessionScope.loginMessage}
-            </p>
-
-            <%
-                session.removeAttribute("loginMessage");
-            %>
-        </c:if>
-
-
-        <c:if test="${not empty error}">
-                    ${error}
-        </c:if>
-
         <h2 class="title">ĐĂNG NHẬP</h2>
-        <input class="input"
-               type="text"
-               type="email"
-               name="username"
-               id="username"
-               placeholder="Tên đăng nhập/Email"><br>
 
-        <input class="input"
-               type="password"
-               name="password"
-               id="password"
-               placeholder="Mật Khẩu"><br>
+        <input class="input" type="text" name="username" id="username" placeholder="Tên đăng nhập/Email"><br>
+        <input class="input" type="password" name="password" id="password" placeholder="Mật Khẩu"><br>
 
         <button class="button" type="submit">Đăng nhập</button>
-        <p id="message"></p>
-        <a href="">Quên mật khẩu</a>
+
+        <!-- Thông báo -->
+        <p id="forgotMsg" style="color: gray; text-align:center; margin-top:10px;"></p>
+
+        <!-- Link Quên mật khẩu -->
+        <a href="#" id="forgotLink">Quên mật khẩu</a>
+
         <div class="register">
-        <span>Bạn chưa có tài khoản?</span>
-        <a href="" class="link1">Đăng ký tại đây</a>
+            <span>Bạn chưa có tài khoản?</span>
+            <a href="${pageContext.request.contextPath}/Assets/component/login_logout/register.jsp" class="link1">Đăng ký tại đây</a>
         </div>
     </div>
 </form>
+
+<script>
+    const forgotLink = document.getElementById("forgotLink");
+    const forgotMsg = document.getElementById("forgotMsg");
+
+    forgotLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        const email = prompt("Vui lòng nhập email của bạn để đổi mật khẩu:");
+        if(email && email.trim() !== ""){
+            fetch("${pageContext.request.contextPath}/forgot-password?email=" + encodeURIComponent(email))
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success){
+                        forgotMsg.style.color = "green";
+                        forgotMsg.innerText = "Vui lòng kiểm tra email để đổi mật khẩu";
+                    } else {
+                        forgotMsg.style.color = "red";
+                        forgotMsg.innerText = data.message;
+                    }
+                });
+        }
+    });
+</script>
+
+<script>
+    const forgotLink = document.getElementById("forgotLink");
+    const forgotMsg = document.getElementById("forgotMsg");
+    forgotLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        const email = prompt("Vui lòng nhập email của bạn để đổi mật khẩu:");
+        if(email && email.trim() !== ""){
+            // Gọi Ajax gửi yêu cầu quên mật khẩu
+            fetch("${pageContext.request.contextPath}/forgot-password?email=" + encodeURIComponent(email))
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success){
+                        forgotMsg.style.color = "green";
+                        forgotMsg.innerText = "Vui lòng kiểm tra email để đổi mật khẩu";
+                    }else{
+                        forgotMsg.style.color = "red";
+                        forgotMsg.innerText = data.message;
+                    }
+                });
+        }
+    });
+</script>
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 </body>
 </html>
