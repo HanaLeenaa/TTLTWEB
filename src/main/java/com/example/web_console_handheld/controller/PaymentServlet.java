@@ -8,10 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @WebServlet("/payment")
@@ -47,9 +44,26 @@ public class PaymentServlet extends HttpServlet {
         List<CartItem> selectedItems = cart.getCartItems().values().stream()
                 .filter(item -> selectedSet.contains(item.getProduct().getID()))
                 .collect(Collectors.toList());
-        session.setAttribute("selectedCartItems", selectedItems);
-        request.setAttribute("cartItems", selectedItems);
-        request.getRequestDispatcher("/Assets/component/cart_payment/payment.jsp")
+
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+            for (CartItem ci : selectedItems) {
+
+                OrderItem oi = new OrderItem();
+                oi.setProduct_id(ci.getProduct().getID());
+                oi.setProduct_name(ci.getProduct().getName());
+                oi.setQuantity(ci.getQuantity());
+                oi.setProduct_price(ci.getProduct().getPriceValue());
+                oi.setProduct_image(ci.getProduct().getImage());
+
+                orderItems.add(oi);
+
+            }
+
+            session.setAttribute("selectedCartItems", selectedItems);
+            request.setAttribute("orderItems", orderItems);
+            request.getRequestDispatcher("/Assets/component/cart_payment/payment.jsp")
                 .forward(request, response);
     }
 }

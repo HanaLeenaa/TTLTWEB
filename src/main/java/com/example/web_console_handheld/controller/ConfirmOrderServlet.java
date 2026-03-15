@@ -38,17 +38,14 @@ public class ConfirmOrderServlet extends HttpServlet {
         try {
             OrderDao dao = new OrderDao();
 
-            // 1️⃣ LƯU ORDER
             int orderId = dao.saveOrder(order);
             if (orderId <= 0) {
                 response.sendRedirect(request.getContextPath() + "/cart");
                 return;
             }
 
-            // 2️⃣ LƯU ORDER ITEMS
             dao.saveOrderItems(orderId, items);
 
-            // 3️⃣ TRỪ ĐÚNG SẢN PHẨM ĐÃ MUA KHỎI CART
             if (cart != null) {
                 for (OrderItem item : items) {
                     cart.remove(item.getProduct_id());
@@ -56,12 +53,10 @@ public class ConfirmOrderServlet extends HttpServlet {
                 session.setAttribute("cart", cart);
             }
 
-            // 4️⃣ CLEAR SESSION TẠM
             session.removeAttribute("pendingOrder");
             session.removeAttribute("pendingOrderItems");
             session.removeAttribute("selectedCartItems");
 
-            // 5️⃣ FLAG CHO JSP
             request.setAttribute("confirmed", true);
             request.setAttribute("order", order);
             request.setAttribute("orderItems", items);

@@ -9,16 +9,17 @@ public class OrderItem {
     private String product_name;
     private long product_price;
     private int quantity;
-
+    private String product_image;
     public OrderItem() {}
 
-    public OrderItem(int ID, int order_id, int product_id, String product_name, long product_price, int quantity) {
+    public OrderItem(int ID, int order_id, int product_id, String product_name, long product_price, int quantity, String product_image) {
         this.ID = ID;
         this.order_id = order_id;
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_price = product_price;
         this.quantity = quantity;
+        this.product_image = product_image;
     }
 
     public int getID() {
@@ -67,5 +68,13 @@ public class OrderItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getProduct_image() {
+        return product_image;
+    }
+
+    public void setProduct_image(String product_image) {
+        this.product_image = product_image;
     }
 }
