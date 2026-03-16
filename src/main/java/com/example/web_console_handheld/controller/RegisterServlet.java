@@ -24,7 +24,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html; charset=UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = req.getSession();
 
@@ -35,41 +35,54 @@ public class RegisterServlet extends HttpServlet {
             String password = req.getParameter("password");
             String confirmPassword = req.getParameter("confirm_password");
 
-            // 1. kiểm tra rỗng
+            // trim dữ liệu
+            if (username != null) username = username.trim();
+            if (email != null) email = email.trim();
+            if (phoneNum != null) phoneNum = phoneNum.trim();
+
+            // kiểm tra rỗng
             if (isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(confirmPassword)) {
                 setMsg(session, "Vui lòng điền đầy đủ thông tin bắt buộc.");
                 redirectRegister(req, resp);
                 return;
             }
 
-            //2. xác nhận mật khẩu
-            if (!password.equals(confirmPassword)) {
+            // xác nhận mật khẩu
+            if (!ValidationUtil.isPasswordMatch(password, confirmPassword)) {
                 setMsg(session, "Mật khẩu nhập lại không khớp.");
                 redirectRegister(req, resp);
                 return;
             }
 
-            // 3. validate format
-            if (!ValidationUtil.isValidUsername(username)) {
-                setMsg(session, "Tên đăng nhập không được chứa ký tự đặc biệt.");
+            // validate tên
+            if (!ValidationUtil.isValidName(username)) {
+                setMsg(session, "Tên chỉ được chứa chữ cái và khoảng trắng.");
                 redirectRegister(req, resp);
                 return;
             }
 
+            // validate email
             if (!ValidationUtil.isValidEmail(email)) {
-                setMsg(session, "Vui lòng kiểm tra lại email của bạn.");
+                setMsg(session, "Email không hợp lệ.");
                 redirectRegister(req, resp);
                 return;
             }
 
+            // validate phone
+            if (!isEmpty(phoneNum) && !ValidationUtil.isValidPhone(phoneNum)) {
+                setMsg(session, "Số điện thoại phải bắt đầu bằng 0, có 10 số và không được lặp số.");
+                redirectRegister(req, resp);
+                return;
+            }
+
+            //validate password
             if (!ValidationUtil.isValidPassword(password)) {
-                setMsg(session,
-                        "Mật khẩu phải bao gồm ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt.");
+                setMsg(session, "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
                 redirectRegister(req, resp);
                 return;
             }
 
-            //4. kiểm tra trùng db
+            // kiểm tra trùng database
             UserDao userDao = new UserDao();
 
             if (userDao.existsUsername(username)) {
@@ -85,21 +98,22 @@ public class RegisterServlet extends HttpServlet {
             }
 
             if (!isEmpty(phoneNum) && userDao.existsPhoneNum(phoneNum)) {
-                setMsg(session, "Số điện thoại này đã được đăng ký.");
+                setMsg(session, "Số điện thoại đã được đăng ký.");
                 redirectRegister(req, resp);
                 return;
             }
 
-            // 5. tạo user tạm
+            //tạo user tạm
             User tempUser = new User();
-            tempUser.setUsername(username.trim());
-            tempUser.setEmail(email.trim());
+
+            tempUser.setUsername(username);
+            tempUser.setEmail(email);
             tempUser.setPhoneNum(phoneNum);
             tempUser.setPassword(PasswordUtil.hash(password));
 
             session.setAttribute("tempUser", tempUser);
 
-            //6. mã otp
+            // tạo OTP
             String rawOtp = OtpUtil.generateOtp();
             String otpHash = PasswordUtil.hash(rawOtp);
             LocalDateTime expiry = LocalDateTime.now().plusSeconds(60);
@@ -107,7 +121,7 @@ public class RegisterServlet extends HttpServlet {
             session.setAttribute("otpHash", otpHash);
             session.setAttribute("otpExpiry", expiry);
 
-            // 7. gửi mail
+            // gửi email OTP
             EmailService.sendOtp(email, rawOtp);
 
             setMsg(session, "Đăng ký thành công! Vui lòng kiểm tra email để nhập mã OTP.");
@@ -120,14 +134,17 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
+    // hàm kiểm tra rỗng
     private boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
 
+    // set message
     private void setMsg(HttpSession session, String msg) {
         session.setAttribute("msg", msg);
     }
 
+    // redirect register
     private void redirectRegister(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/register.jsp");
     }
