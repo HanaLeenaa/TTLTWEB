@@ -1,5 +1,6 @@
 package com.example.web_console_handheld.controller;
 
+import com.example.web_console_handheld.dao.OrderDao;
 import com.example.web_console_handheld.model.*;
 
 import jakarta.servlet.ServletException;
@@ -27,14 +28,49 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // ✅ LẤY ĐÚNG SẢN PHẨM ĐÃ CHỌN
         List<CartItem> selectedItems =
                 (List<CartItem>) session.getAttribute("selectedCartItems");
 
-        if (selectedItems == null || selectedItems.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
+        List<OrderItem> orderItems = new ArrayList<>();
+        long totalPrice = 0;
+
+        Cart cart = (Cart) session.getAttribute("cart");
+
+        //CHECKOUT TỪ CART
+        if (selectedItems != null && !selectedItems.isEmpty()) {
+
+            for (CartItem ci : selectedItems) {
+
+                OrderItem oi = new OrderItem();
+                oi.setProduct_id(ci.getProduct().getID());
+                oi.setProduct_name(ci.getProduct().getName());
+                oi.setQuantity(ci.getQuantity());
+                oi.setProduct_price(ci.getProduct().getPriceValue());
+                oi.setProduct_image(ci.getProduct().getImage());
+
+                totalPrice += oi.getProduct_price() * oi.getQuantity();
+                orderItems.add(oi);
+
+
+            }
+            session.removeAttribute("selectedCartItems");
         }
+
+        // BUY NOW
+        else {
+            List<OrderItem> pendingItems = (List<OrderItem>) session.getAttribute("pendingOrderItems");
+
+            if (pendingItems == null || pendingItems.isEmpty()) {
+                return;
+            }
+            orderItems = pendingItems;
+
+            for (OrderItem oi : orderItems) {
+                totalPrice += oi.getProduct_price() * oi.getQuantity();
+            }
+            session.removeAttribute("pendingOrderItems");
+        }
+
 
         // ===== TẠO ORDER =====
         Order order = new Order();
@@ -59,34 +95,19 @@ public class PlaceOrderServlet extends HttpServlet {
                 "BANK".equals(request.getParameter("paymentMethod"))
         );
 
-        // ===== ORDER ITEMS =====
-        List<OrderItem> orderItems = new ArrayList<>();
-        long totalPrice = 0;
-
-        for (CartItem ci : selectedItems) {
-            OrderItem item = new OrderItem();
-            item.setProduct_id(ci.getProduct().getID());
-            item.setProduct_name(ci.getProduct().getName());
-            item.setProduct_price(ci.getProduct().getPriceValue());
-            item.setQuantity(ci.getQuantity());
-
-            totalPrice += item.getProduct_price() * item.getQuantity();
-            orderItems.add(item);
-        }
-
         order.setPrice(totalPrice);
 
-        // ===== LƯU SESSION =====
+            // ===== LƯU SESSION =====
         session.setAttribute("pendingOrder", order);
         session.setAttribute("pendingOrderItems", orderItems);
 
-        // ===== ĐẨY SANG JSP =====
-        request.setAttribute("order", order);
-        request.setAttribute("orderItems", orderItems);
-        request.setAttribute("confirmed", false);
+            // ===== ĐẨY SANG JSP =====
+            request.setAttribute("order", order);
+            request.setAttribute("orderItems", orderItems);
+            request.setAttribute("confirmed", false);
 
-        request.getRequestDispatcher(
-                "/Assets/component/cart_payment/Order.jsp"
-        ).forward(request, response);
-    }
+            request.getRequestDispatcher(
+                    "/Assets/component/cart_payment/Order.jsp"
+            ).forward(request, response);
+        }
 }
