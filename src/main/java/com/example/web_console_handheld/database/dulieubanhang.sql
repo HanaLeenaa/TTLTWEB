@@ -249,34 +249,60 @@ VALUES
  'Thiết kế mới mỏng hơn 30%, ổ cứng 1TB và tích hợp ổ đĩa để chơi game vật lý.', 
  'CPU: AMD Zen 2 8-core, GPU: 10.3 TFLOPS, RAM: 16GB GDDR6, SSD: 1TB Custom.', 
  13500000, 14990000, 
- 'link_anh_ps5_standard.jpg', 
- NOW(), '340W', 'N/A', '3.2kg', 1, 'ps5-slim-standard', 1, '4K 120Hz, Ray Tracing', 'HDMI 2.1, WiFi 6', 'Tặng 1 tay cầm DualSense'),
-==========================================================
+ 'https://www.droidshop.vn/wp-content/uploads/2024/01/s5-saps5-slim-standard.jpg', 
+ NOW(), '340W', 'N/A', '3.2kg', 1, 'ps5-slim-standard', 1, '4K 120Hz, Ray Tracing', 'HDMI 2.1, WiFi 6', 'Tặng 1 tay cầm DualSense');
+
+INSERT INTO gallary (product_id, img) VALUES
+(1, 'https://www.droidshop.vn/wp-content/uploads/2023/11/may-ps5-standard-slim-247x300.jpg'),
+(1, 'https://www.droidshop.vn/wp-content/uploads/2024/01/s5-saps5-slim-standard-247x300.jpg'),
+(1, 'https://www.droidshop.vn/wp-content/uploads/2024/01/may-choi-game-PS5-Slim-Standard-kem-game-Fortnite-Cobalt-Star-Bundle-247x300.jpg'),
+(1, 'https://www.droidshop.vn/wp-content/uploads/2024/01/may-choi-game-PS5-Slim-Standard-kem-game-Astro-Bot-Bundle-247x300.jpg');
+
 
 -- 2. Bản PS5 Slim Digital (Không ổ đĩa)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (1, 1, 'PlayStation 5 Slim Digital Edition', 
  'Phiên bản kỹ thuật số mỏng nhẹ, không ổ đĩa.', 
  'Trải nghiệm sức mạnh tương đương bản Standard trong một thiết kế đối xứng và gọn gàng hơn.', 
  'CPU: AMD Zen 2 8-core, GPU: 10.3 TFLOPS, RAM: 16GB GDDR6, SSD: 1TB Custom.', 
  11500000, 12990000, 
- 'link_anh_ps5_digital.jpg', 
- NOW(), '340W', 'N/A', '2.6kg', 1, 'ps5-slim-digital', 1, '4K 120Hz, Ray Tracing', 'HDMI 2.1, WiFi 6', 'Voucher giảm giá game Digital');(2, 2, 1, 'PlayStation Portal Remote Player', 'Thiết bị chơi game từ xa.', 'Chơi các trò chơi PS5 thông qua mạng WiFi.', 'Màn hình 8 inch', 5500000, 5990000, 'https://theonionshop.com/cdn/shop/files/ps-portal-remoteplayer-hero-3.webp?v=1697515705&width=1445', NOW(), 4370, 5, 540, 1, 'ps-portal', 0, 'Kết nối PS5', 'WiFi', 'Bảo hành 12 tháng'),
-==========================================================
--- PlayStation Portal Remote Player
-(2, 1, 'PlayStation Portal Remote Player', 'Thiết bị chơi game từ xa.', 'Chơi các trò chơi PS5 thông qua mạng WiFi.', 'Màn hình 8 inch', 5500000, 5990000, 'https://theonionshop.com/cdn/shop/files/ps-portal-remoteplayer-hero-3.webp?v=1697515705&width=1445', NOW(), 4370, 5, 540, 1, 'ps-portal', 0, 'Kết nối PS5', 'WiFi', 'Bảo hành 12 tháng'),
+ 'https://www.droidshop.vn/wp-content/uploads/2024/01/may-choi-game-PS5-Slim-Digital-247x300.jpg', 
+ NOW(), '340W', 'N/A', '2.6kg', 1, 'ps5-slim-digital', 1, '4K 120Hz, Ray Tracing', 'HDMI 2.1, WiFi 6', 'Voucher giảm giá game Digital');
+ 
+INSERT INTO gallary (product_id, img) VALUES
+(2, 'https://www.droidshop.vn/wp-content/uploads/2024/10/May-PS5-slim-digital-Call-of-Duty-Black-Ops-6--247x300.jpg'),
+(2, 'https://www.droidshop.vn/wp-content/uploads/2024/01/s5-saps5-slim-standard-247x300.jpg'),
+(2, 'https://www.droidshop.vn/wp-content/uploads/2024/01/may-choi-game-PS5-Digital-Slim-Fortnite-247x300.jpg'),
+(2, 'http://droidshop.vn/wp-content/uploads/2024/01/may-choi-game-PS5-Digital-Slim-Fortnite-247x300.jpg');
+
+-- 3. PlayStation Portal Remote Player
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 1, 'PlayStation Portal Remote Player', 'Thiết bị chơi game từ xa.', 'Chơi các trò chơi PS5 thông qua mạng WiFi.', 'Màn hình 8 inch', 5500000, 5990000, 'https://www.droidshop.vn/wp-content/uploads/2023/11/May-choi-game-cam-tay-Sony-PlayStation-Portal.jpg', NOW(), 4370, 5, 540, 1, 'ps-portal', 0, 'Kết nối PS5', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(3, 'https://www.droidshop.vn/wp-content/uploads/2025/03/may-ps-portal-den-midnight.jpg'),
+(3, 'https://www.droidshop.vn/wp-content/uploads/2025/03/may-ps-portal-den-midnight-black-247x300.jpg'),
+(3, 'https://www.droidshop.vn/wp-content/uploads/2023/11/May-choi-game-cam-tay-Sony-PlayStation-Portal-6-247x300.jpg'),
+(3, 'https://www.droidshop.vn/wp-content/uploads/2023/11/May-choi-game-cam-tay-Sony-PlayStation-Portal-5-247x300.jpg'),
+(3, 'https://www.droidshop.vn/wp-content/uploads/2023/11/May-choi-game-cam-tay-Sony-PlayStation-Portal-4-247x300.jpg');
 
 
--- 29. PlayStation Portable PSP 3000
+
+-- 4. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Red/Black)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
-    11, -- brand_id: Sony Handheld
-    'PlayStation Portable PSP 3000', 
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Red/Black)', 
     'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
     'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
     'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
     2490000, 
     2990000, 
-    'https://product.hstatic.net/1000289578/product/may_psp_3000_mau_den-xgame_9481630d7ae44ec7aaf9437fe4556caf.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/61zK8l4mebL.jpg', 
     NOW(), 
     '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
     '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
@@ -287,19 +313,256 @@ VALUES
     'PSP Games, PS1 Classics, Movie/Music Player', 
     'Wi-Fi, Mini USB, 3.5mm Jack', 
     'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
-),
+);
 
--- 30. PlayStation Vita Slim (PCH-2000) 
+INSERT INTO gallary (product_id, img) VALUES
+(4, 'https://images-na.ssl-images-amazon.com/images/I/61iqRFinOsL.jpg'),
+(4, 'https://images-na.ssl-images-amazon.com/images/I/61zK8l4mebL.jpg');
+
+-- 5. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Black)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
-    11, -- brand_id: Sony Handheld
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Black)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/615gWr9r13L.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(5, 'https://images-na.ssl-images-amazon.com/images/I/7162mjIToLL.jpg'),
+(5, 'https://images-na.ssl-images-amazon.com/images/I/61LhZBL-pfL.jpg'),
+(5, 'https://images-na.ssl-images-amazon.com/images/I/615gWr9r13L.jpg');
+
+-- 6. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Blue)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Blue)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/61Zhq8U5wSL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(6, 'https://images-na.ssl-images-amazon.com/images/I/61G02teTbZL.jpg'),
+(6, 'https://images-na.ssl-images-amazon.com/images/I/61Zhq8U5wSL.jpg');
+
+-- 7. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Lavender)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Lavender)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/61f5+8xNILL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(7, 'https://images-na.ssl-images-amazon.com/images/I/611cOGas8wL.jpg'),
+(7, 'https://images-na.ssl-images-amazon.com/images/I/61f5+8xNILL.jpg');
+
+-- 8. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Mystic Silver)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Mystic Silver)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/71G8OBFzzdL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(8, 'https://images-na.ssl-images-amazon.com/images/I/71G8OBFzzdL.jpg');
+
+-- 9. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Pink)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Pink)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/6162YbFGdGL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(9, 'https://images-na.ssl-images-amazon.com/images/I/61yD0wuRNuL.jpg'),
+(9, 'https://images-na.ssl-images-amazon.com/images/I/6162YbFGdGL.jpg');
+
+-- 10. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Red)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Red)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/61cdLoZ-i3L.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(10, 'https://images-na.ssl-images-amazon.com/images/I/61ObUq-32hL.jpg'),
+(10, 'https://images-na.ssl-images-amazon.com/images/I/61cdLoZ-i3L.jpg');
+
+-- 11. Playstation Portable PSP 3000 Series Handheld Gaming Console System (Spirited Green)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (Spirited Green)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/51vu-JOgIEL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(11, 'https://images-na.ssl-images-amazon.com/images/I/51cBxzFtlkL.jpg'),
+(11, 'https://images-na.ssl-images-amazon.com/images/I/51vu-JOgIEL.jpg');
+
+-- 12. Playstation Portable PSP 3000 Series Handheld Gaming Console System (White)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'Playstation Portable PSP 3000 Series Handheld Gaming Console System (White)', 
+    'Máy chơi game cầm tay huyền thoại của Sony với màn hình chống chói sắc nét.', 
+    'PSP 3000 là phiên bản hoàn thiện nhất của dòng PSP với màn hình LCD cải tiến, dải màu rộng và tích hợp microphone. Máy sở hữu kho game đồ sộ với các siêu phẩm như God of War, Tekken và Naruto. Thiết kế mỏng nhẹ, hỗ trợ đa phương tiện từ nghe nhạc đến xem phim, là biểu tượng không thể thay thế của giới game thủ.', 
+    'CPU: MIPS R4000 (333 MHz), RAM: 64MB, Màn hình: 4.3 inch LCD (16:9), Hỗ trợ thẻ nhớ Memory Stick Pro Duo.', 
+    2490000, 
+    2990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/61nUrv0K3cL.jpg', 
+    NOW(), 
+    '1200 mAh', -- energy: Dung lượng pin tiêu chuẩn
+    '4 - 6 Hours', -- useTime: Thời lượng chơi game thực tế
+    '189g', -- weight
+    1, 
+    'psp-3000-legend', 
+    0, 
+    'PSP Games, PS1 Classics, Movie/Music Player', 
+    'Wi-Fi, Mini USB, 3.5mm Jack', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ hack full game và bao chống sốc'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(12, 'https://images-na.ssl-images-amazon.com/images/I/61nUrv0K3cL.jpg');
+
+-- 13. PlayStation Vita Slim (PCH-2000) 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
     'PlayStation Vita Slim (PCH-2000)', 
     'Thế hệ kế thừa hoàn hảo với thiết kế mỏng nhẹ, pin bền và màn hình cảm ứng đa điểm.', 
     'PS Vita Slim mang đến trải nghiệm chơi game hiện đại với 2 cần Analog thật thụ, mặt lưng cảm ứng và màn hình LCD tối ưu thời lượng pin. Máy hỗ trợ Remote Play với PS4 và sở hữu những tựa game đỉnh cao như Persona 4 Golden, Uncharted. Đây là thiết bị giải trí cầm tay mạnh mẽ nhất mà Sony từng sản xuất.', 
     'CPU: 4-core ARM Cortex-A9, GPU: SGX543MP4+, RAM: 512MB, Màn hình: 5 inch LCD Touch, Bộ nhớ trong 1GB.', 
     3590000, 
     4090000, 
-    'https://i5.walmartimages.com/seo/Authentic-PlayStation-Ps-Vita-2000-Slim-Console-WiFi-Silver_d54a0ca5-138a-49ae-a5e0-19a04075f897.d5ff0e15b41d4231ac99debca7e622ab.jpeg', 
+    'https://i.pcmag.com/imagery/reviews/04msrlko2zn7stjp5qx4b3w-3-hero-image-gallery.fit_scale.size_1028x578.v1569471216.jpg', 
     NOW(), 
     '2210 mAh', -- energy: Pin của dòng Slim
     '5 - 7 Hours', -- useTime: Cải thiện rõ rệt so với đời OLED (1000)
@@ -310,9 +573,46 @@ VALUES
     'PS Vita Games, PSP/PS1 Support, Remote Play PS4', 
     'Micro USB, Wi-Fi, Bluetooth 2.1', 
     'Bảo hành 6 tháng, Tặng kèm áo thẻ SD2Vita và thẻ nhớ 64GB full game'
-),
+);
 
--- 32. PlayStation Classic Mini
+INSERT INTO gallary (product_id, img) VALUES
+(13, 'https://i.pcmag.com/imagery/reviews/04msrlko2zn7stjp5qx4b3w-5-hero-image-gallery.fit_scale.size_900x507.v1569471216.jpg'),
+(13, 'https://i.pcmag.com/imagery/reviews/04msrlko2zn7stjp5qx4b3w-6-hero-image-gallery.fit_scale.size_900x507.v1569471216.jpg'),
+(13, 'https://i.pcmag.com/imagery/reviews/04msrlko2zn7stjp5qx4b3w-7-hero-image-gallery.fit_scale.size_900x507.v1569471216.jpg'),
+(13, 'https://i.pcmag.com/imagery/reviews/04msrlko2zn7stjp5qx4b3w-8-hero-image-gallery.fit_scale.size_900x507.v1569471216.jpg');
+
+-- 14. PS Vita Slim - Glacial White - Wi-fi (PCH-2000ZA22)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    1, -- brand_id: Sony Handheld
+    'PS Vita Slim - Glacial White - Wi-fi (PCH-2000ZA22)', 
+    'Thế hệ kế thừa hoàn hảo với thiết kế mỏng nhẹ, pin bền và màn hình cảm ứng đa điểm.', 
+    'PS Vita Slim mang đến trải nghiệm chơi game hiện đại với 2 cần Analog thật thụ, mặt lưng cảm ứng và màn hình LCD tối ưu thời lượng pin. Máy hỗ trợ Remote Play với PS4 và sở hữu những tựa game đỉnh cao như Persona 4 Golden, Uncharted. Đây là thiết bị giải trí cầm tay mạnh mẽ nhất mà Sony từng sản xuất.', 
+    'CPU: 4-core ARM Cortex-A9, GPU: SGX543MP4+, RAM: 512MB, Màn hình: 5 inch LCD Touch, Bộ nhớ trong 1GB.', 
+    3590000, 
+    4090000, 
+    'https://images-na.ssl-images-amazon.com/images/I/61KiYl9A3pL.jpg', 
+    NOW(), 
+    '2210 mAh', -- energy: Pin của dòng Slim
+    '5 - 7 Hours', -- useTime: Cải thiện rõ rệt so với đời OLED (1000)
+    '219g', -- weight
+    1, 
+    'ps-vita-slim-2000', 
+    1, -- Để là 1 vì giá trị sưu tầm rất cao hiện nay
+    'PS Vita Games, PSP/PS1 Support, Remote Play PS4', 
+    'Micro USB, Wi-Fi, Bluetooth 2.1', 
+    'Bảo hành 6 tháng, Tặng kèm áo thẻ SD2Vita và thẻ nhớ 64GB full game'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(14, 'https://images-na.ssl-images-amazon.com/images/I/61KiYl9A3pL.jpg');
+   
+
+-- 15. PlayStation Classic Mini
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     1, -- categories_id: Home Console
     1, -- brand_id: Sony (PlayStation)
@@ -322,7 +622,7 @@ VALUES
     'CPU: MediaTek MT8167A, RAM: 1GB, Flash: 16GB, Output: 720p/480p.', 
     1990000, 
     2490000, 
-    'https://m.media-amazon.com/images/I/61bvBCSda0L._SL400_.jpg', 
+    'https://product.hstatic.net/200000722513/product/untitled-1_6249db790c6548be9e10ea90aaf42298_6426ee9fa67f4884909e51ebea61e338_master.jpg', 
     NOW(), 
     'USB Powered', -- energy
     'Instant Play', -- useTime
@@ -335,27 +635,223 @@ VALUES
     'Bảo hành 6 tháng, Tặng kèm bộ nguồn 5V và cáp HDMI'
 );
 
+INSERT INTO gallary (product_id, img) VALUES
+(15, 'https://product.hstatic.net/200000722513/product/upload_b59bc630f9924aedac9ca92034993390_abf494876d564e14904eda0f6c6c2128_master.jpg'),
+(15, 'https://product.hstatic.net/200000722513/product/upload_d361928e26ff4a2a81dd30836dca051b_e241ffe8d3dc4b388ea61627684c23e9_master.jpg'),
+(15, 'https://product.hstatic.net/200000722513/product/upload_68d9aaaa50f4477fb776cff85347513c_7be09a93467742f78a2fcfa8953c46b4_master.jpg'),
+(15, 'https://product.hstatic.net/200000722513/product/upload_45583a53bcff45378704d0dab4bb4f61_489a8683b0e848f6945439c8f94c6fbb_master.jpg');
+
+
+
 -- XBOX (Brand 2)
--- 3. Xbox Series X Carbon Black (Phiên bản đặc biệt màu đen Carbon)
-(1, 2, 'Xbox Series X Carbon Black', 
+-- 16. Xbox Wireless Gaming Controller (2025) – Carbon Black
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller (2025) - Carbon Black', 
  'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
  'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
  'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
  13500000, 14500000, 
- 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg', 
- NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller'),
+ 'https://images-na.ssl-images-amazon.com/images/I/615KnbjRmTL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
 
--- 4. Xbox Series S 1TB Black (Phiên bản nhỏ gọn với dung lượng lưu trữ gấp đôi, màu đen sang trọng)
+INSERT INTO gallary (product_id, img) VALUES
+(16, 'https://images-na.ssl-images-amazon.com/images/I/71+qeUWcMIL.jpg'),
+(16, 'https://images-na.ssl-images-amazon.com/images/I/61BvPsTQslL.jpg'),
+(16, 'https://images-na.ssl-images-amazon.com/images/I/7119HvQIilL.jpg'),
+(16, 'https://images-na.ssl-images-amazon.com/images/I/71WKmv53ICL.jpg'),
+(16, 'https://images-na.ssl-images-amazon.com/images/I/71CiGdm0bYL.jpg');
+
+-- 17. Xbox Wireless Gaming Controller (2025) – Pulse Red
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller (2025) - Pulse Red', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/61vpO3n1-tL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(17, 'https://images-na.ssl-images-amazon.com/images/I/61c3l9MmEIL.jpg'),
+(17, 'https://images-na.ssl-images-amazon.com/images/I/61lmvOfVQpL.jpg'),
+(17, 'https://images-na.ssl-images-amazon.com/images/I/71et2LljNSL.jpg'),
+(17, 'https://images-na.ssl-images-amazon.com/images/I/71vOSm3QELL.jpg'),
+(17, 'https://images-na.ssl-images-amazon.com/images/I/71rkQDIHi7L.jpg');
+
+-- 18. Xbox Wireless Gaming Controller (2025) – Robot White
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller (2025) - Robot White', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/61bh+T2v7SL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(18, 'https://images-na.ssl-images-amazon.com/images/I/61H1SU8t1OL.jpg'),
+(18, 'https://images-na.ssl-images-amazon.com/images/I/61qjDq2Eg9L.jpg'),
+(18, 'https://images-na.ssl-images-amazon.com/images/I/715IVCgH7qL.jpg'),
+(18, 'https://images-na.ssl-images-amazon.com/images/I/61znnrMbvjL.jpg'),
+(18, 'https://images-na.ssl-images-amazon.com/images/I/71k16Xt4LVL.jpg');
+
+-- 19. Xbox Wireless Gaming Controller (2025) – Shock Blue
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller (2025) - Shock Blue', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/61NlIRlKo5L.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(19, 'https://images-na.ssl-images-amazon.com/images/I/616Gecual1L.jpg'),
+(19, 'https://images-na.ssl-images-amazon.com/images/I/610N7XQw7gL.jpg'),
+(19, 'https://images-na.ssl-images-amazon.com/images/I/71ghkWUjqEL.jpg'),
+(19, 'https://images-na.ssl-images-amazon.com/images/I/616Gecual1L.jpg'),
+(19, 'https://images-na.ssl-images-amazon.com/images/I/610N7XQw7gL.jpg');
+
+-- 20. Microsoft Xbox Wireless Controller Storm Breaker Special Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Microsoft Xbox Wireless Controller Storm Breaker Special Edition', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/71jxD5B0u8L.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(20, 'https://images-na.ssl-images-amazon.com/images/I/71rLbRVyP+L.jpg'),
+(20, 'https://images-na.ssl-images-amazon.com/images/I/61dccuoC+VL.jpg'),
+(20, 'https://images-na.ssl-images-amazon.com/images/I/71XpCVDQ5GL.jpg'),
+(20, 'https://images-na.ssl-images-amazon.com/images/I/817FvdS2tjL.jpg'),
+(20, 'https://images-na.ssl-images-amazon.com/images/I/71ak-9F-IML.jpg');
+
+-- 21. Xbox Wireless Gaming Controller (2025) – Velocity Green
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller (2025) - Velocity Green', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/61gwuRFORbL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(21, 'https://images-na.ssl-images-amazon.com/images/I/61-euzvlraL.jpg'),
+(21, 'https://images-na.ssl-images-amazon.com/images/I/61yFXRq1BGL.jpg'),
+(21, 'https://images-na.ssl-images-amazon.com/images/I/715m3u4s4ZL.jpg'),
+(21, 'https://images-na.ssl-images-amazon.com/images/I/71V13xRKY3L.jpg'),
+(21, 'https://images-na.ssl-images-amazon.com/images/I/71JAtpKa4hL.jpg');
+
+-- 23. Xbox Core Wireless Gaming Controller – Electric Volt Series X
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Core Wireless Gaming Controller - Electric Volt Series X', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/511p8oS7pPL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(23, 'https://images-na.ssl-images-amazon.com/images/I/513xljThwZL.jpg'),
+(23, 'https://images-na.ssl-images-amazon.com/images/I/510A6UM3RDL.jpg'),
+(23, 'https://images-na.ssl-images-amazon.com/images/I/41AqfP8utdL.jpg'),
+(23, 'https://images-na.ssl-images-amazon.com/images/I/51hFzk7eKTL.jpg'),
+(23, 'https://images-na.ssl-images-amazon.com/images/I/619+XDyZ-ML.jpg');
+
+-- 24. Xbox Wireless Gaming Controller – Fallout Pip-Boy Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Gaming Controller - Fallout Pip-Boy Edition', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/71NuYPkE0zL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(24, 'https://images-na.ssl-images-amazon.com/images/I/71NuYPkE0zL.jpg');
+
+-- 25. Xbox Wireless Controller Heart Breaker Special Edition - Wireless & Bluetooth Connectivity - New Hybrid D-Pad & Share Button - Featuring Textured Grip
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Controller Heart Breaker Special Edition', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/71M7CxIFX6L.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(25, 'https://images-na.ssl-images-amazon.com/images/I/7196FGtO-vL.jpg'),
+(25, 'https://images-na.ssl-images-amazon.com/images/I/61VLXGjPq6L.jpg'),
+(25, 'https://images-na.ssl-images-amazon.com/images/I/71bbhz-4lXL.jpg'),
+(25, 'https://images-na.ssl-images-amazon.com/images/I/71veA78UijL.jpg'),
+(25, 'https://images-na.ssl-images-amazon.com/images/I/71ByGIOJ+hL.jpg');
+
+-- 26. Xbox Wireless Controller Ice Breaker Special Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Controller Ice Breaker Special Edition', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/71Js3hjffrL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(26, 'https://images-na.ssl-images-amazon.com/images/I/71TmT75-0JL.jpg'),
+(26, 'https://images-na.ssl-images-amazon.com/images/I/6193qjhq++L.jpg'),
+(26, 'https://images-na.ssl-images-amazon.com/images/I/71DWxbfCUWL.jpg'),
+(26, 'https://images-na.ssl-images-amazon.com/images/I/71NiThMNLxL.jpg'),
+(26, 'https://images-na.ssl-images-amazon.com/images/I/71I07+6nbKL.jpg');
+
+-- 27. Xbox Wireless Controller – Pulse Cipher Special Edition Series X
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(1, 2, 'Xbox Wireless Controller - Pulse Cipher Special Edition Series X', 
+ 'Cỗ máy chơi game mạnh mẽ nhất của Microsoft với màu đen Carbon sang trọng.', 
+ 'Xbox Series X sở hữu sức mạnh xử lý đồ họa cực khủng, hỗ trợ độ phân giải 4K tại 120FPS. Công nghệ Velocity Architecture giúp loại bỏ thời gian chờ tải game, mang lại trải nghiệm mượt mà tuyệt đối.', 
+ 'CPU: 8-core AMD Zen 2, GPU: 12 TFLOPS RDNA 2, RAM: 16GB GDDR6, SSD: 1TB NVMe.', 
+ 13500000, 14500000, 
+ 'https://images-na.ssl-images-amazon.com/images/I/713dRmmJrwL.jpg', 
+ NOW(), '315W', 'N/A', '4400g', 1, 'xbox-series-x-carbon', 1, 'Xbox Games, Xbox Game Pass', 'HDMI 2.1, Wi-Fi 5, Ethernet', 'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller');
+
+INSERT INTO gallary (product_id, img) VALUES
+(27, 'https://images-na.ssl-images-amazon.com/images/I/71M0fyUJ93L.jpg'),
+(27, 'https://images-na.ssl-images-amazon.com/images/I/714fuPd+PAL.jpg'),
+(27, 'https://images-na.ssl-images-amazon.com/images/I/81EqQUvXXpL.jpg'),
+(27, 'https://images-na.ssl-images-amazon.com/images/I/71iNaF67arL.jpg'),
+(27, 'https://images-na.ssl-images-amazon.com/images/I/7129vpjXFiL.jpg');
+
+
+-- 28. Xbox Series S 1TB - Black 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     1,
     2,
-    'Xbox Series S 1TB Black', 
+    'Xbox Series S 1TB - Black', 
     'Phiên bản nhỏ gọn với dung lượng lưu trữ gấp đôi, màu đen sang trọng.', 
     'Xbox Series S bản 1TB mang đến không gian lưu trữ rộng lớn cho các tựa game Next-gen. Thiết kế không ổ đĩa cực kỳ nhỏ gọn, hỗ trợ tốc độ khung hình lên đến 120FPS và tính năng Quick Resume giúp chuyển đổi game tức thì.', 
     'CPU: 8-Core AMD Zen 2, GPU: 4 TFLOPS RDNA 2, RAM: 10GB GDDR6, SSD: 1TB NVMe.', 
     8990000, 
     9990000, 
-    'https://product.hstatic.net/1000154920/product/xbox_one_series_s_1tb_box_bf42677b4ed84b35a4b0865486da6287_master.png', 
+    'https://haloshop.vn/wp-content/uploads/2025/04/Xbox-Series-S-black.webp', 
     NOW(), 
     '165W', -- energy: Công suất tiêu thụ trung bình của Series S
     'N/A', -- useTime: Cắm điện trực tiếp
@@ -366,20 +862,57 @@ VALUES
     'Xbox Games, Xbox Game Pass, Quick Resume', 
     'HDMI 2.1, Wi-Fi 5, USB-A, LAN', 
     'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller'
-),
-========================================================
+);
 
--- 31. Xbox One S All-Digital Edition
+INSERT INTO gallary (product_id, img) VALUES
+(28, 'https://haloshop.vn/wp-content/uploads/2025/02/xbox-series-s-black-41-700x700-1.jpg'),
+(28, 'https://haloshop.vn/wp-content/uploads/2025/02/xbox-series-s-black-42-700x700-1.jpg'),
+(28, 'https://haloshop.vn/wp-content/uploads/2025/02/xbox-series-s-black-43-700x700-1.jpg'),
+(28, 'https://haloshop.vn/wp-content/uploads/2025/02/xbox-series-s-42-700x700-1-300x300.jpg');
+
+-- 29. Xbox Series S SSD 1TB – White
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    1,
+    2,
+    'Xbox Series S SSD 1TB - White', 
+    'Phiên bản nhỏ gọn với dung lượng lưu trữ gấp đôi, màu đen sang trọng.', 
+    'Xbox Series S bản 1TB mang đến không gian lưu trữ rộng lớn cho các tựa game Next-gen. Thiết kế không ổ đĩa cực kỳ nhỏ gọn, hỗ trợ tốc độ khung hình lên đến 120FPS và tính năng Quick Resume giúp chuyển đổi game tức thì.', 
+    'CPU: 8-Core AMD Zen 2, GPU: 4 TFLOPS RDNA 2, RAM: 10GB GDDR6, SSD: 1TB NVMe.', 
+    8990000, 
+    9990000, 
+    'https://haloshop.vn/wp-content/uploads/2025/04/Xbox-Series-S-black.webp', 
+    NOW(), 
+    '165W', -- energy: Công suất tiêu thụ trung bình của Series S
+    'N/A', -- useTime: Cắm điện trực tiếp
+    '1950g', -- weight: Trọng lượng máy (xấp xỉ 1.93kg)
+    1, 
+    'https://haloshop.vn/wp-content/uploads/2025/04/Xbox-Series-S-white.webp', 
+    0, 
+    'Xbox Games, Xbox Game Pass, Quick Resume', 
+    'HDMI 2.1, Wi-Fi 5, USB-A, LAN', 
+    'Bảo hành 12 tháng, Tặng kèm tay cầm Wireless Controller'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(29, 'https://haloshop.vn/wp-content/uploads/2025/02/may_xbox_series_s_ssd_1tb_42-700x700-1.jpg'),
+(29, 'https://haloshop.vn/wp-content/uploads/2025/02/may_xbox_series_s_ssd_1tb_43-700x700-1.jpg'),
+(29, 'https://haloshop.vn/wp-content/uploads/2025/02/may_xbox_series_s_ssd_1tb_41-700x700-1.jpg');
+
+-- 30. Xbox One S 1TB All-Digital Edition Console with Xbox One Wireless Controller
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     1, -- categories_id: Home Console
     2, -- brand_id: Microsoft (Xbox)
-    'Xbox One S All-Digital Edition', 
+    'Xbox One S 1TB All-Digital Edition Console with Xbox One Wireless Controller', 
     'Phiên bản loại bỏ ổ đĩa vật lý, tối ưu cho thư viện game kỹ thuật số và Xbox Game Pass.', 
-    'Xbox One S All-Digital mang đến trải nghiệm chơi game 4K streaming và lưu trữ đám mây tiện lợi. Với thiết kế trắng thanh lịch và nhỏ gọn, máy là lựa chọn hoàn hảo cho những game thủ yêu thích sự tối giản, không cần sử dụng đĩa vật lý mà vẫn tận hưởng được kho game khổng lồ.', 
+    'Xbox One S 1TB All-Digital Edition mang đến trải nghiệm chơi game 4K streaming và lưu trữ đám mây tiện lợi. Với thiết kế trắng thanh lịch và nhỏ gọn, máy là lựa chọn hoàn hảo cho những game thủ yêu thích sự tối giản, không cần sử dụng đĩa vật lý mà vẫn tận hưởng được kho game khổng lồ.', 
     'CPU: 1.75GHz 8-core AMD, GPU: 1.23 TFLOPS, RAM: 8GB DDR3, HDD: 1TB.', 
     5490000, 
     6490000, 
-    'https://m.media-amazon.com/images/I/813lBsn0qkL._AC_UF894,1000_QL80_.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/61yMhsRTT-L.jpg', 
     NOW(), 
     'Internal PSU', -- energy
     'Continuous Power', -- useTime
@@ -392,24 +925,82 @@ VALUES
     'Bảo hành 6 tháng, Tặng kèm mã code 3 tháng Xbox Game Pass Ultimate'
 );
 
+INSERT INTO gallary (product_id, img) VALUES
+(30, 'https://images-na.ssl-images-amazon.com/images/I/51VYsn3wL6L.jpg'),
+(30, 'https://images-na.ssl-images-amazon.com/images/I/51k1a2O4KYL.jpg'),
+(30, 'https://images-na.ssl-images-amazon.com/images/I/41UTXSdnnoL.jpg');
+
+
+
 -- NINTENDO (Brand 3)
--- 5. Nintendo Switch OLED Model 
-(2, 3, 'Nintendo Switch OLED Model', 'Màn hình OLED 7 inch rực rỡ.', 'Phiên bản nâng cấp màn hình OLED.', '64GB, OLED Screen', 7500000, 8500000, 'https://bizweb.dktcdn.net/100/476/122/products/vh-installer-1-1702023014809.png?v=1702023021590', NOW(), 4310, 9, 420, 1, 'switch-oled', 1, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng'),
+-- 31. Nintendo Switch - OLED Model: Mario Red Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, 'Nintendo Switch - OLED Model: Mario Red Edition', 'Màn hình OLED 7 inch rực rỡ.', 'Phiên bản nâng cấp màn hình OLED.', '64GB, OLED Screen', 7500000, 8500000,
+'https://images-na.ssl-images-amazon.com/images/I/71vwxEAbq7L.jpg', NOW(), 4310, 9, 420, 1, 'switch-oled', 1, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng');
 
--- 6. Nintendo Switch 2 
-(2, 3, 'Nintendo Switch 2', 'Thế hệ máy tiếp theo.', 'Màn hình LCD 7.9 inch 1080p.', 'Thế hệ tiếp theo', 12350000, 13290000, 'https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_1.5/c_scale,w_700/ncom/My%20Nintendo%20Store/EN-US/Nintendo%20Switch%202/Hardware/123669-nintendo-switch-2-hand-pulling-right-joy-con-off-1200x675', NOW(), 5220, 6, 534, 1, 'switch-2', 0, 'TV', 'WiFi 6', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(31, 'https://images-na.ssl-images-amazon.com/images/I/81c+7-0qsdL.jpg'),
+(31, 'https://images-na.ssl-images-amazon.com/images/I/81w-1wZ1bEL.jpg'),
+(31, 'https://images-na.ssl-images-amazon.com/images/I/71W0i14jHyL.jpg'),
+(31, 'https://images-na.ssl-images-amazon.com/images/I/41Q9Td3-niL.jpg'),
+(31, 'https://images-na.ssl-images-amazon.com/images/I/71qfEJRdgNL.jpg');
 
--- 7. Nintendo Switch V2 Neon Blue & Red
+-- 32. Nintendo Switch – OLED Model w/Neon Red & Neon Blue Joy-Con
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, 'Nintendo Switch - OLED Model w/Neon Red & Neon Blue Joy-Con', 'Màn hình OLED 7 inch rực rỡ.', 'Phiên bản nâng cấp màn hình OLED.', '64GB, OLED Screen', 7500000, 8500000,
+'https://images-na.ssl-images-amazon.com/images/I/41ttIuh5SlL.jpg', NOW(), 4310, 9, 420, 1, 'switch-oled', 1, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(32, 'https://images-na.ssl-images-amazon.com/images/I/31y22S6+VjL.jpg'),
+(32, 'https://images-na.ssl-images-amazon.com/images/I/412v5cSlP1L.jpg'),
+(32, 'https://images-na.ssl-images-amazon.com/images/I/31JzoPxNVOL.jpg'),
+(32, 'https://images-na.ssl-images-amazon.com/images/I/31H83k97DQL.jpg'),
+(32, 'https://images-na.ssl-images-amazon.com/images/I/31tkggsYgZL.jpg');
+
+-- 33. Nintendo Switch – OLED Model w/White Joy-Con
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, 'Nintendo Switch - OLED Model w/White Joy-Con', 'Màn hình OLED 7 inch rực rỡ.', 'Phiên bản nâng cấp màn hình OLED.', '64GB, OLED Screen', 7500000, 8500000,
+'https://images-na.ssl-images-amazon.com/images/I/61nqNujSF2L.jpg', NOW(), 4310, 9, 420, 1, 'switch-oled', 1, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(33, 'https://images-na.ssl-images-amazon.com/images/I/61E4b5drxzS.jpg'),
+(33, 'https://images-na.ssl-images-amazon.com/images/I/6106vjwmtIS.jpg'),
+(33, 'https://images-na.ssl-images-amazon.com/images/I/719EZAc9WHS.jpg'),
+(33, 'https://images-na.ssl-images-amazon.com/images/I/71Sgq7L+AuS.jpg'),
+(33, 'https://images-na.ssl-images-amazon.com/images/I/61z-iuVjhdS.jpg');
+
+
+-- 34. Nintendo Switch 2 System
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, 'Nintendo Switch 2 System', 'Thế hệ máy tiếp theo.', 'Màn hình LCD 7.9 inch 1080p.', 'Thế hệ tiếp theo', 12350000, 13290000, 
+'https://images-na.ssl-images-amazon.com/images/I/714-Fh3ngmL.jpg', NOW(), 5220, 6, 534, 1, 'switch-2', 0, 'TV', 'WiFi 6', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(34, 'https://images-na.ssl-images-amazon.com/images/I/61+fkixBSfL.jpg'),
+(34, 'https://images-na.ssl-images-amazon.com/images/I/615ir3fm25L.jpg'),
+(34, 'https://images-na.ssl-images-amazon.com/images/I/71E-Pk8l8oL.jpg'),
+(34, 'https://images-na.ssl-images-amazon.com/images/I/71cXwQTj8tL.jpg'),
+(34, 'https://images-na.ssl-images-amazon.com/images/I/71BS3e5jgdL.jpg');
+
+
+
+-- 35. Nintendo Switch with Neon Blue and Neon Red Joy‑Con V2 (Red & Blue Switch)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2,
     3, 
-    'Nintendo Switch V2 Neon Blue & Red', 
+    'Nintendo Switch with Neon Blue and Neon Red Joy - Con V2 (Red & Blue Switch)', 
     'Phiên bản nâng cấp thời lượng pin, chơi game linh hoạt mọi lúc mọi nơi.', 
     'Nintendo Switch V2 mang đến sự linh hoạt tuyệt vời khi có thể vừa chơi trên TV, vừa có thể cầm tay mang đi. Phiên bản này sử dụng chip mới tiết kiệm điện năng hơn, giúp kéo dài thời gian trải nghiệm các tựa game đình đám của Nintendo.', 
     'Màn hình: 6.2 inch LCD, Chip: NVIDIA Tegra X1 Mariko, Bộ nhớ: 32GB (Hỗ trợ thẻ nhớ tối đa 2TB).', 
     6890000, 
     7890000, 
-    'https://www.droidshop.vn/wp-content/uploads/2023/01/May-choi-game-Nintendo-Switch-Neon.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/71ZV093mf+L.jpg', 
     NOW(), 
     '4310 mAh', -- energy: Dung lượng pin của máy
     '4.5 - 9 Hours', -- useTime: Thời gian sử dụng thực tế
@@ -420,10 +1011,20 @@ VALUES
     'Nintendo Switch Online, Motion Control, Amiibo', 
     'USB-C, HDMI 2.0 (Dock), WiFi, Bluetooth 4.1', 
     'Bảo hành 12 tháng, Tặng cường lực và túi chống sốc'
-),
-==================================================
+);
 
--- 8. Nintendo Switch Animal Crossing: New Horizons Edition
+INSERT INTO gallary (product_id, img) VALUES
+(35, 'https://images-na.ssl-images-amazon.com/images/I/71ulWn40eoL.jpg'),
+(35, 'https://images-na.ssl-images-amazon.com/images/I/71AAhKVX1XL.jpg'),
+(35, 'https://images-na.ssl-images-amazon.com/images/I/71Hwaj0mm4L.jpg'),
+(35, 'https://images-na.ssl-images-amazon.com/images/I/81XViKqXADL.jpg'),
+(35, 'https://images-na.ssl-images-amazon.com/images/I/71Fd-ZApwqL.jpg');
+
+
+
+-- 36. Nintendo Switch Animal Crossing: New Horizons Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 
     3, 
@@ -431,9 +1032,9 @@ VALUES
     'Phiên bản giới hạn với thiết kế màu sắc Pastel độc đáo lấy cảm hứng từ tựa game Animal Crossing.', 
     'Một trong những phiên bản đẹp nhất của dòng Switch với mặt lưng in họa tiết chìm, cặp Joy-Con màu xanh và lục nhạt cùng Dock sạc màu trắng in hình các nhân vật Nook Inc. Đây là món đồ không thể thiếu cho các tín đồ sưu tầm.', 
     'Màn hình: 6.2 inch LCD, Bộ nhớ: 32GB, Pin: 4310 mAh (Bản nâng cấp V2).', 
-    7590000, 
-    8590000, 
-    'https://bizweb.dktcdn.net/100/088/342/products/3a4ccf1ab2321de3d47ad8e1fe1921ad.jpg?v=1584256452237', 
+    12239791, 
+    12979056,  
+    'https://images-na.ssl-images-amazon.com/images/I/61mp8du3B3L.jpg', 
     NOW(), 
     '4310 mAh', -- energy
     '4.5 - 9 Hours', -- useTime
@@ -444,20 +1045,30 @@ VALUES
     'Nintendo Switch Online, Motion Control, Amiibo', 
     'USB-C, HDMI 2.0 (Dock), WiFi, Bluetooth 4.1', 
     'Bảo hành 12 tháng, Tặng kèm dán cường lực và thẻ giảm giá mua game'
-), 
-=========================================================
+);
 
--- 33. Nintendo NES Classic Edition
+INSERT INTO gallary (product_id, img) VALUES
+(36, 'https://images-na.ssl-images-amazon.com/images/I/51Pwi8IuerL.jpg'),
+(36, 'https://images-na.ssl-images-amazon.com/images/I/51YCX9d03pL.jpghttps://www.droidshop.vn/wp-content/uploads/2024/01/s5-saps5-slim-standard-247x300.jpg'),
+(36, 'https://images-na.ssl-images-amazon.com/images/I/51+8WcQbg0L.jpg'),
+(36, 'https://images-na.ssl-images-amazon.com/images/I/51ON5O2XIVL.jpg'),
+(36, 'https://images-na.ssl-images-amazon.com/images/I/513ceArNGAL.jpg');
+
+
+
+-- 37. Nintendo Super NES Classic Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     1, -- categories_id: Home Console
     3, -- brand_id: Nintendo
-    'Nintendo NES Classic Edition', 
+    'Nintendo Super NES Classic Edition', 
     'Cỗ máy 8-bit huyền thoại trở lại dưới dạng mini với 30 trò chơi cài sẵn.', 
     'Nintendo Entertainment System (NES) Classic Edition mang phong cách hoài cổ đặc trưng của những năm 80. Chỉ cần cắm và chạy để thưởng thức các siêu phẩm như Super Mario Bros, The Legend of Zelda và Donkey Kong trên màn hình HD sắc nét.', 
     'CPU: Allwinner R16, RAM: 256MB, Màn hình hỗ trợ: 720p qua HDMI.', 
-    1790000, 
-    2190000, 
-    'https://m.media-amazon.com/images/I/61zSsTAtFfL._SL1000_.jpg', 
+    7517658, 
+    7717658, 
+    'https://images-na.ssl-images-amazon.com/images/I/41s70Zpc+vL.jpg', 
     NOW(), 
     'USB Powered', -- energy
     'Instant Play', -- useTime
@@ -470,22 +1081,70 @@ VALUES
     'Bảo hành 6 tháng, Tặng kèm tay cầm NES thứ hai cho chơi đối kháng'
 );
 
-(2, 3, 'Nintendo Switch Lite Coral', 'Máy cầm tay thuần túy màu San Hô.', 'Nhẹ nhàng, thời trang, chuyên dụng cho di động.', '32GB Storage', 3900000, 4500000, 'https://shoptrongnghia.com/wp-content/uploads/2020/08/switchhong.jpg', NOW(), 3570, 7, 275, 1, 'switch-lite-coral', 0, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(37, 'https://images-na.ssl-images-amazon.com/images/I/41s70Zpc+vL.jpg'),
+(37, 'https://images-na.ssl-images-amazon.com/images/I/61iUHN17CLL.jpg'),
+(37, 'https://images-na.ssl-images-amazon.com/images/I/61mui-TEpcL.jpg'),
+(37, 'https://images-na.ssl-images-amazon.com/images/I/61oBmW-eseL.jpg'),
+(37, 'https://images-na.ssl-images-amazon.com/images/I/61tEsZmZxjL.jpg');
 
-(3, 3, 'Nintendo Switch Pro Controller', 'Tay cầm không dây cao cấp.', 'Mang lại trải nghiệm chơi game chuyên nghiệp trên Switch.', 'HD Rumble, NFC Amiibo', 1550000, 1750000, 'https://www.droidshop.vn/wp-content/uploads/2023/04/Tay-cam-Nintendo-Switch-Pro-Controller.jpg', NOW(), 1300, 40, 246, 1, 'switch-pro-controller', 1, 'Switch/PC', 'Bluetooth', 'Bảo hành 12 tháng');
+
+
+-- 38. Nintendo Switch Lite Coral
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, 'Nintendo Switch Lite Coral', 'Máy cầm tay thuần túy màu San Hô.', 'Nhẹ nhàng, thời trang, chuyên dụng cho di động.', '32GB Storage', 3900000, 4500000, 
+'https://images-na.ssl-images-amazon.com/images/I/51a34cWPBhL.jpg', NOW(), 3570, 7, 275, 1, 'switch-lite-coral', 0, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(38, 'https://images-na.ssl-images-amazon.com/images/I/61YPmmt0oFL.jpg'),
+(38, 'https://images-na.ssl-images-amazon.com/images/I/61x19lioQDL.jpg'),
+(38, 'https://images-na.ssl-images-amazon.com/images/I/61F+OXdBupL.jpg'),
+(38, 'https://images-na.ssl-images-amazon.com/images/I/51a34cWPBhL.jpg');
+
+-- 39. Nintendo Switch Lite - Turquoise
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 3, ' Nintendo Switch Lite - Turquoise', 'Máy cầm tay thuần túy màu San Hô.', 'Nhẹ nhàng, thời trang, chuyên dụng cho di động.', '32GB Storage', 3900000, 4500000, 
+'https://images-na.ssl-images-amazon.com/images/I/61owpat34dL.jpg', NOW(), 3570, 7, 275, 1, 'switch-lite-turquoise', 0, 'Switch Games', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(39, 'https://images-na.ssl-images-amazon.com/images/I/71OzO+jdVnL.jpg'),
+(39, 'https://images-na.ssl-images-amazon.com/images/I/61tDKuK38zL.jpg'),
+(39, 'https://images-na.ssl-images-amazon.com/images/I/61noAVmvRjL.jpg'),
+(39, 'https://images-na.ssl-images-amazon.com/images/I/61JKcgKM0RL.jpg'),
+(39, 'https://images-na.ssl-images-amazon.com/images/I/81cH0W6NHdL.jpg');
+
+
+-- 40. Nintendo Switch Pro Controller
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 3, 'Nintendo Switch Pro Controller', 'Tay cầm không dây cao cấp.', 'Mang lại trải nghiệm chơi game chuyên nghiệp trên Switch.', 'HD Rumble, NFC Amiibo', 1550000, 1750000, 
+'https://images-na.ssl-images-amazon.com/images/I/71F5nnoo8gL.jpg', NOW(), 1300, 40, 246, 1, 'switch-pro-controller', 1, 'Switch/PC', 'Bluetooth', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(40, 'https://images-na.ssl-images-amazon.com/images/I/71INYpPDGzL.jpg'),
+(40, 'https://images-na.ssl-images-amazon.com/images/I/71UcSIWT50L.jpg'),
+(40, 'https://images-na.ssl-images-amazon.com/images/I/61x8GQzWt8L.jpg'),
+(40, 'https://images-na.ssl-images-amazon.com/images/I/61x8GQzWt8L.jpg'),
+(40, 'https://images-na.ssl-images-amazon.com/images/I/51++xMbbUIL.jpg');
+
+
 
 -- 4. VALVE (Brand 4)
--- 34. Valve Steam Deck 64GB (Certified Refurbished)
+-- 41. Valve Steam Deck 64GB (Certified Refurbished)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     4, -- brand_id: Valve
-    'Steam Deck 64GB (Certified Refurbished)', 
+    'Valve Steam Deck 64GB', 
     'Hàng tân trang chính hãng từ Valve với mức giá tối ưu nhất để trải nghiệm game PC cầm tay.', 
     'Steam Deck Refurbished được chính Valve kiểm định và đảm bảo tiêu chuẩn chất lượng như máy mới. Đây là cơ hội tuyệt vời để sở hữu thiết bị chơi game cầm tay mạnh mẽ chạy SteamOS, hỗ trợ chơi mượt mà hàng ngàn tựa game trên thư viện Steam với mức giá cực kỳ tiết kiệm.', 
     'CPU: AMD Zen 2, GPU: 8 RDNA 2 CUs, RAM: 16GB LPDDR5, Bộ nhớ: 64GB eMMC (Có thể nâng cấp SSD).', 
     9990000, 
     10990000, 
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQac29NMQX4uP7h0t8tEtUpM7b2nC0JZ8uIng&s', 
+    'https://www.droidshop.vn/wp-content/uploads/2021/07/Valve-Steam-Deck.jpg', 
     NOW(), 
     '40 Wh', -- energy
     '2 - 8 Hours', -- useTime
@@ -498,99 +1157,107 @@ VALUES
     'Bảo hành 6 tháng, Tặng kèm bao chống sốc và bộ sạc 45W'
 );
 
--- 1. Steam Deck OLED - 512GB (NVMe SSD)
+INSERT INTO gallary (product_id, img) VALUES
+(41, 'https://www.droidshop.vn/wp-content/uploads/2021/07/Valve-Steam-Deck-1.jpg'),
+(41, 'https://npcshop.vn/media/product/5947-m--y-ch--i-game-c---m-tay-steam-deck-64gb---valve--5-.jpg'),
+(41, 'https://npcshop.vn/media/product/5947-m--y-ch--i-game-c---m-tay-steam-deck-64gb---valve--3-.jpg');
+
+
+-- 42. Steam Deck OLED White Limited Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
-    2, -- categories_id: Handheld Gaming
-    4, -- brand_id: Valve
-    'Steam Deck OLED - 512GB', 
-    'Phiên bản nâng cấp màn hình OLED 90Hz sống động và thời lượng pin vượt trội.', 
-    'Steam Deck OLED mang đến trải nghiệm hình ảnh tuyệt đỉnh với màu đen sâu tuyệt đối và hỗ trợ HDR. Với viên pin lớn hơn và tiến trình chip mới, máy hoạt động mát mẻ hơn, cho thời gian chơi game dài hơn so với bản LCD truyền thống.', 
-    'Màn hình: 7.4 inch OLED 90Hz HDR, SSD: 512GB NVMe, Wi-Fi 6E nhanh hơn.', 
-    17990000, 
-    20090000, 
-    'https://haloshop.vn/wp-content/uploads/2025/02/steam-deck-64gb-emmc-00-700x700-1.jpg', 
-    NOW(), 
-    '50 Wh', -- energy: Dung lượng pin nâng cấp của bản OLED
-    '3 - 12 Hours', -- useTime: Tùy theo độ nặng của game
-    '640g', 
-    1, 
-    'steam-deck-oled-512gb', 
-    1, 
-    'SteamOS (Arch-based Linux), Steam Library', 
-    'Wi-Fi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Tặng bao chống sốc chính hãng'
+    2, -- 1
+    4, -- 2
+    'Steam Deck OLED White Limited Edition', -- 3
+    'Phiên bản nâng cấp màn hình OLED 90Hz sống động và thời lượng pin vượt trội.', -- 4
+    'Steam Deck OLED mang đến trải nghiệm hình ảnh tuyệt đỉnh với màu đen sâu tuyệt đối và hỗ trợ HDR. Với viên pin lớn hơn và tiến trình chip mới, máy hoạt động mát mẻ hơn, cho thời gian chơi game dài hơn so với bản LCD truyền thống.', -- 5
+    'Màn hình: 7.4 inch OLED 90Hz HDR, SSD: 512GB NVMe, Wi-Fi 6E nhanh hơn.', -- 6
+    17990000, -- 7
+    20090000, -- 8
+    'https://nghenhinvietnam.vn/uploads/global/quanghuy/2024/11/12/valve/nghenhin_steam-deck-oled-limited-edition-white_1.jpg', -- 9
+    NOW(), -- 10
+    '50 Wh', -- 11
+    '3 - 12 Hours', -- 12
+    640, -- 13
+    1, -- 14
+    'steam-deck-oled-512gb', -- 15
+    1, -- 16
+    'SteamOS (Arch-based Linux), Steam Library', -- 17
+    'Wi-Fi 6E, Bluetooth 5.3', -- 18
+    'Bảo hành 12 tháng, Tặng bao chống sốc chính hãng' -- 19
 );
 
--- 2. Steam Deck OLED White Edition - 1TB (Limited Edition)
+INSERT INTO gallary (product_id, img) VALUES
+(42, 'https://nghenhinvietnam.vn/uploads/global/quanghuy/2024/11/12/valve/nghenhin_steam-deck-oled-limited-edition-white_2.jpg');
+
+-- 43. Steam Deck OLED 512GB (NVME SSD)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
-    2, 4, 
-    'Steam Deck OLED White Edition - 1TB', 
-    'Phiên bản giới hạn Limited Edition màu trắng cực kỳ sang trọng và hiếm có.', 
-    'Steam Deck OLED White Edition không chỉ là một cỗ máy chơi game mạnh mẽ mà còn là một món đồ sưu tầm giá trị. Toàn bộ vỏ máy và phụ kiện đi kèm đều mang tông màu trắng tinh tế, đi kèm với cấu hình cao nhất 1TB SSD và màn hình OLED chống lóa.', 
-    'Phiên bản giới hạn, SSD: 1TB NVMe, Màn hình OLED chống lóa cao cấp.', 
-    18800000, 
-    19000000, 
-    'https://haloshop.vn/wp-content/uploads/2025/02/steam_deck_oled_1tb_white_edition_00-700x700-1.jpg', 
-    NOW(), 
-    '50 Wh', 
-    '3 - 12 Hours', 
-    '640g', 
-    1, 
-    'steam-deck-oled-white-edition', 
-    1, 
-    'Steam Library, SteamOS', 
-    'Wi-Fi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Fullbox phiên bản giới hạn màu trắng'
+    2, -- 1
+    4, -- 2
+    'Steam Deck OLED 512GB (NVME SSD)', -- 3
+    'Phiên bản nâng cấp màn hình OLED 90Hz sống động và thời lượng pin vượt trội.', -- 4
+    'Steam Deck OLED mang đến trải nghiệm hình ảnh tuyệt đỉnh với màu đen sâu tuyệt đối và hỗ trợ HDR. Với viên pin lớn hơn và tiến trình chip mới, máy hoạt động mát mẻ hơn, cho thời gian chơi game dài hơn so với bản LCD truyền thống.', -- 5
+    'Màn hình: 7.4 inch OLED 90Hz HDR, SSD: 512GB NVMe, Wi-Fi 6E nhanh hơn.', -- 6
+    17990000, -- 7
+    20090000, -- 8
+    'https://www.tncstore.vn/media/product/9983-9982-tnc-store-may-choi-game-steam-deck-oled-1tb--1-.jpg', -- 9
+    NOW(), -- 10
+    '50 Wh', -- 11
+    '3 - 12 Hours', -- 12
+    640, -- 13
+    1, -- 14
+    'steam-deck-oled-512gb', -- 15
+    1, -- 16
+    'SteamOS (Arch-based Linux), Steam Library', -- 17
+    'Wi-Fi 6E, Bluetooth 5.3', -- 18
+    'Bảo hành 12 tháng, Tặng bao chống sốc chính hãng' -- 19
 );
 
--- 3. Valve Steam Deck OLED - 1TB (Standard Black)
-(
-    2, 4, 
-    'Valve Steam Deck OLED - 1TB', 
-    'Dung lượng lưu trữ tối đa cho kho game Steam đồ sộ của bạn.', 
-    'Với dung lượng 1TB NVMe SSD tốc độ cao, bạn có thể cài đặt hàng loạt tựa game AAA mà không lo về bộ nhớ. Màn hình OLED trên bản 1TB được trang bị lớp phủ chống lóa cao cấp (Premium Anti-glare Etched Glass) giúp chơi tốt trong mọi điều kiện ánh sáng.', 
-    'Màn hình: OLED HDR chống lóa, SSD: 1TB NVMe, Pin: 50Wh.', 
-    19490000, 
-    20790000, 
-    'https://bizweb.dktcdn.net/100/476/122/products/316282002-5677069459005263-5496119171875278767-n-1675087036737-1702023014787.jpg?v=1702023019493', 
-    NOW(), 
-    '50 Wh', 
-    '3 - 12 Hours', 
-    '640g', 
-    1, 
-    'steam-deck-oled-1tb', 
-    1, 
-    'SteamOS, Desktop Mode (Linux), Proton Support', 
-    'WiFi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Tặng bao chống sốc bản đặc biệt 1TB'
-),
+INSERT INTO gallary (product_id, img) VALUES 
+(43, 'https://www.tncstore.vn/media/product/9983-9982-tnc-store-may-choi-game-steam-deck-oled-1tb--3-.jpg'),
+(43, 'https://www.tncstore.vn/media/product/9983-78125_may_choi_game_cam_tay_stea.jpg'),
+(43, 'https://www.tncstore.vn/media/product/9983-tnc-store-may-choi-game-steam-deck-oled-512gb--2-.jpg'),
+(43, 'https://www.tncstore.vn/media/product/9983-78124_may_choi_game_cam_tay_stea.jpg'),
+(43, 'https://www.tncstore.vn/media/product/9983-z5255803007923_4e49386f76356e720c9002faf9ad3249.jpg');
+
+
+-- 44. Steam Deck OLED 1TB (NVME SSD)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 4, 'Steam Deck OLED 1TB (NVME SSD)', 'Dung lượng lưu trữ tối đa cho kho game Steam đồ sộ của bạn.', 'Với dung lượng 1TB NVMe SSD tốc độ cao, bạn có thể cài đặt hàng loạt tựa game AAA mà không lo về bộ nhớ. Màn hình OLED trên bản 1TB được trang bị lớp phủ chống lóa cao cấp (Premium Anti-glare Etched Glass) giúp chơi tốt trong mọi điều kiện ánh sáng.', 'Màn hình: OLED HDR chống lóa, SSD: 1TB NVMe, Pin: 50Wh.', 19490000, 20790000, 
+'https://www.tncstore.vn/media/product/250-9982-z5255802999735_c63b82ff9f6a652a8d0f1bce1154ac36.jpg', NOW(), '50 Wh', '3 - 12 Hours', '640g', 1, 'steam-deck-oled-1tb', 1, 'SteamOS, Desktop Mode (Linux), Proton Support', 'WiFi 6E, Bluetooth 5.3', 'Bảo hành 12 tháng, Tặng bao chống sốc bản đặc biệt 1TB');
+
+INSERT INTO gallary (product_id, img) VALUES
+(44, 'https://www.tncstore.vn/media/product/9982-tnc-store-may-choi-game-steam-deck-oled-1tb--4-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/9982-78125_may_choi_game_cam_tay_stea--2-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/9982-tnc-store-may-choi-game-steam-deck-oled-1tb--2-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/9982-tnc-store-may-choi-game-steam-deck-oled-1tb--1-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/9982-tnc-store-may-choi-game-steam-deck-oled-1tb--3-.jpg');
+
+
 
 -- 5. ASUS (Brand 5)
+-- 44. Asus ROG Ally RC71L-NH019W (AMD Ryzen Z1/ 16GB/ 512GB/ 7.0 inch FHD IPS | Win 11/ Trắng)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 5, 'Asus ROG Ally RC71L-NH019W (AMD Ryzen Z1/ 16GB/ 512GB/ 7.0 inch FHD IPS | Win 11/ Trắng)', 'Máy chơi game cầm tay chạy Windows 11 Home với màn hình 7 inch FHD 120Hz sắc nét.', 'ROG Ally (2023) mang đến sự linh hoạt tuyệt đối khi chạy hệ điều hành Windows 11, cho phép bạn chơi game từ mọi nền tảng phổ biến như Steam, Epic, Xbox Game Pass và GOG. Thiết kế gamepad tích hợp giúp trải nghiệm điều khiển tự nhiên và chính xác.', 'CPU: AMD Ryzen™ Z1 Extreme / Z1, Màn hình: 7 inch FHD 120Hz, Hệ điều hành: Windows 11 Home.', 15490000, 16290000, 
+'https://www.tncstore.vn/media/product/250-10060-may-choi-game-asus-rog-ally-rc71l-nh019w--2-.jpg', NOW(), '40 Wh', '2 - 5 Hours', '608g', 1, 'rog-ally-2023', 0, 'Steam, Epic, Xbox Game Pass, GOG', 'Wi-Fi 6E, Bluetooth 5.2', 'Bảo hành chính hãng 24 tháng');
 
--- 1. ROG Ally (2023) RC71L
-(
-    2, -- categories_id: Handheld Gaming
-    5,
-    'ROG Ally (2023) RC71L', 
-    'Máy chơi game cầm tay chạy Windows 11 Home với màn hình 7 inch FHD 120Hz sắc nét.', 
-    'ROG Ally (2023) mang đến sự linh hoạt tuyệt đối khi chạy hệ điều hành Windows 11, cho phép bạn chơi game từ mọi nền tảng phổ biến như Steam, Epic, Xbox Game Pass và GOG. Thiết kế gamepad tích hợp giúp trải nghiệm điều khiển tự nhiên và chính xác.', 
-    'CPU: AMD Ryzen™ Z1 Extreme / Z1, Màn hình: 7 inch FHD 120Hz, Hệ điều hành: Windows 11 Home.', 
-    15490000, 
-    16290000, 
-    'https://laptopworld.vn/media/product/18489_13724_m__y_ch__i_game_asus_rog_ally_2023_1.jpg', 
-    NOW(), 
-    '40 Wh', -- energy: Dung lượng thực tế chuẩn của dòng 2023
-    '2 - 5 Hours', -- useTime
-    '608g', -- weight
-    1, 
-    'rog-ally-2023', 
-    0, 
-    'Steam, Epic, Xbox Game Pass, GOG', 
-    'Wi-Fi 6E, Bluetooth 5.2', 
-    'Bảo hành chính hãng 24 tháng'
-);
+INSERT INTO gallary (product_id, img) VALUES
+(44, 'https://www.tncstore.vn/media/product/10060-may-choi-game-asus-rog-ally-rc71l-nh019w--6-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/10060-may-choi-game-asus-rog-ally-rc71l-nh019w--5-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/10060-may-choi-game-asus-rog-ally-rc71l-nh019w--4-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/10060-may-choi-game-asus-rog-ally-rc71l-nh019w--3-.jpg'),
+(44, 'https://www.tncstore.vn/media/product/10060-may-choi-game-asus-rog-ally-rc71l-nh019w--1-.jpg');
 
--- 2. ROG Xbox Ally X (RC73XA)
+
+
+-- 45. ROG Xbox Ally X (RC73XA)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 
     5,
@@ -600,7 +1267,7 @@ VALUES
     'CPU: AMD Ryzen™ AI Z2 Extreme (8 nhân 16 luồng), GPU: Radeon Graphics tích hợp.', 
     24990000, 
     25790000, 
-    'https://cdn2.cellphones.com.vn/x/media/catalog/product/r/o/rog-xbox-ally-x.jpg', 
+    'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_xbox_ally_x.jpg', 
     NOW(), 
     '80 Wh', -- energy: Nâng cấp pin lớn cho bản X
     '4 - 8 Hours', -- useTime
@@ -613,7 +1280,18 @@ VALUES
     'Tặng kèm 3 tháng Xbox Game Pass Ultimate'
 );
 
--- 3. ROG Xbox Ally (RC73YA)
+INSERT INTO gallary (product_id, img) VALUES
+(45, 'https://vn.store.asus.com/media/wysiwyg/4.Design_1.png'),
+(45, 'https://vn.store.asus.com/media/wysiwyg/5.impulse_trigger_1.png'),
+(45, 'https://vn.store.asus.com/media/wysiwyg/5.impulse_trigger_1.png'),
+(45, 'https://vn.store.asus.com/media/wysiwyg/Scenario_photo_01_1.jpg'),
+(45, 'https://vn.store.asus.com/media/wysiwyg/Scenario_photo_04_1.jpg');
+
+
+
+-- 46. ROG Xbox Ally (RC73YA)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 
     5, 
@@ -623,7 +1301,7 @@ VALUES
     'CPU: AMD Ryzen™ Z1 Series, OS: Windows 11 Home, Thiết kế công thái học tối ưu.', 
     12990000, 
     14990000, 
-    'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/asus_rog_xbox_ally_01_6fe17a60c8.png', 
+    'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_xbox_ally.jpg', 
     NOW(), 
     '40 Wh', -- energy
     '3 - 6 Hours', -- useTime
@@ -636,40 +1314,28 @@ VALUES
     'Bảo hành 24 tháng chính hãng'
 );
 
--- 4. Asus ROG Xbox Ally X – 1 TB (AMD RYZEN Z2 EXTREME)
-(
-    2, 
-    5, 
-    'Asus ROG Xbox Ally X – 1 TB', 
-    'Quái vật Handheld Gaming với bộ nhớ 1TB và chip Ryzen Z2 Extreme đỉnh cao.', 
-    'Sở hữu dung lượng lưu trữ 1TB cực lớn, bản Ally X này cho phép bạn mang theo toàn bộ thư viện game AAA bên mình. Sức mạnh từ chip Z2 Extreme giúp máy vận hành mọi tựa game PC nặng nhất hiện nay một cách trơn tru.', 
-    'CPU: AMD Ryzen™ AI Z2 Extreme, RAM: LPDDR5X, SSD: 1TB NVMe, OS: Windows 11.', 
-    24900000, 
-    25900000, 
-    'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_01_1.png', 
-    NOW(), 
-    '80 Wh', -- energy
-    '4 - 7 Hours', -- useTime
-    '670g', -- weight
-    1, 
-    'rog-xbox-ally-x-1tb', 
-    1, 
-    'Steam, Epic Games, Windows App Store', 
-    'Wi-Fi & Bluetooth', 
-    'Bảo hành chính hãng 2 năm, Tặng túi đựng ROG'
-);
+INSERT INTO gallary (product_id, img) VALUES
+(46, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_01.png'),
+(46, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_02.jpg'),
+(46, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_03.png'),
+(46, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_05.jpg'),
+(46, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_rc73_07.jpg');
 
--- 9. Asus ROG Ally Z1 Extreme 
+
+
+-- 47. ROG Ally AMD Ryzen Z1 Extreme
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     5, -- brand_id: Asus
-    'Asus ROG Ally – 512GB (AMD Ryzen Z1 Extreme)', 
+    'ROG Ally AMD Ryzen Z1 Extreme', 
     'Máy chơi game cầm tay mạnh mẽ nhất từ Asus với chip Z1 Extreme và màn hình 120Hz.', 
     'Asus ROG Ally mang đến sức mạnh đồ họa vượt trội nhờ kiến trúc RDNA 3. Với màn hình Full HD 120Hz hỗ trợ FreeSync Premium, mọi chuyển động trong game đều trở nên mượt mà, không giật xé hình. Hệ thống tản nhiệt Zero Gravity giúp máy hoạt động mát mẻ và yên tĩnh ở mọi tư thế cầm.', 
     'CPU: AMD Ryzen Z1 Extreme (8 nhân/16 luồng), GPU: 12 RDNA 3 CUs, RAM: 16GB LPDDR5, SSD: 512GB NVMe.', 
     12990000, 
     17990000, 
-    'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/a/s/asus_rog_ally_-11.png', 
+    'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_ally_thumbnaill_estore.png', 
     NOW(), 
     '40 Wh', -- energy: Dung lượng pin thực tế của máy
     '2 - 5 Hours', -- useTime: Thời gian sử dụng thực tế tùy tác vụ
@@ -682,88 +1348,28 @@ VALUES
     'Bảo hành 24 tháng chính hãng Asus, Tặng bao chống sốc ROG Ally'
 );
 
--- 10. Asus ROG Ally X 2024 (Phiên bản cao cấp nhất của dòng ROG Ally với cấu hình mạnh mẽ, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(
-    2,
-    5, 
-    'ASUS ROG Ally X (2024)', 
-    'Phiên bản nâng cấp toàn diện với dung lượng Pin gấp đôi và RAM 24GB cực khủng.', 
-    'ROG Ally X là máy chơi game cầm tay chạy Windows mạnh mẽ nhất hiện nay. Máy được trang bị <b>Cảm biến Hall Effect</b> chống drift, hệ thống tản nhiệt cải tiến và thiết kế công thái học mới giúp cầm nắm chắc chắn hơn trong những trận game kéo dài.', 
-    'CPU: AMD Ryzen Z1 Extreme, RAM: 24GB LPDDR5X, SSD: 1TB NVMe M.2 2280, Màn hình: 7 inch FHD 120Hz.', 
-    19990000, 
-    20990000, 
-    'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_551_8_.png', 
-    NOW(), 
-    '80 Wh', -- energy: Điểm nâng cấp lớn nhất (gấp đôi bản cũ)
-    '3 - 8 Hours', -- useTime: Thời lượng pin thực tế đã cải thiện rất nhiều
-    '678g', -- weight: Nặng hơn bản cũ một chút do pin lớn hơn
-    1, 
-    'asus-rog-ally-x-2024', 
-    1, -- Sản phẩm thuộc phân khúc cao cấp nhất (Premium)
-    'Windows 11, Armoury Crate SE, Dolby Atmos', 
-    '2x USB-C (Thunderbolt 4 support), Wi-Fi 6E, Bluetooth 5.2', 
-    'Bảo hành chính hãng 24 tháng, Tặng kèm túi chống sốc ROG cao cấp'
-),
+INSERT INTO gallary (product_id, img) VALUES
+(47, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_ally_ex_feature_1.jpg'),
+(47, 'https://vn.store.asus.com/may-choi-game-cam-tay-rog-ally-gaming-handheld-rc71l-nh001w-amd-ryzen-z1-extreme.html'),
+(47, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/b/o/box.jpg'),
+(47, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_nr2301_02_copy.png'),
+(47, 'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog_ally_ex_feature_7.jpg');
 
--- 11. ASUS ROG Ally White (Phiên bản màu trắng tinh tế, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(
-    2, -- categories_id: Handheld Gaming
-    5, -- brand_id: Asus
-    'ASUS ROG Ally White', 
-    'Máy chơi game cầm tay chạy Windows 11 mạnh mẽ với màn hình 120Hz sắc nét.', 
-    'ASUS ROG Ally mang cả thư viện game PC khổng lồ vào lòng bàn tay bạn. Với hệ điều hành Windows 11 bản quyền, bạn có thể chơi mọi tựa game từ Steam, Epic, Game Pass... Màn hình 120Hz cùng công nghệ FreeSync Premium giúp trải nghiệm mượt mà, không xé hình.', 
-    'CPU: AMD Ryzen Z1 Series, RAM: 16GB LPDDR5, SSD: 512GB NVMe, Màn hình: 7 inch FHD 120Hz 500 nits.', 
-    13990000, 
-    14990000, 
-    'https://product.hstatic.net/1000288298/product/may-choi-game-asus-rog-ally-1_125baf73b5504f00b47cf6c7c6b5a9ba.png', 
-    NOW(), 
-    '40 Wh', -- energy: Dung lượng pin tiêu chuẩn của bản đời đầu
-    '1.5 - 5 Hours', -- useTime: Thời lượng pin thực tế tùy tác vụ
-    '608g', -- weight: Trọng lượng rất nhẹ, thoải mái khi cầm lâu
-    1, 
-    'asus-rog-ally-white', 
-    0, 
-    'Windows 11, Armoury Crate SE, Xbox Game Pass 3 tháng', 
-    'USB-C (ROG XG Mobile), Wi-Fi 6E, Bluetooth 5.2', 
-    'Bảo hành 12 tháng chính hãng, Tặng kèm đế dựng máy'
-),
-
--- 35. ASUS TUF Gaming Handheld (Concept Edition) 
-(
-    2, -- categories_id: Handheld Gaming
-    5, -- brand_id: Asus
-    'ASUS TUF Gaming Handheld', 
-    'Dòng máy cầm tay chuyên game với thiết kế siêu bền chuẩn quân đội và tản nhiệt tối ưu.', 
-    'Kế thừa tinh thần của dòng TUF, mẫu Handheld này tập trung vào độ bền bỉ và khả năng hoạt động ổn định ở cường độ cao. Với lớp vỏ gia cố chắc chắn và hệ thống quạt tản nhiệt kép lớn, máy đảm bảo hiệu năng tối đa cho chip Ryzen Z1 khi chiến các tựa game AAA trong thời gian dài.', 
-    'CPU: AMD Ryzen Z1, GPU: RDNA 3 Graphics, RAM: 16GB LPDDR5, Màn hình: 7 inch FHD 120Hz.', 
-    15990000, 
-    16990000, 
-    'https://vn.store.asus.com/media/catalog/product/cache/74e490e088db727ef90851ac50e1fa20/r/o/rog-ally-x.jpg', 
-    NOW(), 
-    '50 Wh', -- energy: Cấu hình pin cao hơn bản Ally White
-    '3 - 7 Hours', -- useTime
-    '700g', -- weight: Hơi nặng hơn một chút do thiết kế vỏ bền bỉ
-    1, 
-    'asus-tuf-gaming-handheld', 
-    0, 
-    'Windows 11, Military-grade Durability, Armoury Crate', 
-    'USB-C, Wi-Fi 6E, Bluetooth 5.2', 
-    'Bảo hành 12 tháng, Tặng bộ phụ kiện bảo vệ TUF chuyên dụng'
-);
 
 -- 6. MSI (Brand 6)
-
--- 1. Máy chơi game MSI Claw A1M
+-- 48. MSI Claw A1M
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     6, -- brand_id: MSI
-    'Máy chơi game MSI Claw A1M', 
+    'MSI Claw A1M', 
     'Chiếc PC Gaming Handheld đầu tiên từ MSI với sức mạnh chip Intel Core Ultra.', 
     'MSI Claw A1M đánh dấu sự gia nhập của MSI vào thị trường máy cầm tay. Máy sở hữu thiết kế công thái học vượt trội, tản nhiệt Cooler Boost HyperFlow độc quyền và chip Intel Core Ultra mang lại khả năng xử lý đồ họa mượt mà cùng công nghệ xeSS hiện đại.', 
     'CPU: Intel Core Ultra 5/7, GPU: Intel Arc Graphics, Màn hình: 7 inch FHD 120Hz.', 
     13990000, 
     19990000, 
-    'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-1.jpg', 
+    'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-2-638687323732429218-750x500.jpg', 
     NOW(), 
     '53 Wh', -- energy: Dung lượng pin thực tế
     '2 - 5 Hours', 
@@ -774,18 +1380,31 @@ VALUES
     'Game PC (Steam, Epic, Xbox Game Pass) trên Windows 11', 
     'Wi-Fi 7, Bluetooth 5.4, Thunderbolt 4', 
     'Bảo hành 24 tháng chính hãng MSI'
-),
+);
 
--- 2. MSI Claw A8 BZ2EM-025PL (Bản AMD Z2 Extreme)
+INSERT INTO gallary (product_id, img) VALUES
+(48, 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-3-638687323739507556-750x500.jpg'),
+(48, 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-4-638687323745910902-750x500.jpg'),
+(48, 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-5-638687323752857349-750x500.jpg'),
+(48, 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-6-638687323761478441-750x500.jpg'),
+(48, 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/12918/329815/msi-claw-a1m-049vn-core-ultra-7-den-2-638687323732429218-750x500.jpg');
+
+
+
+-- 49. MSI Claw A8 BZ2EM-025PL White
+                                         
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+
 (
     2, 6, 
-    'MSI Claw A8 BZ2EM-025PL', 
+    'MSI Claw A8 BZ2EM-025PL White', 
     'Sức mạnh từ AMD Ryzen Z2 Extreme cùng màn hình 8 inch Full HD+ sắc nét.', 
     'Phiên bản MSI Claw A8 mang đến bước nhảy vọt về hiệu năng với chip Z2 Extreme và RAM 24GB. Màn hình được nâng cấp lên 8 inch cho không gian trải nghiệm rộng lớn hơn, phù hợp cho các game thủ muốn chiến game AAA ở mức thiết lập cao.', 
     'CPU: AMD Ryzen™ Z2 Extreme, RAM: 24GB LPDDR5X, SSD: 1TB, Màn hình: 8 inch 120Hz.', 
     24590000, 
     25990000, 
-    'https://techbox.com.gr/images/ab__webp/thumbnails/570/570/detailed/11627/msi-claw-a8-bz2em-025pl-portable-game-console-20-3-cm-8-1-tb-touchscreen-wi-fi-white-11746257_jpg.webp', 
+    'https://aio.lv/img/cache/product/11558180/66715234_large.webp', 
     NOW(), 
     '80 Wh', -- energy: Nâng cấp pin lớn
     '4 - 7 Hours', 
@@ -796,18 +1415,28 @@ VALUES
     'Steam, Epic, Xbox Game Pass, GOG', 
     'Wi-Fi 7, Bluetooth 5.4', 
     'Bảo hành 24 tháng chính hãng MSI'
-),
+);
 
--- 3. MSI Claw 8 AI+ A2VM-037PL
+INSERT INTO gallary (product_id, img) VALUES
+(49, 'https://aio.lv/img/cache/product/11558180/66715235_large.webp'),
+(49, 'https://aio.lv/img/cache/product/11558180/66715237_large.webp'),
+(49, 'https://aio.lv/img/cache/product/11558180/66715238_large.webp'),
+(49, 'https://aio.lv/img/cache/product/11558180/66715239_large.webp');
+
+
+
+-- 50. MSI Claw 8 AI+ A2VM-007NL
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 6, 
-    'MSI Claw 8 AI+ A2VM-037PL', 
+    'MSI Claw 8 AI+ A2VM-007NL', 
     'Handheld AI thế hệ mới với chip Intel Core Ultra 258V và đồ họa Intel Arc.', 
     'MSI Claw 8 AI+ là thiết bị cầm tay tiên phong tích hợp xử lý AI chuyên sâu. Với vi xử lý Intel Core Ultra 7 258V (Lunar Lake), máy không chỉ mạnh mẽ trong việc chơi game mà còn tối ưu hóa tài nguyên thông minh, mang lại thời lượng pin ấn tượng và hiệu suất đồ họa đột phá.', 
     'CPU: Intel Core Ultra 7 258V, GPU: Intel Arc thế hệ mới, RAM: 32GB, SSD: 1TB.', 
     26900000, 
     27290000, 
-    'https://techbox.com.gr/images/ab__webp/thumbnails/570/570/detailed/11431/msi-claw-8-ai-a2vm-037pl-portable-game-console-20-3-cm-8-1-tb-touchscreen-wi-fi-beige-11550743_jpg.webp', 
+    'https://aio.lv/img/cache/product/11467634/66107367_large.webp', 
     NOW(), 
     '82 Wh', -- energy: Dung lượng pin cao nhất dòng Claw
     '5 - 8 Hours', 
@@ -818,85 +1447,18 @@ VALUES
     'Game PC AAA, AI Applications, Windows 11', 
     'Wi-Fi 7, Bluetooth 5.4, Dual Thunderbolt 4', 
     'Bảo hành 24 tháng chính hãng MSI, Tặng kèm túi đựng cao cấp'
-),
-
--- 12. MSI Claw A1M Ultra 7 (Máy chơi game cầm tay đầu tiên trang bị chip Intel Core Ultra 7 mạnh mẽ, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(
-    2, -- categories_id: Handheld Gaming
-    6, -- brand_id: MSI
-    'MSI Claw A1M Ultra 7', 
-    'Máy chơi game cầm tay đầu tiên trang bị chip Intel Core Ultra 7 mạnh mẽ.', 
-    'MSI Claw mang đến làn gió mới với vi xử lý Intel Core Ultra tích hợp công nghệ AI. Máy sở hữu hệ thống tản nhiệt Cooler Boost HyperFlow độc quyền và cần Analog/Trigger trang bị <b>Cảm biến Hall Effect</b> giúp loại bỏ hoàn toàn hiện tượng trôi cần, mang lại độ chính xác tuyệt đối.', 
-    'CPU: Intel Core Ultra 7 155H, GPU: Intel Arc Graphics, RAM: 16GB LPDDR5, SSD: 512GB NVMe, Màn hình: 7 inch FHD 120Hz.', 
-    18990000, 
-    19990000, 
-    'https://cdn.tgdd.vn/Products/Images/12918/329815/may-choi-game-cam-tay-msi-claw-a1m-049vn-core-ultra-7-155h-16gb-512gb-120hz-win11-12-600x600.jpg', 
-    NOW(), 
-    '53 Wh', -- energy: Dung lượng pin thực tế
-    '2 - 7 Hours', -- useTime: Thời lượng pin tùy tác vụ
-    '675g', -- weight: Trọng lượng thực tế của máy
-    1, 
-    'msi-claw-ultra-7', 
-    0, 
-    'Intel XeSS, MSI Center M, Windows 11', 
-    'Thunderbolt 4, Wi-Fi 7, Bluetooth 5.4, MicroSD Card Reader', 
-    'Bảo hành chính hãng 24 tháng, Tặng kèm túi đựng máy chính hãng MSI'
-),
-
--- 13. MSI Claw A1M Ultra 5 (Phiên bản cân bằng giữa hiệu suất và giá thành với vi xử lý Intel Core Ultra 5, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(
-    2, -- categories_id: Handheld Gaming
-    6, -- brand_id: MSI
-    'MSI Claw A1M Ultra 5', 
-    'Phiên bản cân bằng giữa hiệu suất và giá thành với vi xử lý Intel Core Ultra 5.', 
-    'MSI Claw Ultra 5 sở hữu thiết kế công thái học vượt trội, mang lại sự thoải mái tối đa cho game thủ. Dù là phiên bản rút gọn, máy vẫn được trang bị đầy đủ <b>Cảm biến Hall Effect</b> cho cả cần Analog và Trigger, cùng hệ thống tản nhiệt HyperFlow giúp duy trì hiệu năng ổn định.', 
-    'CPU: Intel Core Ultra 5 135H, GPU: Intel Arc Graphics, RAM: 16GB LPDDR5, SSD: 512GB NVMe, Màn hình: 7 inch FHD 120Hz.', 
-    15990000, 
-    16990000, 
-    'https://m.media-amazon.com/images/I/71788CmL7GL.jpg', 
-    NOW(), 
-    '53 Wh', -- energy: Dung lượng pin giống bản Ultra 7
-    '2 - 7 Hours', -- useTime
-    '675g', -- weight
-    1, 
-    'msi-claw-ultra-5', 
-    0, 
-    'Intel XeSS, MSI Center M, Windows 11', 
-    'Thunderbolt 4, Wi-Fi 7, Bluetooth 5.4, MicroSD Card Reader', 
-    'Bảo hành chính hãng 24 tháng, Miễn phí vận chuyển toàn quốc'
-),
-
--- 14. MSI Claw A1M (Phiên bản tiêu chuẩn với vi xử lý Intel Core Ultra 7, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(2, 6, 'MSI Claw A1M', 'Handheld đầu tiên của MSI.', 'Chip Intel Core Ultra 7.', 'Intel Core Ultra 7', 13990000, 19990000, 'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-3.jpg', NOW(), 3000, 4, 675, 1, 'msi-claw', 0, 'Windows 11', 'WiFi 7', 'Bảo hành 12 tháng'),
--- MSI Claw A8 Z2 Extreme
-(41, 2, 6, 'MSI Claw A8 Z2 Extreme', 'Sức mạnh từ AMD Z2.', 'Màn hình 8 inch 120Hz, RAM 24GB.', 'Z2 Extreme, 24GB RAM', 24590000, 25990000, 'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-3.jpg', NOW(), 3000, 5, 765, 1, 'msi-claw-a8', 0, 'Windows 11', 'WiFi 7', 'Bảo hành 12 tháng'),
--- 36. MSI Claw Lite
-(
-    2, -- categories_id: Handheld Gaming
-    6, -- brand_id: MSI
-    'MSI Claw Lite', 
-    'Phiên bản tối ưu trọng lượng, giá dễ tiếp cận với hiệu năng chip Intel Core Ultra 5.', 
-    'MSI Claw Lite mang đến sự cân bằng hoàn hảo cho nhu cầu chơi game phổ thông trên Windows. Thiết kế nhẹ hơn giúp cầm nắm thoải mái trong thời gian dài, đi kèm hệ thống tản nhiệt HyperFlow tiên tiến.', 
-    'CPU: Intel Core Ultra 5, GPU: Intel Arc Graphics, RAM: 16GB, Màn hình: 7 inch 120Hz.', 
-    13990000, 
-    14990000, 
-    'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-1-678x800.jpg', 
-    NOW(), 
-    '53 Wh', -- energy: Dung lượng pin ổn định
-    '3 - 6 Hours', -- useTime
-    '650g', -- weight: Nhẹ hơn bản tiêu chuẩn
-    1, 
-    'msi-claw-lite', 
-    0, 
-    'Windows 11, MSI Center M, AI Engine', 
-    'USB-C, WiFi 7, Bluetooth 5.4', 
-    'Bảo hành 12 tháng chính hãng MSI'
 );
 
+INSERT INTO gallary (product_id, img) VALUES
+(50, 'https://aio.lv/img/cache/product/11467634/66107368_large.webp'),
+(50, 'https://aio.lv/img/cache/product/11467634/66107372_large.webp'),
+(50, 'https://aio.lv/img/cache/product/11467634/66107370_large.webp');
 
 
 -- 7. LENOVO (Brand 7)
--- 15. Lenovo Legion Go 
+-- 51. Lenovo Legion Go  
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     7, -- brand_id: Lenovo
@@ -906,7 +1468,7 @@ VALUES
     'CPU: AMD Ryzen Z1 Extreme, RAM: 16GB LPDDR5X, SSD: 512GB NVMe, Màn hình: 8.8 inch QHD+ (2560 x 1600) 144Hz.', 
     17990000, 
     18990000, 
-    'https://www.droidshop.vn/wp-content/uploads/2023/11/May-choi-game-Lenovo-Legion-Go-8.8-AMD-Ryzen-Z1-Extreme-16GB-512GB-2.jpg', 
+    'https://aio.lv/img/cache/product/10758171/65612332_large.webp', 
     NOW(), 
     '49.2 Wh', -- energy: Dung lượng pin thực tế
     '2 - 6 Hours', -- useTime: Tùy theo độ phân giải màn hình bạn thiết lập
@@ -917,9 +1479,19 @@ VALUES
     'Legion Space, FPS Mode, Detachable Controllers', 
     '2x USB-C (USB4), Wi-Fi 6E, Bluetooth 5.2, MicroSD Slot', 
     'Bảo hành 12 tháng, Tặng kèm túi đựng máy cao cấp và đế dựng FPS Mode'
-),
+);
 
--- 37. Lenovo Legion Play
+INSERT INTO gallary (product_id, img) VALUES
+(51, 'https://aio.lv/img/cache/product/10758171/65612334_large.webp'),
+(51, 'https://aio.lv/img/cache/product/10758171/65612335_large.webp'),
+(51, 'https://aio.lv/img/cache/product/10758171/65612337_large.webp'),
+(51, 'https://aio.lv/img/cache/product/10758171/65612338_large.webp'),
+(51, 'https://aio.lv/img/cache/product/10758171/65612342_large.webp');
+
+
+-- 52. Lenovo Legion Play
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     7, -- brand_id: Lenovo
@@ -929,7 +1501,7 @@ VALUES
     'CPU: Snapdragon 720G, RAM: 4GB, Màn hình: 7 inch FHD HDR10.', 
     8990000, 
     9990000, 
-    'https://i.ytimg.com/vi/Gx3mROmcYNk/maxresdefault.jpg', 
+    'https://i.ytimg.com/vi/djOWeEFRJ6w/maxresdefault.jpg', 
     NOW(), 
     '7000 mAh', -- energy: Pin dung lượng lớn cho Android
     '7 - 10 Hours', -- useTime
@@ -942,41 +1514,45 @@ VALUES
     'Bảo hành 6 tháng, Miễn phí giao hàng toàn quốc'
 );
 
--- 8. AYANEO (Brand 8)
+INSERT INTO gallary (product_id, img) VALUES
+(52, 'https://liliputing.com/wp-content/uploads/2023/01/lgeion-play_01.jpg'),
+(52, 'https://liliputing.com/wp-content/uploads/2021/10/lenovo-legion-play_02-400x166.jpg'),
+(52, 'https://liliputing.com/wp-content/uploads/2021/10/lenovo-legion-play_03-400x165.jpg'),
+(52, 'https://liliputing.com/wp-content/uploads/2021/10/lenovo-legion-play_01-400x231.jpg');
 
--- 1. AYANEO 2
-(
-    2, -- categories_id: Handheld Gaming
-    8, -- brand_id: Ayaneo
-    'AYANEO 2', 
+
+-- 8. AYANEO (Brand 8)
+-- 53. AYANEO 2
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES (
+    2, 8, 'AYANEO 2', 
     'Máy chơi game cầm tay Windows với thiết kế màn hình vô cực viền siêu mỏng.', 
     'AYANEO 2 là chiếc Handheld PC đầu tiên của hãng trang bị chip AMD Ryzen 7 6800U. Điểm nhấn lớn nhất là mặt trước phủ kính hoàn toàn với thiết kế không viền, mang lại trải nghiệm thị giác đỉnh cao cùng cần Analog Hall Effect chống trôi.', 
     'CPU: AMD Ryzen 7 6800U, GPU: Radeon 680M, RAM: 16GB, Màn hình: 7 inch 1200P.', 
-    12000000, 
-    13290000, 
+    12000000, 13290000, 
     'https://weirdstore.vn/wp-content/uploads/2024/03/AYANEOAIR_20_cfc73e29-919e-4371-9dbe-9f5696e8e9af-1536x1536.webp', 
-    NOW(), 
-    '13000 mAh', -- energy
-    '3 - 5 Hours', -- useTime
-    '680g', -- weight
-    1, 
-    'ayaneo-2-6800u', 
-    1, 
-    'Steam, Epic Games, Xbox Game Pass PC, GOG', 
-    'WiFi 6, Bluetooth 5.2', 
-    'Bảo hành 12 tháng, Tặng kèm bao chống sốc'
+    NOW(), '13000 mAh', '3 - 5 Hours', '680g', 1, 'ayaneo-2-6800u', 1, 
+    'Steam, Epic Games, Xbox Game Pass PC, GOG', 'WiFi 6, Bluetooth 5.2', 'Bảo hành 12 tháng, Tặng kèm bao chống sốc'
 );
 
--- 2. AYANEO 2S – Order
+INSERT INTO gallary (product_id, img) VALUES
+(53, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230110_090710-Copy-1-1400x631.jpg'),
+(53, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230110_091002-Copy-1-1400x631.jpg'),
+(53, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230110_091006-Copy-1-1400x631.jpg'),
+(53, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230110_085931-Copy-1-1400x631.jpg');
+
+-- 54. Ayaneo Air
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 8, 
-    'AYANEO 2S – Order', 
+    'Ayaneo Air', 
     'Bản nâng cấp phần cứng mạnh mẽ với chip Ryzen 7000 series.', 
     'Kế thừa thiết kế cao cấp từ AYANEO 2, phiên bản 2S được nâng cấp sức mạnh CPU đáng kể và tối ưu hệ thống tản nhiệt mới. Máy đáp ứng tốt các tựa game AAA nặng nhất hiện nay trên nền tảng Windows 11.', 
     'CPU: AMD Ryzen 7 7840U, GPU: Radeon 780M, RAM: 16GB/32GB.', 
     19900000, 
     20100000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/03/n-3.png', 
+    'https://weirdstore.vn/wp-content/uploads/2024/03/csm_Untitled_1_f1e5aafca1.jpg', 
     NOW(), 
     '13000 mAh', 
     '4 - 6 Hours', 
@@ -989,16 +1565,26 @@ VALUES
     'Hàng Order - Bảo hành 12 tháng chính hãng'
 );
 
--- 3. AYANEO 3 (AI370)
+INSERT INTO gallary (product_id, img) VALUES
+(54, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20220821_080911947-Copy-1067x800.jpg'),
+(54, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20220821_080918479-Copy-1067x800.jpg'),
+(54, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20220821_082628202-Copy-1067x800.jpg'),
+(54, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20220821_082647212-Copy-1067x800.jpg'),
+(54, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20220821_080820852-Copy-1067x800.jpg');
+
+
+-- 55. AYANEO 3 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 8, 
-    'AYANEO 3 32Gb – 1Tb chip AI370', 
+    'AYANEO 3 32GB', 
     'Siêu phẩm Handheld thế hệ mới với chip AI370 cực khủng.', 
     'AYANEO 3 được đánh giá là một trong những thiết bị cầm tay mạnh nhất thế giới hiện nay. Với chip xử lý tích hợp AI thế hệ mới, máy không chỉ chiến game AAA mượt mà còn hỗ trợ các tác vụ xử lý thông minh, màn hình OLED rực rỡ.', 
     'CPU: AMD Ryzen AI 9 HX 370, RAM: 32GB, SSD: 1TB, Màn hình OLED.', 
     32000000, 
     33090000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/11/Untitled-1.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/61L01B8iRzL.jpg', 
     NOW(), 
     '13000 mAh', 
     '4 - 6 Hours', 
@@ -1011,7 +1597,17 @@ VALUES
     'Bảo hành 12 tháng, Tặng bộ quà tặng cao cấp'
 );
 
--- 4. AYANEO Geek
+INSERT INTO gallary (product_id, img) VALUES
+(55, 'https://images-na.ssl-images-amazon.com/images/I/515G-HvHBwL.jpg'),
+(55, 'https://images-na.ssl-images-amazon.com/images/I/515G-HvHBwL.jpg'),
+(55, 'https://images-na.ssl-images-amazon.com/images/I/71i2BEyfQML.jpg'),
+(55, 'https://images-na.ssl-images-amazon.com/images/I/714r+jrKO-L.jpg'),
+(55, 'https://images-na.ssl-images-amazon.com/images/I/61bqBofi+ZL.jpg');
+
+
+-- 56. AYANEO Geek
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 8, 
     'AYANEO Geek', 
@@ -1033,7 +1629,18 @@ VALUES
     'Bảo hành 12 tháng'
 );
 
--- 5. Ayaneo Pocket Micro
+INSERT INTO gallary (product_id, img) VALUES
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_163449-Copy-1-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_163501-Copy-1-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_163549-Copy-1-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_163620-Copy-1-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_164517-Copy-1-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230404_163436-Copy-1-1067x800.jpg');
+
+
+-- 57. Ayaneo Pocket Micro
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 8, 
     'Ayaneo Pocket Micro', 
@@ -1042,7 +1649,7 @@ VALUES
     'Hệ điều hành: Android 13, Thiết kế vỏ kim loại CNC, Kích thước bỏ túi.', 
     7690000, 
     7800000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/09/AYANEO-POCKET-MICRO-SOUL-RED-DONE-01.png', 
+    'https://images-na.ssl-images-amazon.com/images/I/41dr4pNnthL.jpg', 
     NOW(), 
     '2600 mAh', 
     '4 - 6 Hours', 
@@ -1055,7 +1662,17 @@ VALUES
     'Bảo hành 12 tháng'
 );
 
--- 6. Ayaneo Pocket DS
+INSERT INTO gallary (product_id, img) VALUES
+(57, 'https://images-na.ssl-images-amazon.com/images/I/51Z2E54dgUL.jpg'),
+(57, 'https://images-na.ssl-images-amazon.com/images/I/515H+l7AxvL.jpg'),
+(57, 'https://images-na.ssl-images-amazon.com/images/I/716j4KdJgEL.jpg'),
+(57, 'https://images-na.ssl-images-amazon.com/images/I/515taJPwZzL.jpg'),
+(57, 'https://images-na.ssl-images-amazon.com/images/I/515taJPwZzL.jpg');
+
+
+-- 58. Ayaneo Pocket DS
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 8, 
     'Ayaneo Pocket DS', 
@@ -1075,32 +1692,19 @@ VALUES
     'Retro Emulation (DS/3DS, PSP, PS2...)', 
     'WiFi & Bluetooth', 
     'Bảo hành 12 tháng, Tặng thẻ nhớ full game'
-),
+);
 
--- 16. AYANEO Geek 1S (Máy chơi game cầm tay mạnh nhất hiện nay với chip AMD AI370 và RAM 32GB, thiết kế tối ưu cho game thủ và nhiều tính năng độc quyền.)
-(
-    2, -- categories_id: Handheld Gaming
-    8, -- brand_id: Ayaneo
-    'AYANEO Geek 1S', 
-    'Máy chơi game cầm tay cao cấp với chip Ryzen 7 7840U và thiết kế không viền màn hình.', 
-    'AYANEO Geek 1S mang đến trải nghiệm chơi game PC mượt mà với con chip 7840U mạnh mẽ. Máy được trang bị hệ thống điều khiển <b>Cảm biến Hall Effect</b> toàn diện (cả cần Analog và Trigger) giúp chống trôi cần tuyệt đối và cho độ phản hồi cực kỳ chính xác.', 
-    'CPU: AMD Ryzen 7 7840U, RAM: 16GB/32GB LPDDR5X, SSD: 512GB/2TB NVMe, Màn hình: 7 inch Slim Bezel.', 
-    18990000, 
-    19990000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/03/n-2.png', 
-    NOW(), 
-    '50.25 Wh', -- energy: Dung lượng pin thực tế
-    '2 - 6 Hours', -- useTime
-    '640g', -- weight
-    1, 
-    'ayaneo-geek-1s', 
-    0, 
-    'AYASpace 2, Hall Effect Sensor, Fingerprint Unlock', 
-    '3x USB-C (USB4 support), Wi-Fi 6E, Bluetooth 5.2', 
-    'Bảo hành 12 tháng, Tặng kèm bộ phụ kiện sạc nhanh và cáp USB-C'
-),
+INSERT INTO gallary (product_id, img) VALUES
+(58, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20250927_091024482-Copy.jpg'),
+(58, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20250927_091029325-Copy.jpg'),
+(58, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20250927_091035400-Copy.jpg'),
+(58, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20250927_091104159-Copy-1067x800.jpg'),
+(58, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20250927_0912204502-Copy-1067x800.jpg');
 
--- 17. AYANEO Slide
+
+-- 59. AYANEO Slide
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     8, -- brand_id: Ayaneo
@@ -1121,44 +1725,29 @@ VALUES
     'AYASpace 2, Hall Effect Sensor, Sliding Keyboard', 
     '2x USB4 (Full speed), Wi-Fi 6E, Bluetooth 5.2', 
     'Bảo hành 12 tháng, Tặng kèm túi chống sốc và bộ sạc nhanh PD'
-),
-
--- 38. AYANEO Air
-(
-    2, -- categories_id: Handheld Gaming
-    8, -- brand_id: Ayaneo
-    'AYANEO Air', 
-    'Thiết kế siêu mỏng nhẹ với màn hình OLED rực rỡ và chip Ryzen 5 mạnh mẽ.', 
-    'AYANEO Air tái định nghĩa máy chơi game cầm tay với trọng lượng chưa tới 400g. Màn hình OLED mang lại màu sắc tuyệt đẹp, đi kèm cần Analog Hall Effect chống trôi cần tuyệt đối.', 
-    'CPU: AMD Ryzen 5 5560U, Màn hình: 5.5 inch OLED FHD, RAM: 16GB, SSD: 512GB.', 
-    15990000, 
-    16990000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/03/csm_Untitled_1_f1e5aafca1.jpg', 
-    NOW(), 
-    '7350 mAh', -- energy
-    '2 - 5 Hours', -- useTime
-    '398g', -- weight: Siêu nhẹ
-    1, 
-    'ayaneo-air-oled', 
-    1, 
-    'OLED Screen, Hall Effect Sensor, Fingerprint Unlock', 
-    'USB-C, WiFi 6, Bluetooth 5.2', 
-    'Bảo hành 12 tháng, Tặng kèm túi đựng máy chính hãng'
 );
 
--- 9. GPD (Brand 9)
+INSERT INTO gallary (product_id, img) VALUES
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231222_160836354-Copy-1067x800.jpg'),
+(56, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231222_161132961-Copy-1067x800.jpg'),
+(59, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231222_160912808-Copy-1067x800.jpg'),
+(59, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231222_160845650-Copy-1067x800.jpg'),
+(59, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231222_160954650-Copy.jpg');
 
--- 1. GPD WIN 5 (AI Max 385/AI Max Plus 395)
+-- 9. GPD (Brand 9)
+-- 60. GPD Win 5 32Gb – 2Tb
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     9, -- brand_id: GPD
-    'GPD WIN 5 (AI Max 385/AI Max Plus 395)', 
+    'GPD Win 5 32Gb - 2Tb', 
     'Siêu phẩm Handheld PC cao cấp nhất 2025 với sức mạnh từ chip AMD Ryzen AI Max.', 
     'GPD WIN 5 thiết lập tiêu chuẩn mới cho máy chơi game cầm tay với vi xử lý Ryzen AI Max thế hệ mới nhất. Máy không chỉ tối ưu cho các tựa game AAA nặng nhất mà còn tích hợp nhân xử lý AI chuyên dụng, giúp tăng cường hiệu suất đồ họa và thời lượng pin thông minh.', 
     'CPU: AMD Ryzen AI Max 385 / AI Max Plus 395, RAM: LPDDR5x, SSD: NVMe Gen4.', 
     45980000, 
     50900000, 
-    'https://pcngon.vn/wp-content/uploads/2025/11/May-tinh-cam-tay-GPD-WIN-5-Al-Max-385-AI-Max-Plus-395.jpg', 
+    'https://weirdstore.vn/wp-content/uploads/2025/08/1_l-2.jpg', 
     NOW(), 
     '60 Wh', -- energy: Đã cập nhật dung lượng pin thực tế cho dòng PC cao cấp
     '3 - 6 Hours', -- useTime
@@ -1169,18 +1758,27 @@ VALUES
     'Steam, Epic, Xbox Game Pass, AI Tools', 
     'WiFi 7, Bluetooth 5.4, Oculink', 
     'Bảo hành 12 tháng, Tặng kèm Dock sạc chuyên dụng'
-),
+);
 
--- 2. GPD Win 4 (Phiên bản tiêu chuẩn)
+INSERT INTO gallary (product_id, img) VALUES
+(60, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20251005_1709138782-Copy-1067x800.jpg'),
+(60, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20251005_1709241392-Copy-1067x800.jpg'),
+(60, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20251005_1709268492-Copy-1067x800.jpg'),
+(60, 'https://weirdstore.vn/wp-content/uploads/2025/08/IMG_20251005_1709553182-Copy-1067x800.jpg');
+
+
+-- 61. GPD Win 4 2025 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
  (
     2, 9, 
-    'GPD Win 4', 
+    'GPD Win 4 2025', 
     'Thiết kế bàn phím trượt độc đáo, hiệu năng PC mạnh mẽ trong lòng bàn tay.', 
-    'GPD Win 4 nổi bật với thiết kế trượt màn hình để lộ bàn phím vật lý bên dưới, lấy cảm hứng từ dòng Sony VAIO P huyền thoại. Đây là thiết bị hoàn hảo cho những ai cần sự kết hợp giữa máy chơi game cầm tay và khả năng nhập liệu nhanh của một chiếc mini laptop.', 
+    'GPD Win 4 2025 nổi bật với thiết kế trượt màn hình để lộ bàn phím vật lý bên dưới, lấy cảm hứng từ dòng Sony VAIO P huyền thoại. Đây là thiết bị hoàn hảo cho những ai cần sự kết hợp giữa máy chơi game cầm tay và khả năng nhập liệu nhanh của một chiếc mini laptop.', 
     'CPU: AMD Ryzen 6800U, RAM: 16GB, Thiết kế bàn phím trượt vật lý.', 
     11000000, 
     12290000, 
-    'https://weirdstore.vn/wp-content/uploads/2024/03/n-2.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/71Km1NhXr4L.jpg', 
     NOW(), 
     '45.62 Wh', 
     '3 - 6 Hours', 
@@ -1191,9 +1789,19 @@ VALUES
     'Game PC AAA, Steam, Epic, Emulation', 
     'WiFi 6, Bluetooth 5.2, USB4', 
     'Bảo hành 12 tháng'
-),
+);
 
--- 3. GPD Win 4 8840U (Bản nâng cấp hiệu năng)
+INSERT INTO gallary (product_id, img) VALUES
+(61, 'https://images-na.ssl-images-amazon.com/images/I/61PX0vqKzPL.jpg'),
+(61, 'https://images-na.ssl-images-amazon.com/images/I/61QtmqAf-tL.jpg'),
+(61, 'https://images-na.ssl-images-amazon.com/images/I/51-Vzaj2UDL.jpg'),
+(61, 'https://images-na.ssl-images-amazon.com/images/I/61Ykkg6QymL.jpg'),
+(61, 'https://images-na.ssl-images-amazon.com/images/I/61Lj3tGWtBL.jpg');
+
+
+-- 62. GPD Win 4 8840U (Bản nâng cấp hiệu năng)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 9, 
     'GPD Win 4 8840U', 
@@ -1213,32 +1821,51 @@ VALUES
     'Game PC AAA, Steam, Epic, Windows 11', 
     'WiFi 6E, Bluetooth 5.2, Oculink Port', 
     'Bảo hành 12 tháng chính hãng'
-),
+);
 
--- 18. GPD Win Max 2 2023 (Phiên bản nâng cấp mạnh mẽ với chip Ryzen 7 7840U, thiết kế dạng vỏ sò và nhiều tính năng độc quyền.)
+INSERT INTO gallary (product_id, img) VALUES
+(62, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230226_101554-Copy.jpg'),
+(62, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230226_101543-Copy.jpg'),
+(62, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230226_101920-Copy-1-1067x800.jpg'),
+(62, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230226_101840-Copy-1-1067x800.jpg'),
+(62, 'https://weirdstore.vn/wp-content/uploads/2024/03/20230226_101814-Copy-1-1067x800.jpg');
+
+
+-- 63. GPD Win Max 2 2025 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     9, -- brand_id: GPD
-    'GPD Win Max 2 2023 (Ryzen 7 7840U)', 
+    'GPD Win Max 2 2025', 
     'Sự kết hợp hoàn hảo giữa Laptop làm việc và máy chơi game cầm tay màn hình 10.1 inch.', 
-    'GPD Win Max 2 2023 là thiết bị gaming cầm tay mạnh mẽ nhất với thiết kế dạng vỏ sò (Clamshell). Máy sở hữu bàn phím QWERTY đầy đủ, Touchpad và cụm phím chơi game có nắp che tinh tế. Trang bị <b>Cảm biến Hall Effect</b> cho cả cần Analog và Trigger, đảm bảo độ bền và chính xác tuyệt đối.', 
+    'GPD Win Max 2 2025 là thiết bị gaming cầm tay mạnh mẽ nhất với thiết kế dạng vỏ sò (Clamshell). Máy sở hữu bàn phím QWERTY đầy đủ, Touchpad và cụm phím chơi game có nắp che tinh tế. Trang bị <b>Cảm biến Hall Effect</b> cho cả cần Analog và Trigger, đảm bảo độ bền và chính xác tuyệt đối.', 
     'CPU: AMD Ryzen 7 7840U, RAM: 32GB LPDDR5X, SSD: 1TB NVMe, Màn hình: 10.1 inch 2.5K Touch, hỗ trợ Bút Stylus.', 
     22990000, 
     23990000, 
-    'https://product.hstatic.net/1000203080/product/gpd-win-max-2-1_e92487e58b4d485580a445bab6cf85e6_master.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/51prI6qAGAL.jpg', 
     NOW(), 
     '67 Wh', -- energy: Viên pin cực lớn cho một thiết bị handheld
     '3 - 8 Hours', -- useTime: Thời lượng sử dụng ấn tượng nhờ pin lớn
     '1005g', -- weight: Trọng lượng thực tế khoảng hơn 1kg
     1, 
-    'gpd-win-max-2-2023', 
+    'gpd-win-max-2-2025', 
     1, -- Để là 1 vì đây là thiết kế độc bản và giá trị cao
     'Built-in Keyboard, Oculink Port (eGPU), Fingerprint Unlock', 
     'Oculink (SFF-8612), USB4, HDMI 2.1, SD & MicroSD Slot', 
     'Bảo hành 12 tháng, Tặng kèm túi chống sốc và bộ sạc nhanh 100W PD'
-),
+);
 
--- 19. GPD Win 2 (Phiên bản huyền thoại với thiết kế vỏ sò siêu nhỏ gọn, hiệu năng đủ chơi game PC nhẹ và giả lập các hệ máy cổ điển.)
+INSERT INTO gallary (product_id, img) VALUES
+(63, 'https://images-na.ssl-images-amazon.com/images/I/51prI6qAGAL.jpg'),
+(63, 'https://images-na.ssl-images-amazon.com/images/I/51iQn7xVfuL.jpg'),
+(63, 'https://images-na.ssl-images-amazon.com/images/I/41McEj0E5JL.jpg'),
+(63, 'https://images-na.ssl-images-amazon.com/images/I/51EiahnUQQL.jpg');
+
+
+-- 64. GPD Win Max 2 8840U
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     9, -- brand_id: GPD
@@ -1246,9 +1873,9 @@ VALUES
     'Máy chơi game PC bỏ túi huyền thoại với thiết kế vỏ sò siêu nhỏ gọn.', 
     'GPD Win 2 là biểu tượng của dòng máy tính chơi game cầm tay có thể bỏ gọn vào túi quần. Thiết kế nắp gập bảo vệ màn hình tuyệt đối, tích hợp bàn phím QWERTY và các phím điều khiển chơi game chuyên dụng. Phù hợp để trải nghiệm các tựa game Indie, Esport nhẹ và giả lập các hệ máy cổ điển.', 
     'CPU: Intel Core m3-8100Y, RAM: 8GB LPDDR3, SSD: 256GB M.2, Màn hình: 6 inch HD Touch.', 
-    8990000, 
-    9990000, 
-    'https://product.hstatic.net/1000203080/product/mua-may-choi-game-cam-tay-gpd-win-2-gia-re.jpg', 
+    27000000, 
+    27900000, 
+    'https://weirdstore.vn/wp-content/uploads/2024/03/n-1.jpg', 
     NOW(), 
     '9800 mAh', -- energy: Tổng dung lượng 2 viên pin 4900mAh
     '3 - 6 Hours', -- useTime: Thời lượng sử dụng thực tế
@@ -1259,17 +1886,31 @@ VALUES
     'Full QWERTY Keyboard, Pocket Size, Windows Support', 
     '1x USB-C, 1x USB-A 3.0, Micro HDMI, Wi-Fi 5, Bluetooth 4.2', 
     'Bảo hành 6 tháng, Tặng bao chống sốc và thẻ giảm giá phụ kiện'
-),
+);
 
--- 20. GPD Win 4 8840U (Phiên bản mới nhất với chip AMD Ryzen 7 8840U mạnh mẽ, thiết kế nhỏ gọn và nhiều tính năng độc quyền.)
-(2, 9, 'GPD Win 4 8840U', 'Chip AMD Ryzen 7 8840U.', 'Form dáng nhỏ gọn với bàn phím trượt.', 'AMD 8840U', 20500000, 20900000, 'https://pcngon.vn/wp-content/uploads/2024/04/May-choi-game-cam-tay-GPD-WIN-4-2024-Ram-32GB-SSD-2TB-9.jpg', NOW(), 3000, 6, 598, 1, 'gpd-win-4-8840u', 0, 'Windows 11', 'WiFi & BT', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(64, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20240503_161116208-1067x800.jpg'),
+(64, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20240503_161058679-1067x800.jpg'),
+(64, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20240503_160738392-1067x800.jpg'),
+(64, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20240503_160524719-1067x800.jpg');
 
--- 21. GPD Win Mini 2025 (Phiên bản siêu nhỏ gọn với thiết kế nắp gập bỏ túi, sức mạnh Ryzen 8000 và nhiều tính năng độc quyền.)
-(2, 9, 'GPD Win Mini 2025', 'Handheld PC siêu nhỏ gọn.', 'Thiết kế nắp gập bỏ túi, sức mạnh Ryzen 8000.', 'Ryzen 7 8840U', 18500000, 19900000, 'https://weirdstore.vn/wp-content/uploads/2024/03/n-1.jpg', NOW(), 4500, 5, 520, 1, 'gpd-win-mini', 1, 'Windows 11', 'WiFi 6E', 'Bảo hành 12 tháng');
 
-(2, 9, 'GPD Win Mini 2025', 'Handheld PC siêu nhỏ gọn.', 'Thiết kế nắp gập bỏ túi, sức mạnh Ryzen 8000.', 'Ryzen 7 8840U', 18500000, 19900000, 'https://weirdstore.vn/wp-content/uploads/2024/03/n-1.jpg', NOW(), 4500, 5, 520, 1, 'gpd-win-mini', 1, 'Windows 11', 'WiFi 6E', 'Bảo hành 12 tháng');
- 
--- 39. GPD XP Plus
+-- 65. GPD Win Mini 2025 32Gb-2Tb
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 9, 'GPD Win Mini 2025 32Gb-2Tb', 'Handheld PC siêu nhỏ gọn.', 'Thiết kế nắp gập bỏ túi, sức mạnh Ryzen 8000.', 'Ryzen 7 8840U', 18500000, 19900000, 
+'https://weirdstore.vn/wp-content/uploads/2024/03/n.png', NOW(), 4500, 5, 520, 1, 'gpd-win-mini', 1, 'Windows 11', 'WiFi 6E', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(65, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231130_090531716-Copy-1067x800.jpg'),
+(65, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231130_090523663-Copy-1067x800.jpg'),
+(65, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231130_090709832-Copy-1067x800.jpg'),
+(65, 'https://weirdstore.vn/wp-content/uploads/2024/03/IMG_20231130_090619459-Copy-1067x800.jpg');
+
+
+-- 66. GPD XP Plus
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     9, -- brand_id: GPD
@@ -1279,7 +1920,7 @@ VALUES
     'CPU: MediaTek Dimensity 1200, RAM: 6GB, Màn hình: 6.81 inch, Hỗ trợ SIM 4G.', 
     9990000, 
     10990000, 
-    'https://minhhightech.com/admin/sanpham/GPD-XP-Plus-_28_6107.jpg', 
+    'https://droix.co.uk/wp-content/uploads/2021/10/GPD-XP_PLUS-DONE-LISTING-IMAGE-1.png', 
     NOW(), 
     '7000 mAh', -- energy
     '8 - 12 Hours', -- useTime: Thời lượng pin cực trâu
@@ -1292,21 +1933,65 @@ VALUES
     'Bảo hành 12 tháng, Tặng thẻ nhớ 64GB'
 );
 
- -- 10. Anbernic (Brand 10)
--- 22. Anbernic RG35XX H (Phiên bản nâng cấp với thiết kế ngang hiện đại, cấu hình mạnh mẽ trong thân hình nhỏ gọn, và nhiều tính năng độc quyền.)
-(2, 10, 'Anbernic RG35XX H', 'Thiết kế ngang hiện đại.', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn.', 'H-Series Design', 1450000, 1650000, 'https://images-na.ssl-images-amazon.com/images/I/71VoTjyKBUL.jpg', NOW(), 3300, 6, 180, 1, 'anbernic-rg35xxh', 0, 'Retro Systems', 'WiFi/BT', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(66, 'https://droix.co.uk/wp-content/uploads/2021/10/GPD-XP_PLUS-DONE-LISTING-IMAGE-2.jpg'),
+(66, 'https://droix.co.uk/wp-content/uploads/2021/10/GPD-XP_PLUS-DONE-LISTING-IMAGE-2.jpg'),
+(66, 'https://droix.co.uk/wp-content/uploads/2021/10/GPD-XP_PLUS-DONE-LISTING-IMAGE-4.jpg'),
+(66, 'https://droix.co.uk/wp-content/uploads/2021/10/GPD-XP_PLUS-DONE-LISTING-IMAGE-6.jpg');
 
--- 23. Anbernic RG35XX Plus
+
+-- 10. Anbernic (Brand 10)
+-- 67. Anbernic RG35XX H - 64G Jet
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG35XX H - 64G Jet', 'Thiết kế ngang hiện đại.', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn.', 'H-Series Design', 1450000, 1650000, 
+'https://images-na.ssl-images-amazon.com/images/I/61dpIqib4+L.jpg', NOW(), 3300, 6, 180, 1, 'anbernic-rg35xxh', 0, 'Retro Systems', 'WiFi/BT', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(67, 'https://images-na.ssl-images-amazon.com/images/I/71nFblSamGL.jpg'),
+(67, 'https://images-na.ssl-images-amazon.com/images/I/71f+C5kPeaL.jpg'),
+(67, 'https://images-na.ssl-images-amazon.com/images/I/71zGYlSYcpL.jpg'),
+(67, 'https://images-na.ssl-images-amazon.com/images/I/61p2OvtJ7mL.jpg');
+
+-- 68. Anbernic RG35XX H - 64G Purple
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG35XX H - 64G Purple', 'Thiết kế ngang hiện đại.', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn.', 'H-Series Design', 1450000, 1650000, 
+'https://images-na.ssl-images-amazon.com/images/I/71mb2vcdyPL.jpg', NOW(), 3300, 6, 180, 1, 'anbernic-rg35xxh', 0, 'Retro Systems', 'WiFi/BT', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(68, 'https://images-na.ssl-images-amazon.com/images/I/71nFblSamGL.jpg'),
+(68, 'http://images-na.ssl-images-amazon.com/images/I/71VkmB2dEjL.jpg'),
+(68, 'https://images-na.ssl-images-amazon.com/images/I/71f+C5kPeaL.jpg'),
+(68, 'https://images-na.ssl-images-amazon.com/images/I/61WeidpQaUL.jpg'),
+(68, 'https://images-na.ssl-images-amazon.com/images/I/61mbDahGkPL.jpg');
+
+-- 69. Anbernic RG35XX H - 64G White
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG35XX H - 64G White', 'Thiết kế ngang hiện đại.', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn.', 'H-Series Design', 1450000, 1650000, 
+'https://images-na.ssl-images-amazon.com/images/I/614TSfsJX7L.jpg', NOW(), 3300, 6, 180, 1, 'anbernic-rg35xxh', 0, 'Retro Systems', 'WiFi/BT', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(69, 'https://images-na.ssl-images-amazon.com/images/I/71nFblSamGL.jpg'),
+(69, 'http://images-na.ssl-images-amazon.com/images/I/71VkmB2dEjL.jpg'),
+(69, 'https://images-na.ssl-images-amazon.com/images/I/71f+C5kPeaL.jpg'),
+(69, 'https://images-na.ssl-images-amazon.com/images/I/61WeidpQaUL.jpg');
+
+
+-- 70. Anbernic RG35XX Pro Retro - Black
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     10, -- brand_id: Anbernic
-    'Anbernic RG35XX Plus', 
+    'Anbernic RG35XX Pro Retro - Black', 
     'Máy chơi game Retro cầm dọc huyền thoại, hỗ trợ giả lập hơn 30 hệ máy cổ điển.', 
-    'Anbernic RG35XX Plus là phiên bản nâng cấp mạnh mẽ về hiệu năng so với bản tiền nhiệm. Với thiết kế cầm dọc cổ điển mang lại cảm giác hoài niệm, máy cho phép bạn chơi mượt mà các tựa game từ PS1, PSP, NDS đến các hệ máy thùng. Màn hình IPS 3.5 inch sắc nét cùng hệ điều hành Linux tối ưu giúp trải nghiệm chơi game trở nên đơn giản và thú vị hơn bao giờ hết.', 
+    'Anbernic RG35XX Pro Retro - Black là phiên bản nâng cấp mạnh mẽ về hiệu năng so với bản tiền nhiệm. Với thiết kế cầm dọc cổ điển mang lại cảm giác hoài niệm, máy cho phép bạn chơi mượt mà các tựa game từ PS1, PSP, NDS đến các hệ máy thùng. Màn hình IPS 3.5 inch sắc nét cùng hệ điều hành Linux tối ưu giúp trải nghiệm chơi game trở nên đơn giản và thú vị hơn bao giờ hết.', 
     'CPU: Allwinner H700, RAM: 1GB LPDDR4, Màn hình: 3.5 inch IPS (640x480), Hệ điều hành: Linux.', 
     1690000, 
     1990000, 
-    'https://vhost53003.vhostcdn.com/wp-content/uploads/2025/04/RG35XX-Plus-4.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/71Wdl7AtdsL.jpg', 
     NOW(), 
     '3300 mAh', -- energy: Dung lượng pin thực tế
     '6 - 8 Hours', -- useTime: Thời lượng pin cực tốt cho dòng máy Retro
@@ -1317,19 +2002,62 @@ VALUES
     'PSP, PS1, DC, NDS, Arcade, GBA giả lập', 
     'Wi-Fi 5G, Bluetooth 4.2, Mini HDMI output, USB-C', 
     'Bảo hành 6 tháng, Tặng kèm thẻ nhớ 64GB chứa sẵn 5000+ game'
-),
+);
 
--- 24. Anbernic RG Arc-D
+INSERT INTO gallary (product_id, img) VALUES
+(70, 'https://images-na.ssl-images-amazon.com/images/I/71F78aRiXhL.jpg'),
+(70, 'https://images-na.ssl-images-amazon.com/images/I/613F0+fxtlL.jpg'),
+(70, 'https://images-na.ssl-images-amazon.com/images/I/61ZkVVrR8pL.jpg'),
+(70, 'https://images-na.ssl-images-amazon.com/images/I/71IZHWGunpL.jpg'),
+(70, 'https://images-na.ssl-images-amazon.com/images/I/71sRjSWcKyL.jpg');
+
+-- 71. Anbernic RG35XX Pro Retro - Transparent Teal
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     10, -- brand_id: Anbernic
-    'Anbernic RG Arc-D', 
+    'Anbernic RG35XX Pro Retro - Transparent Teal', 
+    'Máy chơi game Retro cầm dọc huyền thoại, hỗ trợ giả lập hơn 30 hệ máy cổ điển.', 
+    'Anbernic RG35XX Pro Retro - Transparent Teal là phiên bản nâng cấp mạnh mẽ về hiệu năng so với bản tiền nhiệm. Với thiết kế cầm dọc cổ điển mang lại cảm giác hoài niệm, máy cho phép bạn chơi mượt mà các tựa game từ PS1, PSP, NDS đến các hệ máy thùng. Màn hình IPS 3.5 inch sắc nét cùng hệ điều hành Linux tối ưu giúp trải nghiệm chơi game trở nên đơn giản và thú vị hơn bao giờ hết.', 
+    'CPU: Allwinner H700, RAM: 1GB LPDDR4, Màn hình: 3.5 inch IPS (640x480), Hệ điều hành: Linux.', 
+    1690000, 
+    1990000, 
+    'https://images-na.ssl-images-amazon.com/images/I/71uvQNyqJRL.jpg', 
+    NOW(), 
+    '3300 mAh', -- energy: Dung lượng pin thực tế
+    '6 - 8 Hours', -- useTime: Thời lượng pin cực tốt cho dòng máy Retro
+    '186g', -- weight: Rất nhẹ, dễ dàng mang đi khắp nơi
+    1, 
+    'anbernic-rg35xx-plus', 
+    0, 
+    'PSP, PS1, DC, NDS, Arcade, GBA giả lập', 
+    'Wi-Fi 5G, Bluetooth 4.2, Mini HDMI output, USB-C', 
+    'Bảo hành 6 tháng, Tặng kèm thẻ nhớ 64GB chứa sẵn 5000+ game'
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(71, 'https://images-na.ssl-images-amazon.com/images/I/71vK0QhiEbL.jpg'),
+(71, 'https://images-na.ssl-images-amazon.com/images/I/71RVZ6cwFvL.jpg'),
+(71, 'https://images-na.ssl-images-amazon.com/images/I/71ItB1ZwOcL.jpg'),
+(71, 'https://images-na.ssl-images-amazon.com/images/I/71ItB1ZwOcL.jpg'),
+(71, 'https://images-na.ssl-images-amazon.com/images/I/71paiJXVO2L.jpg');
+
+
+
+-- 72. Anbernic RG Arc-D Gray
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(
+    2, -- categories_id: Handheld Gaming
+    10, -- brand_id: Anbernic
+    'Anbernic RG Arc-D Gray', 
     'Máy chơi game Retro thiết kế tay cầm SEGA Saturn với hệ điều hành kép (Android & Linux).', 
     'Anbernic RG Arc mang đến sự hoài niệm tuyệt đối với bố cục 6 nút bấm mặt trước, cực kỳ tối ưu cho các tựa game đối kháng và hệ máy SEGA. Máy sử dụng màn hình IPS 4.0 inch sắc nét, hỗ trợ cảm ứng (trên bản D) và khả năng giả lập mượt mà đến các hệ máy PSP, Dreamcast và Nintendo 64.', 
     'CPU: RK3566 Quad-core, RAM: 2GB LPDDR4, Màn hình: 4.0 inch IPS (640x480), Hệ điều hành: Android 11 & Linux.', 
     2890000, 
     3290000, 
-    'https://anbernic.com/cdn/shop/files/dde48a7a609347cbd042dbfee136f2a.jpg?v=1766487240&width=800', 
+    'https://images-na.ssl-images-amazon.com/images/I/61E8m4Vx8zL.jpg', 
     NOW(), 
     '3500 mAh', -- energy: Dung lượng pin thực tế
     '5 - 6 Hours', -- useTime
@@ -1340,44 +2068,97 @@ VALUES
     'SEGA Saturn, Dreamcast, PSP, PS1, NDS giả lập', 
     'Wi-Fi 5G, Bluetooth 4.2, Mini HDMI, USB-C (OTG)', 
     'Bảo hành 6 tháng, Tặng thẻ nhớ 128GB full game và cường lực'
-),
+);
 
--- 25. Anbernic RG477V
-(2, 10, 'Anbernic RG477V', 'Máy dọc mạnh nhất hiện nay.', 'Cân tốt PS2 và Wii U với thiết kế cổ điển.', 'Android 13, 8GB RAM', 6789000, 6987000, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-5-600x600.jpg', NOW(), 5500, 8, 334, 1, 'anbernic-rg477v', 1, 'Android', 'WiFi & BT', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(72, 'https://images-na.ssl-images-amazon.com/images/I/71ZPO-j67yL.jpg'),
+(72, 'https://images-na.ssl-images-amazon.com/images/I/714MVs8MCvL.jpg'),
+(72, 'https://images-na.ssl-images-amazon.com/images/I/718rvTzX8tL.jpg'),
+(72, 'https://images-na.ssl-images-amazon.com/images/I/71t4Vs21soL.jpg'),
+(72, 'https://images-na.ssl-images-amazon.com/images/I/71zaj8p1PrL.jpg');
 
--- 26. Anbernic RG35XXSP
-(2, 10, 'Anbernic RG35XXSP', 'Thiết kế nắp gập huyền thoại.', 'Tái hiện GBA SP với màn hình IPS 3.5 inch.', 'IPS 3.5 inch', 1800000, 1990000, 'https://herogame.vn/upload/images/img_02_01_2025/may-retro-game-cam-tay-rg35xxsp-nap-gap-nho-gon-hon-10000-games-anbernic-4_801428_67761b70133425.88983002.jpg', NOW(), 3300, 6, 200, 1, 'anbernic-rg35xxsp', 0, 'Retro Systems', 'WiFi', 'Bảo hành 12 tháng'),
 
--- 27. Anbernic RG406V
-(2, 10, 'Anbernic RG406V', 'Máy dọc chuyên game 3D cũ.', 'Sức mạnh vượt trội, màn hình 4 inch sắc nét.', '256GB Storage', 5000000, 6190000, 'https://haloshop.vn/wp-content/uploads/2025/03/anbernic_retro_game_handheld_rg406v_256gb_42-700x700-1.jpg', NOW(), 4500, 8, 260, 1, 'anbernic-rg406', 0, 'Retro systems', 'WiFi', 'Bảo hành 12 tháng'),
+-- 73. Anbernic RG477V - Black
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG477V - Black', 'Máy dọc mạnh nhất hiện nay.', 'Cân tốt PS2 và Wii U với thiết kế cổ điển.', 'Android 13, 8GB RAM', 6789000, 6987000, 
+'https://images-na.ssl-images-amazon.com/images/I/61vu3UMymsL.jpg', NOW(), 5500, 8, 334, 1, 'anbernic-rg477v', 1, 'Android', 'WiFi & BT', 'Bảo hành 12 tháng');
 
--- 28. Anbernic RG353PS
-(2, 10, 'Anbernic RG353PS', 'Thiết kế lấy cảm hứng SNES.', 'Vỏ trong suốt, phím bấm êm ái, chạy Linux.', 'SNES Retro Style', 2200000, 2450000, 'https://haloshop.vn/wp-content/uploads/2025/02/anbernic-retro-game-rg353p-64gb-sd-card-46.jpg', NOW(), 3500, 6, 210, 1, 'anbernic-rg353ps', 0, 'Linux Retro', 'WiFi', 'Bảo hành 12 tháng'),
+INSERT INTO gallary (product_id, img) VALUES
+(73, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-2-300x300.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-4-300x300.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-6.jpg');
 
--- 1. Anbernic RG353P + 64GB Card
-(
-    2, -- categories_id: Handheld Gaming
-    10, -- brand_id: Anbernic
-    'Anbernic RG353P + 64GB Micro SD Card', 
-    'Thiết kế cổ điển lấy cảm hứng từ tay cầm SNES, hỗ trợ hệ điều hành kép Linux và Android.', 
-    'Anbernic RG353P nổi bật với ngoại hình hoài cổ nhưng mang trong mình cấu hình hiện đại. Máy cho phép chuyển đổi linh hoạt giữa Linux (để chơi game ổn định) và Android (để dùng các ứng dụng giải trí), hỗ trợ mượt mà các hệ máy từ NES cho đến PSP, PS1 và N64.', 
-    'Màn hình: 3.5 inch IPS Touch, CPU: RK3566, RAM: 2GB LPDDR4, Dual OS (Android 11 + Linux).', 
-    3850000, 
-    3990000, 
-    'https://haloshop.vn/wp-content/uploads/2025/02/Anbernic-Retro-Game-RG353P-_-64GB-Micro-SD-C.jpg', 
-    NOW(), 
-    '3500 mAh', -- energy
-    '5 - 6 Hours', -- useTime
-    '422g', -- weight
-    1, 
-    'anbernic-rg353p', 
-    0, 
-    'Giả lập NES, SNES, GBA, SEGA, PS1, PSP, N64...', 
-    'WiFi 5G, Bluetooth 4.2, HDMI Output', 
-    'Tặng kèm thẻ nhớ 64GB full game, Cáp sạc, Dán màn hình'
-),
+-- 74. Anbernic RG477V - Gray
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG477V - Gray', 'Máy dọc mạnh nhất hiện nay.', 'Cân tốt PS2 và Wii U với thiết kế cổ điển.', 'Android 13, 8GB RAM', 6789000, 6987000, 
+'https://images-na.ssl-images-amazon.com/images/I/61sCdVsT0SL.jpg', NOW(), 5500, 8, 334, 1, 'anbernic-rg477v', 1, 'Android', 'WiFi & BT', 'Bảo hành 12 tháng');
 
--- 1. Anbernic RG DS
+INSERT INTO gallary (product_id, img) VALUES
+(74, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-3.jpg'),
+(74, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-5.jpg'),
+(74, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-5.jpg'),
+(74, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-1-300x300.jpg');
+
+
+-- 75. Anbernic RG35XXSP 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG35XXSP ', 'Thiết kế nắp gập huyền thoại.', 'Tái hiện GBA SP với màn hình IPS 3.5 inch.', 'IPS 3.5 inch', 1800000, 1990000, 
+'https://file.hstatic.net/200000272737/file/rg35xx-sp-gia-re_grande.jpg', NOW(), 3300, 6, 200, 1, 'anbernic-rg35xxsp', 0, 'Retro Systems', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(75, 'https://file.hstatic.net/200000272737/file/240612_edit-_review_rg35xxsp_3.00_06_04_16.still004_grande.jpg'),
+(75, 'https://file.hstatic.net/200000272737/file/gameboy-sp_grande.jpg'),
+(75, 'https://file.hstatic.net/200000272737/file/rg35xx-sp-topo_grande.jpg'),
+(75, 'https://file.hstatic.net/200000272737/file/240612_edit-_review_rg35xxsp_3.00_01_52_23.still003_grande.jpg');
+
+
+-- 76. Anbernic RG406V - Beige White
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG406V - Beige White', 'Máy dọc chuyên game 3D cũ.', 'Sức mạnh vượt trội, màn hình 4 inch sắc nét.', '256GB Storage', 5000000, 6190000, 
+'https://images-na.ssl-images-amazon.com/images/I/71L85D6EtjL.jpg', NOW(), 4500, 8, 260, 1, 'anbernic-rg406', 0, 'Retro systems', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(76, 'https://images-na.ssl-images-amazon.com/images/I/71RJA40wgSL.jpg'),
+(76, 'https://images-na.ssl-images-amazon.com/images/I/617O2KuOFaL.jpg'),
+(76, 'https://images-na.ssl-images-amazon.com/images/I/81o+z6s1TgL.jpg'),
+(76, 'https://images-na.ssl-images-amazon.com/images/I/81qH5MSFZVL.jpg'),
+(76, 'https://images-na.ssl-images-amazon.com/images/I/71RJA40wgSL.jpg'),
+(76, 'https://images-na.ssl-images-amazon.com/images/I/71lCw5HLVBL.jpg');
+
+-- 77. Anbernic RG406V - Black
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG406V - Black', 'Máy dọc chuyên game 3D cũ.', 'Sức mạnh vượt trội, màn hình 4 inch sắc nét.', '256GB Storage', 5000000, 6190000, 
+'https://images-na.ssl-images-amazon.com/images/I/71387aDX4kL.jpg', NOW(), 4500, 8, 260, 1, 'anbernic-rg406', 0, 'Retro systems', 'WiFi', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(77, 'https://images-na.ssl-images-amazon.com/images/I/71lCw5HLVBL.jpg'),
+(77, 'https://images-na.ssl-images-amazon.com/images/I/71SzCda+V2L.jpg'),
+(77, 'https://images-na.ssl-images-amazon.com/images/I/61xJ6bPYrnL.jpg'),
+(77, 'https://images-na.ssl-images-amazon.com/images/I/81Y2y8hZiCL.jpg'),
+(77, 'https://images-na.ssl-images-amazon.com/images/I/81ntSojVRRL.jpg');
+
+
+-- 71. Anbernic RG353PS 
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 10, 'Anbernic RG353PS', 'Thiết kế lấy cảm hứng SNES.', 'Vỏ trong suốt, phím bấm êm ái, chạy Linux.', 'SNES Retro Style', 2200000, 2450000, 
+'https://images-na.ssl-images-amazon.com/images/I/61p3e9J5PpL.jpg', NOW(), 3500, 6, 210, 1, 'anbernic-rg353ps', 0, 'Linux Retro', 'WiFi', 'Bảo hành 12 tháng');
+ 
+INSERT INTO gallary (product_id, img) VALUES
+(71, 'https://izzygame.com/wp-content/uploads/2023/05/may-choi-game-cam-tay-anbernic-rg353ps-8.jpg'),
+(71, 'https://izzygame.com/wp-content/uploads/2023/05/may-choi-game-cam-tay-anbernic-rg353ps-6.jpg'),
+(71, 'https://izzygame.com/wp-content/uploads/2023/05/may-choi-game-cam-tay-anbernic-rg353ps-2.jpg'),
+(71, 'https://izzygame.com/wp-content/uploads/2023/05/may-choi-game-cam-tay-anbernic-rg353ps-4.jpg'),
+(71, 'https://izzygame.com/wp-content/uploads/2023/05/may-choi-game-cam-tay-anbernic-rg353ps-5.jpg');
+
+-- 72. Anbernic RG DS
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     10, -- brand_id: Anbernic
@@ -1387,7 +2168,7 @@ VALUES
     'Thiết kế Dual-Screen, Chạy Android, Hỗ trợ màn hình cảm ứng dưới.', 
     2990000, 
     3299000, 
-    'https://izzygame.com/wp-content/uploads/2025/12/anbernic-rgds-4.jpg', 
+    'https://izzygame.com/wp-content/uploads/2025/12/anbernic-rgds-3.jpg', 
     NOW(), 
     '4000 mAh', 
     '5 Hours', 
@@ -1400,7 +2181,14 @@ VALUES
     'Bảo hành 6 tháng, Tặng kèm thẻ nhớ'
 );
 
--- 2. Anbernic RG 476H
+INSERT INTO gallary (product_id, img) VALUES
+(72, 'https://izzygame.com/wp-content/uploads/2025/12/anbernic-rgds.jpg'),
+(72, 'https://izzygame.com/wp-content/uploads/2025/12/anbernic-rgds-4.jpg'),
+(72, 'https://izzygame.com/wp-content/uploads/2025/12/anbernic-rgds-2.jpg');
+
+-- 73. Anbernic RG 476H
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 
     10, 
@@ -1424,32 +2212,16 @@ VALUES
 );
 
 
+INSERT INTO gallary (product_id, img) VALUES
+(73, 'https://izzygame.com/wp-content/uploads/2025/09/anbernic-rg476h-120hz-2-1.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2025/09/anbernic-rg476h-120hz-3-1.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2025/09/anbernic-rg476h-120hz-6-1.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2025/09/anbernic-rg476h-120hz-7-1.jpg'),
+(73, 'https://izzygame.com/wp-content/uploads/2025/09/anbernic-rg476h-120hz-8-1.jpg');
 
-
--- 40. Anbernic RG Nano
-(
-    2, -- categories_id: Handheld Gaming
-    10, -- brand_id: Anbernic
-    'Anbernic RG Nano', 
-    'Máy chơi game Retro nhỏ nhất thế giới với vỏ nhôm CNC cao cấp.', 
-    'Kích thước siêu tí hon có thể dùng làm móc khóa nhưng RG Nano vẫn sở hữu vỏ hợp kim bền bỉ và khả năng giả lập mượt mà các hệ máy NES, GBA, PS1. Một món đồ chơi công nghệ đầy cá tính.', 
-    'Màn hình: 1.54 inch IPS, Vỏ: Hợp kim nhôm, Pin: 1050mAh.', 
-    1290000, 
-    1590000, 
-    'https://product.hstatic.net/200000272737/product/rgnano_e499535be7784ae7a9d76aa2d01a3d68_master.png', 
-    NOW(), 
-    '1050 mAh', -- energy
-    '2 - 3 Hours', -- useTime
-    '75g', -- weight: Siêu nhẹ
-    1, 
-    'anbernic-rg-nano', 
-    0, 
-    'Aluminum Shell, Clock function, Music Player', 
-    'USB-C (Sạc và dữ liệu)', 
-    'Tặng kèm dây đeo móc khóa và cáp sạc USB-C'
-);
-
--- 41. Anbernic RG353M
+-- 74. Anbernic RG353M
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     10, -- brand_id: Anbernic
@@ -1459,7 +2231,7 @@ VALUES
     'CPU: RK3566, RAM: 2GB LPDDR4, Màn hình: 3.5 inch IPS Touch, Dual OS.', 
     3990000, 
     4490000, 
-    'https://anbernic.com/cdn/shop/products/RG353M.jpg?v=1746003726&width=2048', 
+    'https://anbernic.com/cdn/shop/products/RG353M.jpg?v=1746003726&width=800', 
     NOW(), 
     '3500 mAh', -- energy
     '5 - 7 Hours', -- useTime
@@ -1472,8 +2244,16 @@ VALUES
     'Bảo hành 6 tháng, Tặng thẻ nhớ 64GB full game'
 );
 
+INSERT INTO gallary (product_id, img) VALUES
+(74, 'https://anbernic.com/cdn/shop/products/bddd794f717f28ede0d9fccf7ad135d.jpg?v=1746003726&width=800'),
+(74, 'https://anbernic.com/cdn/shop/products/23cd5a036af3b02d097308cdd908e19.jpg?v=1746003726&width=800'),
+(74, 'https://anbernic.com/cdn/shop/products/5b61327dc9850c05631a7be60d7558e.jpg?v=1746003726&width=800'),
+(74, 'https://anbernic.com/cdn/shop/products/fee3b4a7fdf674187e502b12c066799.jpg?v=1746003726&width=800');
+
 -- 12. Miyoo (Brand 12)
--- 1. Miyoo Mini Flip
+-- 75. Miyoo Mini Flip
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, -- categories_id: Handheld Gaming
     12, -- brand_id: Miyoo
@@ -1483,7 +2263,7 @@ VALUES
     'Thiết kế gập, Màn hình IPS sắc nét, Hỗ trợ giả lập đa hệ máy.', 
     1490000, 
     1680000, 
-    'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-1-600x600.jpg', 
+    'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-11.jpg', 
     NOW(), 
     '2500 mAh', 
     '4 - 5 Hours', 
@@ -1494,9 +2274,20 @@ VALUES
     'Emulation nhiều hệ Retro (GBA, NES, SNES, PS1...)', 
     'Wi-Fi', 
     'Bảo hành 6 tháng, Tặng thẻ nhớ 64GB'
-),
+);
 
--- 2. Miyoo A30
+INSERT INTO gallary (product_id, img) VALUES
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-1.jpg'),
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-2.jpg'),
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-3.jpg'),
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-4.jpg'),
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-7.jpg'),
+(75, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-10.jpg');
+
+ 
+-- 76. Miyoo A30
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 12, 
     'Miyoo A30', 
@@ -1518,7 +2309,17 @@ VALUES
     'Bảo hành 6 tháng'
 );
 
--- 3. Miyoo Mini Plus (Miyoo Handheld)
+INSERT INTO gallary (product_id, img) VALUES
+(76, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30-2.jpg'),
+(76, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30-3.jpg'),
+(76, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30-4.jpg'),
+(76, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30-6.jpg'),
+(76, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30.jpg');
+
+
+-- 77. Miyoo Mini Plus (Miyoo Handheld)
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     2, 12, 
     'Miyoo Mini Plus (Miyoo Handheld)', 
@@ -1527,7 +2328,7 @@ VALUES
     'OS: Linux (Hỗ trợ OnionOS/DotUI), Màn hình: 3.5 inch IPS, Pin: 3000mAh.', 
     1390000, 
     1480000, 
-    'https://izzygame.com/wp-content/uploads/2023/04/photo_2023-04-29_21-30-49-600x600.jpg', 
+    'https://izzygame.com/wp-content/uploads/2023/04/Miyoo-mini-plus-den.jpg', 
     NOW(), 
     '3000 mAh', 
     '5 - 6 Hours', 
@@ -1538,136 +2339,172 @@ VALUES
     'Hệ Retro (NES → PS1), Hỗ trợ RetroArch', 
     'Wi-Fi', 
     'Bảo hành 6 tháng, Tặng bao chống sốc'
-),
+);
+
+
+INSERT INTO gallary (product_id, img) VALUES
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/photo_2023-04-29_21-30-49.jpg'),
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/photo_2023-04-29_21-30-48.jpg'),
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/photo_2023-04-29_21-30-47.jpg'),
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/photo_2023-04-29_21-30-46.jpg'),
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/May-choi-game-miyoo-mini-plus.jpg'),
+(77, 'https://izzygame.com/wp-content/uploads/2023/04/20230527_152635.jpg');
 
 
 -- 13. Retroid (Brand 13)
--- Retroid Pocket G2
-(2, 13, 'Retroid Pocket G2', 'Phiên bản nâng cấp mạnh mẽ với khả năng giả lập Android 3D mượt mà.', 'Retroid Pocket G2 là mẫu máy cầm tay thuộc dòng Android handheld, được tối ưu để chơi tốt các tựa game Android hiện đại và giả lập các hệ máy cũ với hiệu suất cao.', 'Hệ điều hành Android, Màn hình sắc nét, Hỗ trợ Google Play.', 6790000, 6980000, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-5.jpg', NOW(), '5000 mAh', '6 Hours', '280g', 1, 'retroid-pocket-g2', 0, 'Android games + Emulation', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
+-- 78. Retroid Pocket G2
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 13, 'Retroid Pocket G2', 'Phiên bản nâng cấp mạnh mẽ với khả năng giả lập Android 3D mượt mà.', 'Retroid Pocket G2 là mẫu máy cầm tay thuộc dòng Android handheld, được tối ưu để chơi tốt các tựa game Android hiện đại và giả lập các hệ máy cũ với hiệu suất cao.', 'Hệ điều hành Android, Màn hình sắc nét, Hỗ trợ Google Play.', 6790000, 6980000, 
+'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-5.jpg', NOW(), '5000 mAh', '6 Hours', '280g', 1, 'retroid-pocket-g2', 0, 'Android games + Emulation', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
 
--- Retroid Pocket Mini V2
-(2, 13, 'Retroid Pocket Mini V2', 'Thiết kế tràn viền siêu mỏng, mang lại trải nghiệm thị giác hiện đại.', 'Nâng cấp viền màn hình siêu mỏng giúp tổng thể máy thanh thoát hơn bản V1. Đây là lựa chọn tuyệt vời cho người dùng yêu thích sự nhỏ gọn nhưng vẫn muốn màn hình đẹp.', 'Màn hình tràn viền, Thiết kế công thái học.', 4750000, 4980000, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-1.jpg', NOW(), '4000 mAh', '6 Hours', '215g', 1, 'retroid-pocket-mini-v2', 0, 'Android & Emulator (PS1, N64, PSP/GC...)', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
+INSERT INTO gallary (product_id, img) VALUES
+(78, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2.jpg'),
+(78, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-6.jpg'),
+(78, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-3.jpg'),
+(78, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-2.jpg');
 
--- Retroid Pocket Mini
-(2, 13, 'Retroid Pocket Mini', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn với chip Snapdragon.', 'Pocket Mini sở hữu cấu hình Snapdragon mạnh mẽ nhất trong phân khúc máy nhỏ gọn, phù hợp để mang theo mọi lúc mọi nơi mà không lo về hiệu năng.', 'Chip Snapdragon, Thiết kế nhỏ gọn.', 3990000, 4199000, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-1.jpg', NOW(), '4000 mAh', '6 Hours', '215g', 1, 'retroid-pocket-mini', 0, 'Android & Emulator', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
 
--- Retroid Pocket Flip 2
-(2, 13, 'Retroid Pocket Flip 2', 'Máy handheld Android nắp gập độc đáo với màn hình OLED.', 'Trang bị màn hình OLED cực đẹp với thiết kế Clamshell (nắp gập) bảo vệ màn hình. Viền màn hình mỏng hơn giúp tối ưu không gian hiển thị.', 'Thiết kế nắp gập, Màn hình OLED.', 4590000, 4890000, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-1.jpg', NOW(), '5000 mAh', '7 Hours', '300g', 1, 'retroid-pocket-flip-2', 1, 'Android & Retro systems', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
+-- 79. Retroid Pocket Mini V2
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 13, 'Retroid Pocket Mini V2', 'Thiết kế tràn viền siêu mỏng, mang lại trải nghiệm thị giác hiện đại.', 'Nâng cấp viền màn hình siêu mỏng giúp tổng thể máy thanh thoát hơn bản V1. Đây là lựa chọn tuyệt vời cho người dùng yêu thích sự nhỏ gọn nhưng vẫn muốn màn hình đẹp.', 'Màn hình tràn viền, Thiết kế công thái học.', 4750000, 4980000, 
+'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-1.jpg', NOW(), '4000 mAh', '6 Hours', '215g', 1, 'retroid-pocket-mini-v2', 0, 'Android & Emulator (PS1, N64, PSP/GC...)', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
 
--- Retroid Pocket 2S
-(2, 13, 'Retroid Pocket 2S', 'Bản nâng cấp phím bấm và cần Analog Hall Effect đáng giá.', 'Retroid Pocket 2S cải thiện đáng kể về cảm giác bấm và độ bền nhờ cần Analog chống trôi (Hall Effect), phù hợp cho các tựa game yêu cầu độ chính xác cao.', 'Analog Hall Effect, Cấu hình khỏe tầm trung.', 2450000, 2890000, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-4.jpg', NOW(), '4000 mAh', '6 Hours', '200g', 1, 'retroid-pocket-2s', 0, 'Android & Retro games', 'WiFi & Bluetooth', 'Bảo hành 6 tháng');
+INSERT INTO gallary (product_id, img) VALUES
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-9.jpg'),
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-2.jpg'),
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-3.jpg'),
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-6.jpg'),
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-4.jpg'),
+(79, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-8.jpg');
+
+
+-- 80. Retroid Pocket Mini
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 13, 'Retroid Pocket Mini', 'Cấu hình mạnh mẽ trong thân hình nhỏ gọn với chip Snapdragon.', 'Pocket Mini sở hữu cấu hình Snapdragon mạnh mẽ nhất trong phân khúc máy nhỏ gọn, phù hợp để mang theo mọi lúc mọi nơi mà không lo về hiệu năng.', 'Chip Snapdragon, Thiết kế nhỏ gọn.', 3990000, 4199000, 
+'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-1.jpg', NOW(), '4000 mAh', '6 Hours', '215g', 1, 'retroid-pocket-mini', 0, 'Android & Emulator', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(80, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-2.jpg'),
+(80, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-3.jpg'),
+(80, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865.jpg'),
+(80, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-5.jpg');
+
+
+-- 81. Retroid Pocket Flip 2
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 13, 'Retroid Pocket Flip 2', 'Máy handheld Android nắp gập độc đáo với màn hình OLED.', 'Trang bị màn hình OLED cực đẹp với thiết kế Clamshell (nắp gập) bảo vệ màn hình. Viền màn hình mỏng hơn giúp tối ưu không gian hiển thị.', 'Thiết kế nắp gập, Màn hình OLED.', 4590000, 4890000, 
+'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-1.jpg', NOW(), '5000 mAh', '7 Hours', '300g', 1, 'retroid-pocket-flip-2', 1, 'Android & Retro systems', 'WiFi & Bluetooth', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(81, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-4.jpg'),
+(81, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-10.jpg'),
+(81, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-8.jpg'),
+(81, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-6.jpg'),
+(81, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-5.jpg');
+
+
+-- 82. Retroid Pocket 2S
+INSERT INTO products (
+    categories_id, brand_id, name, short_description, full_description, 
+    information, price, priceOld, image, createdAt, 
+    energy, useTime, weight, active, metatitle, 
+    ispremium, suports, connect, endow
+)
+VALUES (
+    2, -- 1. categories_id
+    13, -- 2. brand_id (Retroid)
+    'Retroid Pocket 2S', -- 3. name
+    'Bản nâng cấp phím bấm và cần Analog Hall Effect đáng giá.', -- 4. short_description
+    'Retroid Pocket 2S cải thiện đáng kể về cảm giác bấm và độ bền nhờ cần Analog chống trôi (Hall Effect), phù hợp cho các tựa game yêu cầu độ chính xác cao.', -- 5. full_description
+    'Analog Hall Effect, Cấu hình khỏe tầm trung.', -- 6. information
+    2450000, -- 7. price
+    2890000, -- 8. priceOld
+    'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-4.jpg', -- 9. image
+    NOW(), -- 10. createdAt
+    '4000 mAh', -- 11. energy
+    '6 Hours', -- 12. useTime
+    '200g', -- 13. weight (Mình giả định trọng lượng thực tế của máy này)
+    1, -- 14. active
+    'retroid-pocket-2s', -- 15. metatitle
+    0, -- 16. ispremium
+    'Android 11, Retroid Launcher', -- 17. suports
+    'Wi-Fi, Bluetooth, HDMI Out', -- 18. connect
+    'Bảo hành 12 tháng' -- 19. endow (Giá trị này chính là nội dung bảo hành bạn cần)
+);
+
+INSERT INTO gallary (product_id, img) VALUES
+(82, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-2.jpg'),
+(82, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-3.jpg'),
+(82, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-5.jpg'),
+(82, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s.jpg'),
+(82, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-8.jpg');
+
 
 -- 14. Flydigi (Brand 14)
-(3, 14, 'Flydigi Apex 4 Elite', 'Tay cầm màn hình LED.', 'Cò nhấn phản hồi lực (Adaptive Trigger) cực đỉnh.', 'Force Feedback', 2550000, 2850000, 'https://shoptaycam.com/wp-content/uploads/2024/07/bandicam-2025-06-21-17-32-42-547.jpg', NOW(), 1500, 30, 300, 1, 'flydigi-apex-4', 1, 'PC/Switch/Android', '2.4G/BT', 'Bảo hành 12 tháng'),
-(3, 14, 'Flydigi Vader 4 Pro', 'Phiên bản cao cấp nhất.', 'Cảm biến Hall Effect, tùy chỉnh lực nhấn.', 'Hall Effect', 1550000, 1850000, 'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-Wireless-Controller.jpg', NOW(), 1000, 20, 250, 1, 'vader-4-pro', 1, 'PC/Switch/Mobile', '2.4G/BT', 'Bảo hành 12 tháng'),
-(3, 14, 'Flydigi Nova 3', 'Thiết kế hiện đại.', 'Joystick độ nhạy cao.', 'Joystick High Precision', 890000, 1100000, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3.jpg', NOW(), 800, 15, 240, 1, 'nova-3', 0, 'PC/Android', 'BT/USB', 'Bảo hành 6 tháng'),
+-- 83. Flydigi Apex 4 Elite
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 14, 'Flydigi Apex 4 Elite', 'Tay cầm màn hình LED.', 'Cò nhấn phản hồi lực (Adaptive Trigger) cực đỉnh.', 'Force Feedback', 2550000, 2850000, 
+'https://thegioigames.vn/wp-content/uploads/2025/05/61rCViwRGL._SL1500_-768x768.jpg', NOW(), 1500, 30, 300, 1, 'flydigi-apex-4', 1, 'PC/Switch/Android', '2.4G/BT', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(83, 'https://thegioigames.vn/wp-content/uploads/2025/05/71BTQ43xseL._SL1500_-768x768.jpg'),
+(83, 'https://thegioigames.vn/wp-content/uploads/2025/05/71qNeC5zHRL._SL1500_-768x768.jpg'),
+(83, 'https://thegioigames.vn/wp-content/uploads/2025/05/71QzVgDm9dL._SL1500_.jpg'),
+(83, 'https://thegioigames.vn/wp-content/uploads/2025/05/71Vp06k8nML._SL1500_.jpg'),
+(83, 'https://thegioigames.vn/wp-content/uploads/2025/05/716ixDM4SRL._SL1500_.jpg');
+
+
+-- 84. Flydigi Vader 4 Pro
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 14, 'Flydigi Vader 4 Pro', 'Phiên bản cao cấp nhất.', 'Cảm biến Hall Effect, tùy chỉnh lực nhấn.', 'Hall Effect', 1550000, 1850000, 
+'https://thegioigames.vn/wp-content/uploads/2025/05/61MAuaVwXL._SL1500_-768x768.jpg', NOW(), 1000, 20, 250, 1, 'vader-4-pro', 1, 'PC/Switch/Mobile', '2.4G/BT', 'Bảo hành 12 tháng');
+
+INSERT INTO gallary (product_id, img) VALUES
+(84, 'https://thegioigames.vn/wp-content/uploads/2025/05/61N4TDejSjL._SL1500_-768x768.jpg'),
+(84, 'https://thegioigames.vn/wp-content/uploads/2025/05/71ldHa8FzL._SL1500_-768x768.jpg'),
+(84, 'https://thegioigames.vn/wp-content/uploads/2025/05/71MHrF3u3EL._SL1500_.jpg'),
+(84, 'https://thegioigames.vn/wp-content/uploads/2025/05/71r48mcq9YL._SL1500_.jpg'),
+(84, 'https://thegioigames.vn/wp-content/uploads/2025/05/81OBvfZyXeL._SL1500_.jpg');
+
+
+-- 85. Flydigi Dune Fox
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 14, 'Flydigi Dune Fox', 'Thiết kế hiện đại.', 'Joystick độ nhạy cao.', 'Joystick High Precision', 419000, 550000, 
+'https://thegioigames.vn/wp-content/uploads/2025/05/61MjZgrzoXL._SL1500_-768x768.jpg', NOW(), 800, 15, 240, 1, 'dune-fox', 0, 'PC/Android', 'BT/USB', 'Bảo hành 6 tháng');
  
+INSERT INTO gallary (product_id, img) VALUES
+(85, 'https://thegioigames.vn/wp-content/uploads/2025/05/Dune-Fox-768x768.png'),
+(85, 'https://thegioigames.vn/wp-content/uploads/2025/05/61n7UCFTjlL._SL1500_-768x768.jpg'),
+(85, 'https://thegioigames.vn/wp-content/uploads/2025/05/61wAFbTE-oL._SL1500_.jpg'),
+(85, 'https://thegioigames.vn/wp-content/uploads/2025/05/61tsU9R8hbL._SL1500_.jpg'),
+(85, 'https://thegioigames.vn/wp-content/uploads/2025/05/71bCFBFTGL._SL1500_.jpg');
+
 
 -- 15. Aokzoe (Brand 15)
-(3, 15, 'Aokzoe A1', 'Tay cầm chơi game đa nền tảng.', 'Thiết kế công thái học, hỗ trợ nhiều hệ máy.', 'Multi-platform', 1200000, 1500000, 'https://shoptaycam.com/wp-content/uploads/2024/08/Aokzoe-A1-Wireless-Controller.jpg', NOW(), 1200, 25, 220, 1, 'aokzoe-a1', 0, 'PC/Switch/Android', '2.4G/BT', 'Bảo hành 12 tháng'),
+-- 86. Aokzoe A1
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 15, 'Aokzoe A1', 'Tay cầm chơi game đa nền tảng.', 'Thiết kế công thái học, hỗ trợ nhiều hệ máy.', 'Multi-platform', 1200000, 1500000, 
+'https://images-na.ssl-images-amazon.com/images/I/61qQkXkKx1L.jpg', NOW(), 1200, 25, 220, 1, 'aokzoe-a1', 0, 'PC/Switch/Android', '2.4G/BT', 'Bảo hành 12 tháng');
 
+INSERT INTO gallary (product_id, img) VALUES
+(86, 'https://images-na.ssl-images-amazon.com/images/I/51PAW-qCi+L.jpg'),
+(86, 'https://images-na.ssl-images-amazon.com/images/I/518C5G8+z6L.jpg'),
+(86, 'https://images-na.ssl-images-amazon.com/images/I/71YtIeg-jhL.jpg'),
+(86, 'https://images-na.ssl-images-amazon.com/images/I/71MIudpYilL.jpg');
 
 
 -- 16. Khác (Brand 16)
--- Steam 
--- 1. Steam Deck OLED - 512GB (NVMe SSD)
+-- 87. Atari Flashback X
 INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
-VALUES (
-    2, -- categories_id: Handheld Gaming
-    4, -- brand_id: Valve
-    'Steam Deck OLED - 512GB', 
-    'Phiên bản nâng cấp màn hình OLED 90Hz sống động và thời lượng pin vượt trội.', 
-    'Steam Deck OLED mang đến trải nghiệm hình ảnh tuyệt đỉnh với màu đen sâu tuyệt đối và hỗ trợ HDR. Với viên pin lớn hơn và tiến trình chip mới, máy hoạt động mát mẻ hơn, cho thời gian chơi game dài hơn so với bản LCD truyền thống.', 
-    'Màn hình: 7.4 inch OLED 90Hz HDR, SSD: 512GB NVMe, Wi-Fi 6E nhanh hơn.', 
-    17990000, 
-    20090000, 
-    'https://haloshop.vn/wp-content/uploads/2025/02/steam-deck-64gb-emmc-00-700x700-1.jpg', 
-    NOW(), 
-    '50 Wh', -- energy: Dung lượng pin nâng cấp của bản OLED
-    '3 - 12 Hours', -- useTime: Tùy theo độ nặng của game
-    '640g', 
-    1, 
-    'steam-deck-oled-512gb', 
-    1, 
-    'SteamOS (Arch-based Linux), Steam Library', 
-    'Wi-Fi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Tặng bao chống sốc chính hãng'
-);
-
--- 2. Steam Deck OLED White Edition - 1TB (Limited Edition)
-INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
-VALUES (
-    2, 4, 
-    'Steam Deck OLED White Edition - 1TB', 
-    'Phiên bản giới hạn Limited Edition màu trắng cực kỳ sang trọng và hiếm có.', 
-    'Steam Deck OLED White Edition không chỉ là một cỗ máy chơi game mạnh mẽ mà còn là một món đồ sưu tầm giá trị. Toàn bộ vỏ máy và phụ kiện đi kèm đều mang tông màu trắng tinh tế, đi kèm với cấu hình cao nhất 1TB SSD và màn hình OLED chống lóa.', 
-    'Phiên bản giới hạn, SSD: 1TB NVMe, Màn hình OLED chống lóa cao cấp.', 
-    18800000, 
-    19000000, 
-    'https://haloshop.vn/wp-content/uploads/2025/02/steam_deck_oled_1tb_white_edition_00-700x700-1.jpg', 
-    NOW(), 
-    '50 Wh', 
-    '3 - 12 Hours', 
-    '640g', 
-    1, 
-    'steam-deck-oled-white-edition', 
-    1, 
-    'Steam Library, SteamOS', 
-    'Wi-Fi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Fullbox phiên bản giới hạn màu trắng'
-);
-
--- 3. Valve Steam Deck OLED - 1TB (Standard Black)
-INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
-VALUES (
-    2, 4, 
-    'Valve Steam Deck OLED - 1TB', 
-    'Dung lượng lưu trữ tối đa cho kho game Steam đồ sộ của bạn.', 
-    'Với dung lượng 1TB NVMe SSD tốc độ cao, bạn có thể cài đặt hàng loạt tựa game AAA mà không lo về bộ nhớ. Màn hình OLED trên bản 1TB được trang bị lớp phủ chống lóa cao cấp (Premium Anti-glare Etched Glass) giúp chơi tốt trong mọi điều kiện ánh sáng.', 
-    'Màn hình: OLED HDR chống lóa, SSD: 1TB NVMe, Pin: 50Wh.', 
-    19490000, 
-    20790000, 
-    'https://bizweb.dktcdn.net/100/476/122/products/316282002-5677069459005263-5496119171875278767-n-1675087036737-1702023014787.jpg?v=1702023019493', 
-    NOW(), 
-    '50 Wh', 
-    '3 - 12 Hours', 
-    '640g', 
-    1, 
-    'steam-deck-oled-1tb', 
-    1, 
-    'SteamOS, Desktop Mode (Linux), Proton Support', 
-    'WiFi 6E, Bluetooth 5.3', 
-    'Bảo hành 12 tháng, Tặng bao chống sốc bản đặc biệt 1TB'
-);
-
-
-
-
-
--- 42. Sega Mega Drive Mini
-(
-    1, -- categories_id: Home Console
-    11, -- brand_id: SEGA
-    'Sega Mega Drive Mini', 
-    'Phiên bản thu nhỏ của hệ máy 16-bit huyền thoại, cài sẵn 42 tựa game.', 
-    'Sống lại kỷ niệm tuổi thơ với Sonic và Contra trên màn hình HD hiện đại. Thiết kế mô phỏng hoàn hảo bản gốc, đi kèm 2 tay cầm cổ điển, cắm là chạy không cần cài đặt.', 
-    'Cổng xuất: HDMI 720p, Game: 42 trò cài sẵn, Nguồn: USB 5V.', 
-    2190000, 
-    2590000, 
-    'https://m.media-amazon.com/images/I/71jz2UF7LsS._AC_UF894,1000_QL80_.jpg', 
-    NOW(), 
-    'USB Power', -- energy
-    'Instant Play', -- useTime
-    '180g', -- weight: Nhỏ gọn
-    1, 
-    'sega-mega-drive-mini', 
-    0, 
-    '42 Pre-loaded Games, Save/Load State', 
-    'HDMI, USB (Power/Controller)', 
-    'Bảo hành 6 tháng, Tặng bộ nguồn 5V chuyên dụng'
-);
-
--- 43. Atari Flashback X
+VALUES
 (
     1, -- categories_id: Home Console
     11, -- brand_id: Atari (Sử dụng ID 11 cho nhóm máy Classic)
@@ -1677,7 +2514,7 @@ VALUES (
     'CPU: ARM Cortex, Game: 110 trò cài sẵn, Cổng xuất: HDMI 720p.', 
     1790000, 
     2190000, 
-    'https://i.ebayimg.com/images/g/x7UAAOSwTI1jmDPa/s-l400.png', 
+    'https://i.ebayimg.com/images/g/x7UAAOSwTI1jmDPa/s-l1600.webp', 
     NOW(), 
     'USB Power', -- energy
     'Instant Play', -- useTime
@@ -1690,7 +2527,14 @@ VALUES (
     'Bảo hành 6 tháng, Tặng kèm 2 tay cầm Joystick nguyên bản'
 );
 
--- 44. Neo Geo Mini International Edition
+INSERT INTO gallary (product_id, img) VALUES
+(87, 'https://i.ebayimg.com/images/g/GdEAAOSwSTpjmWyK/s-l960.webp'),
+(87, 'https://m.media-amazon.com/images/I/51WJQCLznlL._SL1000_.jpg'),
+(87, 'https://m.media-amazon.com/images/I/61mGGlb8SHL._SL1000_.jpg');
+
+-- 88. Neo Geo Mini International Edition
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
 (
     1, -- categories_id: Home Console
     11, -- brand_id: SNK (Neo Geo)
@@ -1700,7 +2544,7 @@ VALUES (
     'Màn hình: 3.5 inch LCD, Game: 40 trò tích hợp, Cổng: HDMI (xuất TV), Jack 3.5mm.', 
     2490000, 
     2990000, 
-    'https://images-na.ssl-images-amazon.com/images/I/71LnMXwSSmL.jpg', 
+    'https://images-na.ssl-images-amazon.com/images/I/61bNh7r-r9L.jpg', 
     NOW(), 
     'USB Power', -- energy
     'Instant Play', -- useTime
@@ -1714,171 +2558,54 @@ VALUES (
 );
 
 
-
-(2, 11, 'Q8 Retro Handheld ', '10.000 trò chơi retro.', 'Màn hình 3.0 inch, nhỏ gọn dễ mang theo.', '10.000+ Games', 550000, 750000, 'https://i.ebayimg.com/images/g/cYwAAOSw-EBmzXja/s-l1200.jpg', NOW(), 1500, 5, 150, 1, 'mini-q8', 0, 'Retro games', 'USB', 'Bảo hành 3 tháng'),
-(2, 11, 'GKD Pixel X2', 'Phong cách Pixel hoài cổ.', 'Tích hợp hơn 8.000 trò chơi cổ điển.', '8.000+ Games', 450000, 600000, 'https://i.ytimg.com/vi/X1OAPuLEnAU/maxresdefault.jpg', NOW(), 1200, 4, 130, 1, 'pixel-x2', 0, 'Retro games', 'USB', 'Bảo hành 3 tháng'),
-
-(3, 15, 'Razer Wolverine V2 Chroma', 'Tay cầm Gaming cơ học RGB.', 'Nút bấm Mecha-Tactile và hệ thống LED Chroma.', '6 Nút đa năng', 3600000, 3990000, 'https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-6.jpg?v=1716652873040', NOW(), 0, 0, 270, 1, 'razer-wolverine-v2', 1, 'Xbox/PC', 'Có dây', 'Bảo hành 24 tháng'),
-(3, 16, 'Acer Nitro NGR300', 'Tay cầm Nitro chuyên game.', 'Thiết kế bền bỉ, độ trễ cực thấp cho game thủ.', 'Dual Vibration', 750000, 950000, 'https://cohotech.vn/wp-content/uploads/2025/04/Acer-Nitro-NGR300-1.jpg', NOW(), 600, 10, 230, 1, 'acer-nitro-ngr300', 0, 'PC/Android', 'USB/BT', 'Bảo hành 6 tháng'),
-(2, 8, 'Ayaneo Pocket Micro', 'Thân máy siêu nhỏ.', 'Vỏ kim loại sang trọng, màn hình sắc nét.', 'Micro Handheld', 12500000, 13500000, 'https://weirdstore.vn/wp-content/uploads/2024/09/AYANEO-POCKET-MICRO-SOUL-RED-DONE-01.png', NOW(), 2600, 4, 220, 1, 'ayaneo-pocket-micro', 0, 'Android', 'WiFi', 'Bảo hành 12 tháng'),
-
+INSERT INTO gallary (product_id, img) VALUES
+(88, 'https://m.media-amazon.com/images/I/41H7Uq4AorL.jpg'),
+(88, 'https://m.media-amazon.com/images/I/61Iv3j3MY5L._SL1500_.jpg'),
+(88, 'https://m.media-amazon.com/images/I/51hQ4f1xFJL._SL1500_.jpg'),
+(88, 'https://m.media-amazon.com/images/I/81JXvSKx89L._SL1500_.jpg'),
+(88, 'https://m.media-amazon.com/images/I/81sQ9E1Zr3L._SL1500_.jpg');
 
 
-
+-- 89. Q8 Retro Handheld
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 11, 'Q8 Retro Handheld ', '10.000 trò chơi retro.', 'Màn hình 3.0 inch, nhỏ gọn dễ mang theo.', '10.000+ Games', 550000, 750000, 
+'https://i.ebayimg.com/images/g/30EAAOSw4B5mzXjQ/s-l1600.webp', NOW(), 1500, 5, 150, 1, 'mini-q8', 0, 'Retro games', 'USB', 'Bảo hành 3 tháng');
 
 INSERT INTO gallary (product_id, img) VALUES
--- 1. PlayStation 5 Slim
-(1, 'https://www.droidshop.vn/wp-content/uploads/2023/11/May-ps5-slim-standard.jpg'),
-(1, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tay-cam-choi-game-ps5-dualsense-1.png'),
+(89, 'https://i.ebayimg.com/images/g/6ZoAAOSwLpZmzXjY/s-l960.webp'),
+(89, 'https://i.ebayimg.com/images/g/cYwAAOSw-EBmzXja/s-l960.webp'),
+(89, 'https://i.ebayimg.com/images/g/clwAAOSwJtVmzXjm/s-l960.webp'),
+(89, 'https://i.ebayimg.com/images/g/QVAAAOSwSz1mzXjo/s-l960.webp'),
+(89, 'https://i.ebayimg.com/images/g/SrMAAOSwredmzXjr/s-l960.webp'),
+(89, 'https://i.ebayimg.com/images/g/OFMAAOSwjeJmzXjV/s-l960.webp');
 
--- 2. PlayStation Portal
-(2, 'https://theonionshop.com/cdn/shop/files/ps-portal-remoteplayer-hero-3.webp?v=1697515705&width=1445'),
-(2, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/may-choi-game-sony-playstation-portal-1.png'),
 
--- 3. Nintendo Switch Pro Controller
-(3, 'https://www.droidshop.vn/wp-content/uploads/2023/04/Tay-cam-Nintendo-Switch-Pro-Controller.jpg'),
-(3, 'https://www.droidshop.vn/wp-content/uploads/2023/04/Tay-cam-Nintendo-Switch-Pro-Controller-1.jpg'),
+-- 90. GKD Pixel X2
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(2, 11, 'GKD Pixel X2', 'Phong cách Pixel hoài cổ.', 'Tích hợp hơn 8.000 trò chơi cổ điển.', '8.000+ Games', 450000, 600000, 
+'https://i.ebayimg.com/images/g/n8kAAeSwQy5o5jWl/s-l1600.webp', NOW(), 1200, 4, 130, 1, 'pixel-x2', 0, 'Retro games', 'USB', 'Bảo hành 3 tháng');
 
--- 4. Xbox Series X
-(4, 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-1.jpg'),
-(4, 'https://nvs.tn-cdn.net/2021/01/Tay-cam-choi-game-Xbox-Series-X-Controller-den-1-2.jpg'),
+INSERT INTO gallary (product_id, img) VALUES
+(90, 'https://i.ebayimg.com/images/g/oB4AAeSwhjdo5jWt/s-l960.webp'),
+(90, 'https://i.ebayimg.com/images/g/rzsAAeSwfT9o5jWv/s-l960.webp'),
+(90, 'https://i.ebayimg.com/images/g/oAsAAeSwQy5o5jWx/s-l960.webp'),
+(90, 'https://i.ebayimg.com/images/g/oAsAAeSwQy5o5jWx/s-l960.webp');
 
--- 5. Razer Wolverine V2
-(5, 'https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-6.jpg?v=1716652873040'),
-(5, 'https://bizweb.dktcdn.net/thumb/medium/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-5.jpg?v=1716652873330'),
-(5, 'https://bizweb.dktcdn.net/thumb/medium/100/329/122/products/tay-cam-choi-game-razer-wolverine-v2-chroma-1.jpg?v=1716652873330'),
 
--- 6. Flydigi Vader 4 Pro
-(6, 'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-Wireless-Controller.jpg'),
-(6, 'https://shoptaycam.com/wp-content/uploads/2024/06/Flydigi-Vader-4-Pro-3.jpg'),
+-- 91. Razer Wolverine V2 Chroma
+INSERT INTO products (categories_id, brand_id, name, short_description, full_description, information, price, priceOld, image, createdAt, energy, useTime, weight, active, metatitle, ispremium, suports, connect, endow)
+VALUES
+(3, 15, 'Razer Wolverine V2 Chroma', 'Tay cầm Gaming cơ học RGB.', 'Nút bấm Mecha-Tactile và hệ thống LED Chroma.', '6 Nút đa năng', 3600000, 3990000, 
+'https://i.ebayimg.com/images/g/klEAAeSwQA1pvXJp/s-l1600.webp', NOW(), 0, 0, 270, 1, 'razer-wolverine-v2', 1, 'Xbox/PC', 'Có dây', 'Bảo hành 24 tháng');
 
--- 7. Flydigi Nova 3
-(7, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3.jpg'),
-(7, 'https://shoptaycam.com/wp-content/uploads/2024/11/z6033108912562_90b42ee971285bca9c311879de636d13-1024x768.jpg'),
-(7, 'https://shoptaycam.com/wp-content/uploads/2024/11/tay-c%E1%BA%A7m-flydigi-direwolf-3-5.jpg'),
-
--- 10. Retro Q8
-(10, 'https://i.ebayimg.com/images/g/cYwAAOSw-EBmzXja/s-l1200.jpg'),
-(10, 'https://i.ebayimg.com/images/g/QVAAAOSwSz1mzXjo/s-l1600.webp'),
-
--- 11. Pixel X2
-(11, 'https://i.ytimg.com/vi/X1OAPuLEnAU/maxresdefault.jpg'),
-(11, 'https://gkdpixel.com/wp-content/uploads/2025/04/green.png'),
-
--- 14. Nintendo Switch Lite Coral
-(14, 'https://shoptrongnghia.com/wp-content/uploads/2020/08/switchhong.jpg'),
-(14, 'https://shoptrongnghia.com/wp-content/uploads/2020/08/sw.jpg'),
-(14, 'https://shoptrongnghia.com/wp-content/uploads/2020/08/switchhong2.jpg'),
-(14, 'https://shoptrongnghia.com/wp-content/uploads/2020/08/switchhong3.jpg'),
-
--- 15. Nintendo Switch V2
-(15, 'https://www.droidshop.vn/wp-content/uploads/2023/12/May-choi-game-Nintendo-Switch-V2-Mario-Kart-8-Deluxe-Bundle-Nintendo-Switch-Online-Membership-247x300.jpg'),
-(15, 'https://www.droidshop.vn/wp-content/uploads/2023/01/May-choi-game-Nintendo-Switch-Neon-2.jpg'),
-(15, 'https://www.droidshop.vn/wp-content/uploads/2023/01/May-choi-game-Nintendo-Switch-Neon-1-247x300.jpg'),
-
--- 17. Nintendo Switch OLED
-(17, 'https://bizweb.dktcdn.net/100/476/122/products/vh-installer-1-1702023014809.png?v=1702023021590'),
-(17, 'https://bizweb.dktcdn.net/100/476/122/products/vh-installer-1702023014820.png?v=1702023022600'),
-
--- 18. Nintendo Switch 2
-(18, 'https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/c_scale,w_700/ncom/My%20Nintendo%20Store/EN-US/Nintendo%20Switch%202/Hardware/123669-nintendo-switch-2-hand-pulling-right-joy-con-off-1200x675'),
-(18, 'https://cdn.tgdd.vn/News/0/QjyRxUoKLzksmSNjoyGQHL-1200-80-1200x675.jpg'),
-(18, 'https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/c_scale,w_700/ncom/My%20Nintendo%20Store/EN-US/Nintendo%20Switch%202/Hardware/123669-nintendo-switch-2-hand-pulling-right-joy-con-off-1200x675'),
-
--- 19. Steam Deck OLED
-(19, 'https://weirdstore.vn/wp-content/uploads/2024/11/Untitled-2-1.jpg'),
-(19, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlgO0nX3kJp-WGOGyfNFXD0B9zeV6ouDpE6g&s'),
-(19, 'https://gameline.ph/cdn/shop/files/Layer26_500x_487bb3e0-c112-4723-a358-a600cfe99f72_500x500.png?v=1746670095'),
-==================================================
-
--- 20. Asus ROG Ally X
-(20, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/r/o/rog-xbox-ally-x-2.jpg'),
-(20, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/r/o/rog-xbox-ally-x-1.jpg'),
-
--- 21. MSI Claw A1M
-(21, 'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-3.jpg'),
-(21, 'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-2.jpg'),
-
--- 22. AYANEO 3
-(22, 'https://weirdstore.vn/wp-content/uploads/2025/08/ayaneo-pocket-ds-indiegogo-confirmation-kv-1067x800.jpg'),
-(22, 'https://s.yimg.com/ny/api/res/1.2/Bk1uEmle.lTNddhl1yFvcg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNDI7aD02OTQ-/https://s.yimg.com/os/creatr-uploaded-images/2024-11/6a28f640-9e01-11ef-b6f7-10617312a1aa'),
-(22, 'https://pcngon.vn/wp-content/uploads/2025/10/May-tinh-cam-tay-AYANEO-3-R7-8840U-AI-9-HX370-16.png'),
-(22, 'https://pcngon.vn/wp-content/uploads/2025/10/May-tinh-cam-tay-AYANEO-3-R7-8840U-AI-9-HX370-15.png'),
-
--- 23. Ayaneo Pocket Micro
-(23, 'https://weirdstore.vn/wp-content/uploads/2024/09/AYANEO-POCKET-MICRO-SOUL-RED-DONE-01.png'),
-
--- 24. Anbernic RG35XXSP
-(24, 'https://herogame.vn/upload/images/img_02_01_2025/may-retro-game-cam-tay-rg35xxsp-nap-gap-nho-gon-hon-10000-games-anbernic-4_801428_67761b70133425.88983002.jpg'),
-(24, 'https://herogame.vn/upload/images/img_02_01_2025/may-retro-game-cam-tay-rg35xxsp-nap-gap-nho-gon-hon-10000-games-anbernic-6_373158_67761b70135fb1.86248728.jpg'),
-
--- 25. Anbernic RG406V
-(25, 'https://haloshop.vn/wp-content/uploads/2025/03/anbernic_retro_game_handheld_rg406v_256gb_42-700x700-1.jpg'),
-(25, 'https://haloshop.vn/wp-content/uploads/2025/03/anbernic_retro_game_handheld_rg406v_256gb_47-700x700-1.jpg'),
-
--- 26. Anbernic RG477V
-(26, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-5-600x600.jpg'),
-(26, 'https://izzygame.com/wp-content/uploads/2026/01/anbernic-rg477v-8300-cuc-manh-4-600x600.jpg'),
-
--- 28. Miyoo Mini Flip
-(28, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-3-600x600.jpg'),
-(28, 'https://izzygame.com/wp-content/uploads/2026/01/miyoo-mini-flip-4-600x600.jpg'),
-
--- 29. Retroid Pocket 5
-(29, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-2-600x600.jpg'),
-(29, 'https://izzygame.com/wp-content/uploads/2025/06/retroid-pocket-mini-snapdragon-865-7-600x600.jpg'),
-
--- 30. Anbernic RG35XX H
-(30, 'https://images-na.ssl-images-amazon.com/images/I/71VoTjyKBUL.jpg'),
-(30, 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvo24tuhbnbuef'),
-(30, 'https://images-na.ssl-images-amazon.com/images/I/716sKBz0uBL.jpg'),
-(30, 'http://images-na.ssl-images-amazon.com/images/I/71WQe1WL7qL.jpg'),
-(30, 'https://images-na.ssl-images-amazon.com/images/I/714FdrYh+oL.jpg'),
-
--- 32. Lenovo Legion Go
-(32, 'https://weirdstore.vn/wp-content/uploads/2024/03/n-2.jpg'),
-(32, 'https://weirdstore.vn/wp-content/uploads/2024/03/n-1.jpg'),
-
--- 33. Anbernic RG353PS
-(33, 'https://haloshop.vn/wp-content/uploads/2025/02/anbernic-retro-game-rg353p-64gb-sd-card-46.jpg'),
-(33, 'https://product.hstatic.net/200000272737/product/rg353ps-chinh-hang_ad13dc39bbe1444a90674da2d400d575_master.jpg'),
-(33, 'https://image.made-in-china.com/155f0j00NMnblqRLnfor/Anbernic-Rg353PS-64-Bit-Handheld-Game-Console-Linux-System-3-5-Inch-IPS-Screen-Retro-Game-Player-HD-Compatible-2-4G-5g-WiFi.webp'),
-
--- 34. Miyoo A30
-(34, 'https://izzygame.com/wp-content/uploads/2024/05/Miyoo-A30-2-600x600.jpg'),
-
--- 36. Retroid Pocket G2
-(36, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-6-600x600.jpg'),
-(36, 'https://izzygame.com/wp-content/uploads/2025/12/Retroid-pocket-g2-4-600x600.jpg'),
-
--- 37. Retroid Pocket Mini V2
-(37, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-9-600x600.jpg'),
-(37, 'https://izzygame.com/wp-content/uploads/2025/09/retroid-pocket-mini-v2-rpmini-2-600x600.jpg'),
-
--- 40. Retroid Pocket 2S
-(40, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-9-600x600.jpg'),
-(40, 'https://izzygame.com/wp-content/uploads/2023/09/Retroid-pocket-2s-5-600x600.jpg'),
-
--- 41. MSI Claw A8 Z2
-(41, 'https://www.droidshop.vn/wp-content/uploads/2024/06/May-choi-game-MSI-Claw-3.jpg'),
-(41, 'https://laptopworld.vn/media/product/22995_product_17501423256641567b47c67a56dce17d0121439176.jpg'),
-(41, 'https://laptopworld.vn/media/product/22995_product_1750142323763e761a0cb5ba887363d398ba8e5775.jpg'),
-
--- 43. GPD Win 4
-(43, 'https://pcngon.vn/wp-content/uploads/2024/04/May-choi-game-cam-tay-GPD-WIN-4-2024-Ram-32GB-SSD-2TB-9.jpg'),
-(43, 'https://pcngon.vn/wp-content/uploads/2024/04/May-choi-game-cam-tay-GPD-WIN-4-2024-Ram-32GB-SSD-2TB-5.jpg'),
-(43, 'https://pcngon.vn/wp-content/uploads/2024/04/May-choi-game-cam-tay-GPD-WIN-4-2024-Ram-32GB-SSD-2TB-3.jpg'),
-
--- 44. GPD Win Mini 2025
-(44, 'https://weirdstore.vn/wp-content/uploads/2024/03/n-1.jpg'),
-(44, 'https://droix.co.uk/wp-content/uploads/2024/12/GPD-WIN-4-2025-LISTING-32-1-8840U-01.png'),
-(44, 'https://nghenhinvietnam.vn/uploads/global/tunglampv/2025/t01/14/gdp/gpd_win_mini_2025_004.jpg'),
-(44, 'https://droix.co.uk/wp-content/uploads/2024/12/GPD-WIN-4-2025-LISTING-06-2048x2048.jpg.webp'),
-(44, 'https://droix.co.uk/wp-content/uploads/2024/12/GPD-WIN-4-2025-LISTING-08.jpg'),
-
--- 45. Retroid Pocket Flip 2
-(45, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-4-600x600.jpg'),
-(45, 'https://izzygame.com/wp-content/uploads/2025/04/Retroid-Pocket-Flip-2-cao-cap-10-600x600.jpg');
+INSERT INTO gallary (product_id, img) VALUES
+(91, 'https://i.ebayimg.com/images/g/z6YAAeSwpAtpvXIv/s-l960.webp'),
+(91, 'https://i.ebayimg.com/images/g/0gIAAeSw1gJpvXI1/s-l960.webp'),
+(91, 'https://i.ebayimg.com/images/g/0DEAAeSwpAtpvXI6/s-l960.webp'),
+(91, 'https://i.ebayimg.com/images/g/lJsAAeSw6QBpvXJG/s-l960.webp'),
+(91, 'https://i.ebayimg.com/images/g/BvAAAeSw5JppvXJL/s-l960.webp');
 
 
 update products
@@ -2006,6 +2733,7 @@ UPDATE products SET full_description = 'Nintendo Switch 2 là thế hệ tiếp 
 -- ID 22: AYANEO 3
 UPDATE products SET full_description = 'AYANEO 3 là biểu tượng của sự sang trọng và sức mạnh đỉnh cao với chip AMD Ryzen AI 370 mới nhất. Máy mang đến trải nghiệm Windows 11 mượt mà hơn bao giờ hết nhờ sự hỗ trợ của trí tuệ nhân tạo để tối ưu hóa hiệu năng và pin. Màn hình OLED tràn viền, hệ thống âm thanh vòm và các phím bấm đạt chuẩn e-sports biến AYANEO 3 thành một trạm chơi game di động thực thụ dành cho những người dùng không chấp nhận sự thỏa hiệp về cấu hình.' WHERE ID = 22;
 
+
 SELECT 
     products.ID as ProductID, 
     products.name as ProductName, 
@@ -2052,18 +2780,36 @@ INSERT INTO banner (title, link, active) VALUES
 ('three new version', 'Assets/image/threeversion.png', 1);
 
 -- ABOUT (id tự tăng, section, title, description, image, icon, sort_order)
-INSERT INTO about (section, title, description, image, icon, sort_order) VALUES
-('INFO_IMAGE', NULL, NULL, 'Assets/image/aboutUs_info.png', NULL, 1),
-('INFO','50+ CỬA HÀNG','Hệ thống cửa hàng phân bố khắp cả nước...', NULL, NULL, 1),
-('INFO','200+ THƯƠNG HIỆU','Sản phẩm từ nhiều thương hiệu nổi tiếng...', NULL, NULL, 2),
-('SERVICE', NULL, 'Cửa hàng luôn sẵn sàng tư vấn và hỗ trợ.', NULL, 'fa-headset', 1),
-('SERVICE', NULL, 'Dịch vụ giao hàng tận nơi.', NULL, 'fa-truck-fast', 2),
-('WHAT_WE_DO','Sản phẩm của chúng tôi','Đa dạng các loại máy chơi game.','Assets/image/aboutUs_product.png', NULL, 1),
-('FINAL','Nhóm 17','Cửa hàng có nhiều loại máy chơi game để lựa chọn.', NULL, NULL, 1);
+INSERT INTO about (section, title, description, sort_order) VALUES
+                                                                ('INFO','50+ CỬA HÀNG','Hệ thống cửa hàng của chúng tôi được phân bố khắp cả nước tại các thành phố như Hà Nội, TP. Hồ Chí Minh, Đà Nẵng, Huế...',1),
+                                                                ('INFO','200+ THƯƠNG HIỆU','Chúng tôi cung cấp sản phẩm đến từ nhiều thương hiệu nổi tiếng, uy tín và chất lượng được người dùng yêu thích.',2),
+                                                                ('INFO','3+ TRUNG TÂM TƯ VẤN','Chúng tôi có hơn 3 trung tâm hỗ trợ luôn sẵn sàng giải đáp mọi thắc mắc của khách hàng về sản phẩm.',3),
+                                                                ('INFO','5000+ KHÁCH HÀNG','Tính đến nay, cửa hàng của chúng tôi đã làm hài lòng hơn 5.000 khách hàng trong nước cũng như quốc tế.',4);
+
+INSERT INTO about(section, description, icon, sort_order) VALUES
+                                                              ('SERVICE','Cửa hàng luôn sẵn sàng tư vấn và hỗ trợ mọi thắc mắc của bạn bất cứ lúc nào.','fa-headset',1),
+                                                              ('SERVICE','Chúng tôi có dịch vụ giao hàng tận nơi dành cho khách hàng không thể đến trực tiếp.','fa-truck-fast',2),
+                                                              ('SERVICE','Cửa hàng thường xuyên có nhiều chương trình khuyến mãi vào các dịp đặc biệt khi bạn mua sản phẩm.','fa-gift',3),
+                                                              ('SERVICE','Chúng tôi sẽ thông báo cho bạn khi có sản phẩm mới nếu bạn có nhu cầu.','fa-bell',4);
+
+INSERT INTO about(section, title, description, image, sort_order) VALUES
+                                                                      ('WHAT_WE_DO','Sản phẩm của chúng tôi','Cửa hàng có đa dạng các loại máy chơi game bạn có thể thoải mái lựa chọn theo sở thích.','Assets/image/aboutUs_product.png',1),
+                                                                      ('WHAT_WE_DO','Đội ngũ của chúng tôi','Đội ngũ nhân viên luôn sẵn sàng hỗ trợ bạn bất cứ khi nào bạn cần.','Assets/image/aboutUs_team.png',2),
+                                                                      ('WHAT_WE_DO','Cửa hàng của chúng tôi','Chúng tôi luôn sẵn lòng phục vụ bạn, hãy đến với cửa hàng khi bạn có nhu cầu.','Assets/image/aboutUs_store.png',3);
+
+INSERT INTO about(section, description, title, sort_order) VALUES
+                                                               ('FINAL','Cửa hàng có nhiều loại máy chơi game để bạn dễ dàng chọn theo sở thích của mình.','Nhóm 17',1),
+                                                               ('FINAL','Đội ngũ luôn sẵn sàng hỗ trợ bạn bất cứ khi nào.','Nhóm 17',2),
+                                                               ('FINAL','Cửa hàng luôn vui vẻ phục vụ bạn, đừng ngần ngại ghé thăm khi có nhu cầu.','Nhóm 17',3);
 
 -- BLOG (ID tự tăng, img, title, metatitle, description, active, playorder)
-INSERT INTO blog (img, title, metatitle, description, active, playorder) VALUES
-('https://i.ytimg.com/vi/CXMRMA9Hh-o/hq720.jpg', 'Review tay cầm PS5 DualSense', 'review-tay-cam', 'Cảm giác rung thông minh, adaptive trigger...', 1, 1),
-('https://file.hstatic.net/1000231532/file/danh_sach_game_hay_nhat_ps5_fe3378786833475cbee83f5c924c59c6.jpg', 'Top game hay nhất 2024 trên PS5', 'top-game-hay', 'Tổng hợp những tựa game đáng chơi nhất...', 1, 2),
-('https://bizweb.dktcdn.net/100/503/563/files/24.jpg', 'Hướng dẫn bảo quản tay cầm', 'baoquantaycam', 'Cách vệ sinh joystick, chống drift...', 1, 3);
+INSERT INTO blog VALUES
+                     (null, 'https://i.ytimg.com/vi/CXMRMA9Hh-o/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAE-nfKyVbOygwsMqvVSETSmpn-Eg', 'Review tay cầm PS5 DualSense', 'review-tay-cam', 'Cảm giác rung thông minh, adaptive trigger và khả năng tương thích
+                    cực tốt...', 1, 1),
+                     (null, 'https://haloshop.vn/wp-content/uploads/2024/11/nhung_tua_game_ps5_hay_nhat_2024-1.jpg', 'Top game hay nhất 2024 trên PS5', 'top-game-hay', 'Tổng hợp những tựa game có đồ họa đẹp, gameplay cuốn và đáng chơi
+                    nhất...', 1, 2),
+                     (null, 'https://www.droidshop.vn/wp-content/uploads/2023/05/so-sanh-ps5-vs-xbox.jpg', 'So sánh PS5 và Xbox Series X', 'so-sanh', 'Đâu là chiếc máy console phù hợp cho bạn? Cùng xem phân tích chi
+                    tiết...', 1, 3),
+                     (null, 'https://bizweb.dktcdn.net/100/503/563/files/24.jpg?v=1740329584220', 'Hướng dẫn bảo quản tay cầm', 'baoquantaycam', 'Cách vệ sinh joystick, chống drift và kéo dài tuổi thọ tay cầm...', 1, 4),
+                     (null, 'https://hocviengaming.vn/wp-content/uploads/2024/02/nintendo-switch-2-se-co-man-hinh-lcd-8-inch-0.jpg', 'Tin nóng: Nintendo Switch 2 sắp ra mắt?', 'hot new', 'Tổng hợp thông tin rò rỉ mới nhất từ các nguồn uy tín...', 1, 5);
 
