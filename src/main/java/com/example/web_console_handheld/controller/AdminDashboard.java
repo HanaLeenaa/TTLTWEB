@@ -36,6 +36,7 @@ public class AdminDashboard extends HttpServlet {
         request.setAttribute("totalUsers", totalUsers);
         request.setAttribute("totalRevenue", totalRevenue);
         request.setAttribute("recentOrders", recentOrders);
+        request.setAttribute("activePage", "dashboard");
         request.getRequestDispatcher("/Assets/component/adminPage/adminDashboard.jsp").forward(request, response);
     }
 }

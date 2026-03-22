@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -87,11 +88,13 @@
                                 <td>#${o.ID}</td>
                                 <td>${o.createAt}</td>
                                 <td>${o.receiver_address}</td>
-                                <td>${o.price} đ</td>
+                                <td>
+                                    <fmt:formatNumber value="${o.price}" type="number"/>đ
+                                </td>
                                 <td>${o.status}</td>
                                 <td>
                                     <a class="detail-link"
-                                       href="${pageContext.request.contextPath}/order-detail?id=${o.ID}">
+                                       href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
                                         Xem chi tiết
                                     </a>
                                 </td>

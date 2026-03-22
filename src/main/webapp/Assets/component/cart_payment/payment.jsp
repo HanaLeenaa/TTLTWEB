@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -102,13 +103,12 @@
                 Đơn hàng (${quantity} sản phẩm)
             </p>
 
-            <c:forEach var="item" items="${cartItems}">
+            <c:forEach var="item" items="${orderItems}">
                 <div class="flex_infor_product padding-same same">
 
                     <div class="part1">
                         <div class="parent2">
-                            <img src="${item.product.image}"
-                                 alt="${item.product.metatitle}" />
+                            <img src="${item.product_image}"/>
                             <div class="child2">
                                 <p class="number">${item.quantity}</p>
                             </div>
@@ -116,12 +116,12 @@
                     </div>
 
                     <div>
-                        <p class="title-item">${item.product.name}</p>
+                        <p class="title-item">${item.product_name}</p>
                     </div>
 
                     <div class="part3">
                         <p>
-                                ${item.product.priceValue * item.quantity}đ
+                            <fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true"/>đ
                         </p>
                     </div>
 

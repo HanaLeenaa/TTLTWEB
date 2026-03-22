@@ -20,7 +20,7 @@ public class OrderDao {
 
         String sql =
                 "INSERT INTO orders " +
-                        "(user_id, createAt, status, price, receiver_name, receiver_phone, receiver_address, receiver_email, payment_method) " +
+                        "(user_id, order_date, status, total_amount, fullname_order, phone_order, address_order, email_order, note) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (
@@ -38,9 +38,8 @@ public class OrderDao {
             ps.setString(6, order.getReceiver_phone());
             ps.setString(7, order.getReceiver_address());
             ps.setString(8, order.getReceiver_email());
+            ps.setString(9, order.getReceiver_note());
 
-            // false = COD, true = BANK
-            ps.setBoolean(9, order.isPayment_method());
 
             ps.executeUpdate();
 
@@ -63,7 +62,7 @@ public class OrderDao {
 
         String sql =
                 "INSERT INTO order_items " +
-                        "(order_id, product_id, product_name, product_price, quantity) " +
+                        "(order_id, product_id, quantity, price_at_purchase, product_image) " +
                         "VALUES (?, ?, ?, ?, ?)";
 
         try (
@@ -73,9 +72,9 @@ public class OrderDao {
             for (OrderItem item : items) {
                 ps.setInt(1, orderId);
                 ps.setInt(2, item.getProduct_id());
-                ps.setString(3, item.getProduct_name());
+                ps.setInt(3, item.getQuantity());
                 ps.setLong(4, item.getProduct_price());
-                ps.setInt(5, item.getQuantity());
+                ps.setString(5, item.getProduct_image());
                 ps.addBatch();
             }
 
@@ -108,16 +107,16 @@ public class OrderDao {
 
                     order.setID(rs.getInt("ID"));
                     order.setUser_Id(rs.getInt("user_id"));
-                    order.setCreateAt(rs.getTimestamp("createAt"));
+                    order.setCreateAt(rs.getTimestamp("order_date"));
                     order.setStatus(rs.getString("status"));
-                    order.setPrice(rs.getLong("price"));
+                    order.setPrice(rs.getLong("total_amount"));
 
-                    order.setReceiver_name(rs.getString("receiver_name"));
-                    order.setReceiver_phone(rs.getString("receiver_phone"));
-                    order.setReceiver_address(rs.getString("receiver_address"));
-                    order.setReceiver_email(rs.getString("receiver_email"));
-
-                    order.setPayment_method(rs.getBoolean("payment_method"));
+                    order.setReceiver_name(rs.getString("fullname_order"));
+                    order.setReceiver_phone(rs.getString("phone_order"));
+                    order.setReceiver_address(rs.getString("address_order"));
+                    order.setReceiver_email(rs.getString("email_order"));
+                    order.setReceiver_note(rs.getString("note"));
+//                    order.setPayment_method(rs.getBoolean("payment_method"));
                 }
             }
 
@@ -134,7 +133,7 @@ public class OrderDao {
 
         List<Order> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM orders ORDER BY createAt DESC";
+        String sql = "SELECT * FROM orders ORDER BY order_date DESC";
 
         try (
                 Connection conn = DBConnection.getConnection();
@@ -147,15 +146,15 @@ public class OrderDao {
 
                 order.setID(rs.getInt("ID"));
                 order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("createAt"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
                 order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("price"));
+                order.setPrice(rs.getLong("total_amount"));
 
-                order.setReceiver_name(rs.getString("receiver_name"));
-                order.setReceiver_phone(rs.getString("receiver_phone"));
-                order.setReceiver_address(rs.getString("receiver_address"));
-                order.setReceiver_email(rs.getString("receiver_email"));
-                order.setPayment_method(rs.getBoolean("payment_method"));
+                order.setReceiver_name(rs.getString("fullname_order"));
+                order.setReceiver_phone(rs.getString("phone_order"));
+                order.setReceiver_address(rs.getString("address_order"));
+                order.setReceiver_email(rs.getString("email_order"));
+//                order.setPayment_method(rs.getBoolean("payment_method"));
 
                 list.add(order);
             }
@@ -217,8 +216,9 @@ public class OrderDao {
             oi.order_id,
             oi.product_id,
             p.name AS product_name,
-            oi.product_price,
-            oi.quantity
+            oi.price_at_purchase,
+            oi.quantity,
+            oi.product_image
         FROM order_items oi
         JOIN products p ON oi.product_id = p.ID
         WHERE oi.order_id = ?
@@ -236,8 +236,9 @@ public class OrderDao {
                 OrderItem item = new OrderItem();
                 item.setProduct_id(rs.getInt("product_id"));
                 item.setProduct_name(rs.getString("product_name"));
-                item.setProduct_price(rs.getLong("product_price"));
+                item.setProduct_price(rs.getLong("price_at_purchase"));
                 item.setQuantity(rs.getInt("quantity"));
+                item.setProduct_image(rs.getString("product_image"));
                 list.add(item);
             }
 
@@ -269,7 +270,7 @@ public class OrderDao {
     }
     public double getTotalRevenue() {
         double total = 0;
-        String sql = "SELECT COALESCE(SUM(total_price),0) FROM orders WHERE status = 'COMPLETED'";
+        String sql = "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE status = 'completed'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -289,10 +290,10 @@ public class OrderDao {
         List<Order> list = new ArrayList<>();
 
         String sql = """
-        SELECT o.id, u.fullname, o.status
+        SELECT o.ID, o.fullname_order, o.status
         FROM orders o
         JOIN users u ON o.user_id = u.id
-        ORDER BY o.created_at DESC
+        ORDER BY o.order_date DESC
         LIMIT ?
     """;
 
@@ -305,8 +306,8 @@ public class OrderDao {
 
             while (rs.next()) {
                 Order o = new Order();
-                o.setID(rs.getInt("id"));
-                o.setReceiver_email(rs.getString("fullname"));
+                o.setID(rs.getInt("ID"));
+                o.setReceiver_name(rs.getString("fullname_order"));
                 o.setStatus(rs.getString("status"));
                 list.add(o);
             }
@@ -325,7 +326,6 @@ public class OrderDao {
         SELECT *
         FROM orders
         WHERE user_id = ?
-        ORDER BY createAt DESC
     """;
 
         try (
@@ -341,16 +341,14 @@ public class OrderDao {
 
                 order.setID(rs.getInt("ID"));
                 order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("createAt"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
                 order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("price"));
+                order.setPrice(rs.getLong("total_amount"));
+                order.setReceiver_name(rs.getString("fullname_order"));
+                order.setReceiver_phone(rs.getString("phone_order"));
+                order.setReceiver_address(rs.getString("address_order"));
+                order.setReceiver_email(rs.getString("email_order"));
 
-                order.setReceiver_name(rs.getString("receiver_name"));
-                order.setReceiver_phone(rs.getString("receiver_phone"));
-                order.setReceiver_address(rs.getString("receiver_address"));
-                order.setReceiver_email(rs.getString("receiver_email"));
-
-                order.setPayment_method(rs.getBoolean("payment_method"));
 
                 list.add(order);
             }

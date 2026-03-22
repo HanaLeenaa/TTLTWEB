@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.ProductDao;
+import com.example.web_console_handheld.model.OrderItem;
 import com.example.web_console_handheld.model.Product;
 import com.example.web_console_handheld.model.User;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/buy-now")
 public class BuyNowServlet extends HttpServlet {
@@ -60,9 +63,25 @@ public class BuyNowServlet extends HttpServlet {
         long totalPrice = price * quantity;
         DecimalFormat df = new DecimalFormat("#,###");
         String totalPriceFormatted = df.format(totalPrice).replace(",", ".");
-        request.setAttribute("product", product);
-        request.setAttribute("quantity", quantity);
-        request.setAttribute("totalPrice", totalPriceFormatted);
+
+        OrderItem item = new OrderItem();
+        item.setProduct_id(product.getID());
+        item.setProduct_name(product.getName());
+        item.setProduct_price(price);
+        item.setQuantity(quantity);
+        item.setProduct_image(product.getImage());
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(item);
+
+        session.setAttribute("pendingOrderItems", orderItems);
+
+        //gửi sang payment.jsp
+        request.setAttribute("orderItems", orderItems);
+
+        session.removeAttribute("selectedCartItem");
+
+
 
         request.getRequestDispatcher("/Assets/component/cart_payment/payment.jsp")
                 .forward(request, response);

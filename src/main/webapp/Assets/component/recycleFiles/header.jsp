@@ -217,6 +217,22 @@
             </div>
         </div>
     </div>
+    <div id="cart-toast"
+         style="
+         position: absolute;
+         top: 60px;
+         right: 12px;
+         background: #4CAF50;
+         color: white;
+         padding: 12px 20px;
+         border-radius: 8px;
+         display: none;
+         z-index: 9999;
+         font-size: 14px;
+         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+     ">
+    </div>
+
 </header>
 
 <script>
@@ -246,6 +262,19 @@
                 });
             });
     });
+</script>
+
+<script>
+    function showToast(msg){
+        const  toast = document.getElementById("cart-toast");
+        toast.innerText = msg;
+        toast.style.display = "block";
+
+        setTimeout(() => {
+            toast.style.display = "none";
+
+        }, 3000);
+    }
 </script>
 
 </body>
