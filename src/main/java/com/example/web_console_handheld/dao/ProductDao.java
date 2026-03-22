@@ -577,7 +577,8 @@ public class ProductDao extends BaseDao {
             """)
                         .bind("id", id)
                         .mapToBean(Product.class)
-                        .one()
+                        .findOne() // để trả về một Optional
+                        .orElse(null)
         );
     }
     public void update(Product p) {

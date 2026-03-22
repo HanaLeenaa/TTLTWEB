@@ -2780,27 +2780,35 @@ INSERT INTO banner (title, link, active) VALUES
 ('three new version', 'Assets/image/threeversion.png', 1);
 
 -- ABOUT (id tự tăng, section, title, description, image, icon, sort_order)
+-- 1. Thêm ảnh bìa giới thiệu (Cần thiết để Servlet không bị lỗi Index 0)
+INSERT INTO about (section, title, description, image, sort_order)
+VALUES ('INFO_IMAGE', 'Về chúng tôi', 'Đơn vị cung cấp máy chơi game hàng đầu', 'Assets/image/aboutUs_info.png', 1);
+
+-- 2. Thêm thông tin con số (INFO)
 INSERT INTO about (section, title, description, sort_order) VALUES
-                                                                ('INFO','50+ CỬA HÀNG','Hệ thống cửa hàng của chúng tôi được phân bố khắp cả nước tại các thành phố như Hà Nội, TP. Hồ Chí Minh, Đà Nẵng, Huế...',1),
-                                                                ('INFO','200+ THƯƠNG HIỆU','Chúng tôi cung cấp sản phẩm đến từ nhiều thương hiệu nổi tiếng, uy tín và chất lượng được người dùng yêu thích.',2),
-                                                                ('INFO','3+ TRUNG TÂM TƯ VẤN','Chúng tôi có hơn 3 trung tâm hỗ trợ luôn sẵn sàng giải đáp mọi thắc mắc của khách hàng về sản phẩm.',3),
-                                                                ('INFO','5000+ KHÁCH HÀNG','Tính đến nay, cửa hàng của chúng tôi đã làm hài lòng hơn 5.000 khách hàng trong nước cũng như quốc tế.',4);
+                                                                ('INFO','50+ CỬA HÀNG','Hệ thống cửa hàng phân bố khắp cả nước tại các thành phố lớn.', 1),
+                                                                ('INFO','200+ THƯƠNG HIỆU','Sản phẩm đến từ nhiều thương hiệu nổi tiếng, uy tín.', 2),
+                                                                ('INFO','3+ TRUNG TÂM TƯ VẤN','Trung tâm hỗ trợ luôn sẵn sàng giải đáp thắc mắc.', 3),
+                                                                ('INFO','5000+ KHÁCH HÀNG','Đã làm hài lòng hơn 5.000 khách hàng trong và ngoài nước.', 4);
 
-INSERT INTO about(section, description, icon, sort_order) VALUES
-                                                              ('SERVICE','Cửa hàng luôn sẵn sàng tư vấn và hỗ trợ mọi thắc mắc của bạn bất cứ lúc nào.','fa-headset',1),
-                                                              ('SERVICE','Chúng tôi có dịch vụ giao hàng tận nơi dành cho khách hàng không thể đến trực tiếp.','fa-truck-fast',2),
-                                                              ('SERVICE','Cửa hàng thường xuyên có nhiều chương trình khuyến mãi vào các dịp đặc biệt khi bạn mua sản phẩm.','fa-gift',3),
-                                                              ('SERVICE','Chúng tôi sẽ thông báo cho bạn khi có sản phẩm mới nếu bạn có nhu cầu.','fa-bell',4);
+-- 3. Thêm dịch vụ (SERVICE)
+INSERT INTO about (section, description, icon, sort_order) VALUES
+                                                               ('SERVICE','Cửa hàng luôn sẵn sàng tư vấn và hỗ trợ mọi thắc mắc của bạn.','fa-headset', 1),
+                                                               ('SERVICE','Chúng tôi có dịch vụ giao hàng tận nơi nhanh chóng.','fa-truck-fast', 2),
+                                                               ('SERVICE','Thường xuyên có nhiều chương trình khuyến mãi đặc biệt.','fa-gift', 3),
+                                                               ('SERVICE','Thông báo cho bạn khi có sản phẩm mới về.','fa-bell', 4);
 
-INSERT INTO about(section, title, description, image, sort_order) VALUES
-                                                                      ('WHAT_WE_DO','Sản phẩm của chúng tôi','Cửa hàng có đa dạng các loại máy chơi game bạn có thể thoải mái lựa chọn theo sở thích.','Assets/image/aboutUs_product.png',1),
-                                                                      ('WHAT_WE_DO','Đội ngũ của chúng tôi','Đội ngũ nhân viên luôn sẵn sàng hỗ trợ bạn bất cứ khi nào bạn cần.','Assets/image/aboutUs_team.png',2),
-                                                                      ('WHAT_WE_DO','Cửa hàng của chúng tôi','Chúng tôi luôn sẵn lòng phục vụ bạn, hãy đến với cửa hàng khi bạn có nhu cầu.','Assets/image/aboutUs_store.png',3);
+-- 4. Thêm hoạt động (WHAT_WE_DO)
+INSERT INTO about (section, title, description, image, sort_order) VALUES
+                                                                       ('WHAT_WE_DO','Sản phẩm của chúng tôi','Đa dạng các loại máy chơi game thoải mái lựa chọn.','Assets/image/aboutUs_product.png', 1),
+                                                                       ('WHAT_WE_DO','Đội ngũ của chúng tôi','Nhân viên chuyên nghiệp, nhiệt tình hỗ trợ.','Assets/image/aboutUs_team.png', 2),
+                                                                       ('WHAT_WE_DO','Cửa hàng của chúng tôi','Không gian trải nghiệm hiện đại, thân thiện.','Assets/image/aboutUs_store.png', 3);
 
-INSERT INTO about(section, description, title, sort_order) VALUES
-                                                               ('FINAL','Cửa hàng có nhiều loại máy chơi game để bạn dễ dàng chọn theo sở thích của mình.','Nhóm 17',1),
-                                                               ('FINAL','Đội ngũ luôn sẵn sàng hỗ trợ bạn bất cứ khi nào.','Nhóm 17',2),
-                                                               ('FINAL','Cửa hàng luôn vui vẻ phục vụ bạn, đừng ngần ngại ghé thăm khi có nhu cầu.','Nhóm 17',3);
+-- 5. Thêm phần kết (FINAL)
+INSERT INTO about (section, description, title, sort_order) VALUES
+                                                                ('FINAL','Cửa hàng máy chơi game uy tín nhất khu vực.','Nhóm 17', 1),
+                                                                ('FINAL','Chất lượng phục vụ là ưu tiên hàng đầu.','Nhóm 17', 2),
+                                                                ('FINAL','Hân hạnh được phục vụ quý khách.','Nhóm 17', 3);
 
 -- BLOG (ID tự tăng, img, title, metatitle, description, active, playorder)
 INSERT INTO blog VALUES
