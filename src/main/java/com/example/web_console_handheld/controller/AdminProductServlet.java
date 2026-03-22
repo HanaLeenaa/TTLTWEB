@@ -23,6 +23,7 @@ public class AdminProductServlet extends HttpServlet {
         request.setAttribute("products", list);
         request.setAttribute("contentPage", "/Assets/component/adminPage/productManagement.jsp");
 
+        request.setAttribute("activePage", "products");
         request.getRequestDispatcher( "/Assets/component/adminPage/admin.jsp").forward(request, response);
     }
 }

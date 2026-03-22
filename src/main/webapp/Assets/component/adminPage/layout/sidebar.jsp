@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 1/27/2026
-  Time: 5:40 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -56,6 +49,9 @@
         .menu a:hover {
             background-color: #ff6b35;
         }
+        .menu a.active{
+            background: #e95211;
+        }
     </style>
 </head>
 
@@ -64,10 +60,22 @@
     <h2 class="logo">${sessionScope.admin.username}</h2>
 
     <ul class="menu">
-        <li><a href="${pageContext.request.contextPath}/admin/dashboard">🏠 Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/products">📦 Quản lý sản phẩm</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/orders">🧾 Quản lý đơn hàng</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/users">👤 Quản lý user</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/dashboard"
+            class="${activePage == 'dashboard' ? 'active' : ''}">
+            🏠 Dashboard</a></li>
+
+        <li><a href="${pageContext.request.contextPath}/admin/products"
+               class="${activePage == 'products' ? 'active' : ''}">
+            📦 Quản lý sản phẩm</a></li>
+
+        <li><a href="${pageContext.request.contextPath}/admin/orders"
+               class="${activePage == 'orders' ? 'active' : ''}" >
+            🧾 Quản lý đơn hàng</a></li>
+
+        <li><a href="${pageContext.request.contextPath}/admin/users"
+            class="${activePage == 'users' ? 'active' : ''}">
+            👤 Quản lý user</a></li>
+
         <li><a href="${pageContext.request.contextPath}/admin-logout">🚪 Đăng xuất</a></li>
     </ul>
 </div>

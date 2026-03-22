@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -229,31 +230,24 @@
 <!-- CAMERA SECTION -->
 <section class="camera-section">
     <div class="camera-grid">
-        <!-- LEFT: Banner -->
-        <div class="camera-banner">
-            <img src="${smaller[0].image}" alt="Camera Banner" />
-            <div class="banner-text">
-                <p class="top">Top Handle Brands</p>
-                <h2>Tất cả sản phẩm<br />Dưới $50</h2>
-                <button class="shop-btn">Mua ngay</button>
+        <c:if test="${not empty smaller && fn:length(smaller) > 0}">
+            <div class="camera-banner">
+                <img src="${smaller[0].image}" alt="Camera Banner" />
+                <div class="banner-text">
+                    <p class="top">Sản phẩm giá tốt</p>
+                    <h2>Tất cả sản phẩm<br />Dưới 1,3 Triệu</h2>
+                    <button class="shop-btn">Mua ngay</button>
+                </div>
             </div>
-        </div>
-
-        <!-- MIDDLE: Video -->
-        <!--
-        <iframe width="402" height="715" src="https://www.youtube.com/embed/jJRDGkEvrx0" title="A closer look at the Backbone One Xbox Edition. Link in bio. @xbox #backbone #xbox" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        -->
+        </c:if>
 
         <div class="camera-video">
-            <iframe
-                    src="https://www.youtube.com/embed/jJRDGkEvrx0"
-                    title="Mi Home Security Camera"
-                    frameborder="0"
-                    allowfullscreen
-            ></iframe>
-            <img src="${smaller[1].image}" alt="Camera Room" />
-        </div>
+            <iframe src="https://www.youtube.com/embed/jJRDGkEvrx0" title="Video" frameborder="0" allowfullscreen></iframe>
 
+            <c:if test="${not empty smaller && fn:length(smaller) > 1}">
+                <img src="${smaller[1].image}" alt="Camera Room" />
+            </c:if>
+        </div>
     </div>
 </section>
 
