@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.model.Cart;
+import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -61,8 +62,14 @@ public class AddToCartServlet extends HttpServlet {
 
         session.setAttribute("cart", cart);
 
-        session.setAttribute("addSuccess", true);
-        response.sendRedirect(request.getHeader("Referer"));
+        int total = 0;
+        for (CartItem item : cart.getCartItems().values()){
+            total += item.getQuantity();
+        }
+        response.setContentType("application/json");
+
+        String json = "{ \"message\": \"Thêm " +"'" + p.getName() +  "'" + " vào giỏ thành công!\", \"total\": " + total + "}";
+        response.getWriter().write(json);
     }
 }
 

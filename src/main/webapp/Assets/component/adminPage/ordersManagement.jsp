@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -182,7 +183,7 @@
                     <td>#${o.ID}</td>
                     <td>${o.receiver_name}</td>
                     <td>${o.receiver_phone}</td>
-                    <td>${o.price} đ</td>
+                    <td><fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/>đ</td>
                     <td>
     <span class="status ${o.status}">
             ${o.status}
@@ -245,7 +246,7 @@
                 <c:forEach items="${orderItems}" var="i">
                     <tr>
                         <td>${i.product_name}</td>
-                        <td>${i.product_price} đ</td>
+                        <td><fmt:formatNumber value="${i.product_price}" type="number" groupingUsed="true"/>đ</td>
                         <td>${i.quantity}</td>
                     </tr>
                 </c:forEach>

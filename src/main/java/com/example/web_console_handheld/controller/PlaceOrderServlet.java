@@ -90,6 +90,9 @@ public class PlaceOrderServlet extends HttpServlet {
                         : auth.getLocation()
         );
 
+        String note = request.getParameter("note");
+        order.setReceiver_note(note);
+
         // payment_method: false = COD, true = BANK
         order.setPayment_method(
                 "BANK".equals(request.getParameter("paymentMethod"))

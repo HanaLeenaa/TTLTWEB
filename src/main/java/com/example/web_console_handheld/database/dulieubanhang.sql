@@ -652,3 +652,7 @@ INSERT INTO blog (img, title, metatitle, description, active, playorder) VALUES
 ('https://file.hstatic.net/1000231532/file/danh_sach_game_hay_nhat_ps5_fe3378786833475cbee83f5c924c59c6.jpg', 'Top game hay nhất 2024 trên PS5', 'top-game-hay', 'Tổng hợp những tựa game đáng chơi nhất...', 1, 2),
 ('https://bizweb.dktcdn.net/100/503/563/files/24.jpg', 'Hướng dẫn bảo quản tay cầm', 'baoquantaycam', 'Cách vệ sinh joystick, chống drift...', 1, 3);
 
+
+-- Huỳnh Như -21/03
+-- THEM FIELD "product_image" vao order_items
+ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500)

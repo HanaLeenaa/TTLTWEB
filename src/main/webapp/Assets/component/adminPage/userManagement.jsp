@@ -139,7 +139,7 @@
                 <c:forEach var="u" items="${users}">
                     <tr>
                         <td>#${u.id}</td>
-                        <td>${u.fullname}</td>
+                        <td>${u.username}</td>
                         <td>${u.email}</td>
 
                         <!-- ROLE -->

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -198,7 +199,7 @@
             <div class="stat-card">
                 <div>
                     <h3>Doanh thu</h3>
-                    <p>${totalRevenue} ₫</p>
+                    <p><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true"/>đ</p>
                 </div>
                 <div class="icon bg-red">💰</div>
             </div>
@@ -223,8 +224,8 @@
                     <tbody>
                     <c:forEach var="o" items="${recentOrders}">
                         <tr>
-                            <td>#${o.id}</td>
-                            <td>${o.fullname}</td>
+                            <td>#${o.ID}</td>
+                            <td>${o.receiver_name}</td>
                             <td>
                     <span class="status
                         ${o.status == 'PENDING' ? 'pending' :
@@ -253,7 +254,7 @@
                 <h3>⚡ Thao tác nhanh</h3>
                 <a href="${pageContext.request.contextPath}/admin/products">➕ Thêm sản phẩm</a>
                 <a href="${pageContext.request.contextPath}/admin/orders">📦 Xem đơn hàng</a>
-                <a href="#">👤 Quản lý user</a>
+                <a href="${pageContext.request.contextPath}/admin/users">👤 Quản lý user</a>
                 <a href="${pageContext.request.contextPath}/admin-logout">🚪 Đăng xuất</a>
             </div>
 

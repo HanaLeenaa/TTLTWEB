@@ -119,9 +119,9 @@
                                                                                     value="${product.image}"> <input
                         type="hidden" name="quantity" id="quantity-cart" value="1">
 
-                    <button type="submit" class="btn-add btn">
-                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
-                    </button>
+                        <button type="button" class="btn-add btn" onclick="addToCart()">
+                            <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                        </button>
                 </form>
 
                 <!-- BUY NOW -->
@@ -360,6 +360,32 @@
     }
 </script>
 
+<%--   Thong bao them san pham vao gio hang--%>
+<script>
+    function addToCart(){
+        const formData = new URLSearchParams();
+        formData.append("productId", "${product.ID}");
+        formData.append("name", "${product.name}");
+        formData.append("price", "${product.price}");
+        formData.append("image", "${product.image}");
+        formData.append("quantity", document.getElementById("quantity-cart").value);
+
+        fetch("${pageContext.request.contextPath}/AddCart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                showToast(data.message);
+
+                document.getElementById("cart_num").innerText = data.total;
+            });
+    }
+
+</script>
 </body>
 <script>
     new Swiper('.related-swiper', {

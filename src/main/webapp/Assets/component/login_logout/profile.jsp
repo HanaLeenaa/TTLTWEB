@@ -94,7 +94,7 @@
                                 <td>${o.status}</td>
                                 <td>
                                     <a class="detail-link"
-                                       href="${pageContext.request.contextPath}/order-detail?id=${o.ID}">
+                                       href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
                                         Xem chi tiết
                                     </a>
                                 </td>
