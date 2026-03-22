@@ -27,18 +27,13 @@ public class CartActionServlet extends HttpServlet {
 
         if (action.startsWith("increase_")) {
             int id = Integer.parseInt(action.split("_")[1]);
-            CartItem item = cart.getCartItems().get(id);
-            if (item != null) {
-                item.increaseQuantity(1);
-            }
+            cart.increase(id);
         }
         else if (action.startsWith("decrease_")) {
             int id = Integer.parseInt(action.split("_")[1]);
-            CartItem item = cart.getCartItems().get(id);
-            if (item != null && item.getQuantity() > 1) {
-                item.setQuantity(item.getQuantity() - 1);
+            cart.decrease(id);
             }
-        }
+
         else if (action.startsWith("remove_")) {
             int id = Integer.parseInt(action.split("_")[1]);
             cart.deleteProduct(id);

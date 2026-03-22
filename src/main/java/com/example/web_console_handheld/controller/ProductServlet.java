@@ -36,10 +36,8 @@ public class ProductServlet extends HttpServlet {
         int offset = (page - 1) * PAGE_SIZE;
 
         /* ================= PARAMS ================= */
-        Integer categoryId = null;
-        try {
-            categoryId = Integer.parseInt(request.getParameter("categoryId"));
-        } catch (Exception ignored) {}
+        String catParam = request.getParameter("categoryId");
+        Integer categoryId = (catParam != null && !catParam.isEmpty()) ? Integer.parseInt(catParam) : null;
 
         String priceRange = request.getParameter("priceRange");
         String sort = request.getParameter("sort");
@@ -49,6 +47,7 @@ public class ProductServlet extends HttpServlet {
         String[] brandArr = request.getParameterValues("brandId");
         if (brandArr != null) {
             brandIds = Arrays.stream(brandArr)
+                    .filter(s -> s != null && !s.isEmpty()) // Lọc bỏ chuỗi rỗng
                     .map(Integer::parseInt)
                     .toList();
         }
@@ -57,6 +56,7 @@ public class ProductServlet extends HttpServlet {
         String[] useArr = request.getParameterValues("useTime");
         if (useArr != null) {
             useTimes = Arrays.stream(useArr)
+                    .filter(s -> s != null && !s.isEmpty())
                     .map(Integer::parseInt)
                     .toList();
         }

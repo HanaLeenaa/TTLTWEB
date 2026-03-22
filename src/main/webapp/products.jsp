@@ -42,14 +42,18 @@
 
 
         <div class="filter" id="filter-panel">
-
+            <div class="filter-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
+                <span style="font-weight: bold;">BỘ LỌC</span>
+                <a href="${pageContext.request.contextPath}/product" style="font-size: 12px; color: #E95221; text-decoration: none;">Xóa tất cả</a>
+            </div>
 
             <!-- CATEGORY -->
             <div class="title">LOẠI SẢN PHẨM</div>
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
-                    <input type="radio" name="categoryId" value="${cat.ID}"
-                        ${param.categoryId == cat.ID ? 'checked' : ''} />
+                <!-- doi radio -> checkbox -->
+                    <input type="checkbox" name="categoryId" value="${cat.ID}"
+                        ${fn:contains(fn:join(paramValues.categoryId, ','), cat.ID) ? 'checked' : ''} />
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>
@@ -63,8 +67,8 @@
                     <input type="radio" name="priceRange" value="${p}" ${price == p ? 'checked' : ''} />
                     <label>
                         <c:choose>
-                            <c:when test="${p=='under500'}">Dưới 500.000đ</c:when>
-                            <c:when test="${p=='500-1m'}">500.000đ - 1 triệu</c:when>
+                            <c:when test="${p=='under500'}">Dưới 500,000đ</c:when>
+                            <c:when test="${p=='500-1m'}">500,000đ - 1 triệu</c:when>
                             <c:when test="${p=='1-2m'}">1 - 2 triệu</c:when>
                             <c:when test="${p=='2-3m'}">2 - 3 triệu</c:when>
                             <c:otherwise>Trên 3 triệu</c:otherwise>
@@ -168,6 +172,7 @@
                         <c:if test="${c.ispremium}">
                             <div class="tag">Premium</div>
                         </c:if>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 0;">
                         <div class="product-info">
                             <h4>${c.name}</h4>
                             <p class="price">${c.price}đ</p>
@@ -247,45 +252,42 @@
     });
 </script>
 
-
 <script>
-    let filterTimeout;
+    document.querySelectorAll('#filter-panel input').forEach(input => {
+        // Lưu trạng thái ban đầu khi vừa load trang (dành cho Radio)
+        if (input.type === 'radio' && input.checked) {
+            input.wasChecked = true;
+        }
 
-    document.querySelectorAll(
-        '#filter-panel input[type="checkbox"], #filter-panel input[type="radio"]'
-    ).forEach(input => {
-        input.addEventListener('change', () => {
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(() => {
+        input.addEventListener('click', function(e) {
+            if (this.type === 'radio') {
+                // Logic bỏ chọn cho Radio
+                if (this.wasChecked) {
+                    this.checked = false;
+                    this.wasChecked = false;
+                } else {
+                    // Reset trạng thái các radio cùng name
+                    document.querySelectorAll(`input[name="\${this.name}"]`).forEach(r => r.wasChecked = false);
+                    this.wasChecked = true;
+                }
+            }
+
+            // Đối với Checkbox (Pin/Category/Brand), trình duyệt tự xử lý check/uncheck
+            // Chúng ta chỉ cần đợi một chút để DOM cập nhật rồi mới Submit
+            setTimeout(() => {
                 document.getElementById('filterForm').submit();
-            }, 500); // 0.5 giây
+            }, 150);
         });
     });
 </script>
 
+<%-- doi dau '.' sang ',' --%>
 <script>
-    document.querySelectorAll('#filter-panel input[type="radio"]').forEach(function (radio) {
-
-        radio.addEventListener('click', function () {
-
-            var name = this.name;
-
-            // nếu radio đã được check từ trước -> bỏ check
-            if (this.wasChecked) {
-                this.checked = false;
-            }
-
-            // reset trạng thái cho tất cả radio cùng name
-            document.querySelectorAll('input[name="' + name + '"]')
-                .forEach(function (r) {
-                    r.wasChecked = false;
-                });
-
-            // lưu trạng thái hiện tại
-            this.wasChecked = this.checked;
-
-            // submit form
-            document.getElementById('filterForm').submit();
+    document.addEventListener("DOMContentLoaded", function() {
+        const prices = document.querySelectorAll('.price');
+        prices.forEach(p => {
+            let currentText = p.innerText;
+            p.innerText = currentText.replace(/\./g, ',');
         });
     });
 </script>
