@@ -113,30 +113,33 @@ public class UserDao extends BaseDao{
 
     // cập nhật thông tin người dùng
     public boolean updateProfile(User u) {
-        String sql = """
+        String sql = """ 
         UPDATE users
-        SET email = ?,
+        SET username = ?,
+            email = ?,
             phoneNum = ?,
             location = ?,
             updated_at = NOW()
-        WHERE id = ?
-    """;
+        WHERE id = ?""";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, u.getEmail());
-            ps.setString(2, u.getPhoneNum());
-            ps.setString(3, u.getLocation());
-            ps.setInt(4, u.getId());
+            ps.setString(1, u.getUsername());
+            ps.setString(2, u.getEmail());
+            ps.setString(3, u.getPhoneNum());
+            ps.setString(4, u.getLocation());
+            ps.setInt(5, u.getId());
 
-            return ps.executeUpdate() > 0;
+            int rows = ps.executeUpdate();
+            return rows > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
+
     public void updateAddress(int userId, String address) {
         get().useHandle(handle ->
                 handle.createUpdate(
