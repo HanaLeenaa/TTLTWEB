@@ -242,4 +242,23 @@ public class UserDao extends BaseDao{
         }
         return list;
     }
+
+    public User getUserByEmail(String email) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE email = :email")
+                        .bind("email", email)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null));
+    }
+
+    public void insertGoogleUser(String email, String name) {
+        get().withHandle(handle ->
+                handle.createUpdate("""
+                INSERT INTO users(username, email, password, active, created_at, provider)
+                VALUES(:username, :email, '', true, NOW(), 'google')""")
+                        .bind("username", name)
+                        .bind("email", email)
+                        .execute());
+    }
 }
