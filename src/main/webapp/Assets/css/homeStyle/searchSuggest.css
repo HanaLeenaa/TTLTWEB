@@ -1,0 +1,60 @@
+.input1 {
+    position: relative; /* để suggest-box bám theo input */
+    display: inline-block;
+    width: 100%; /* hoặc chiều rộng bạn muốn */
+}
+
+.suggest-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%; /* Đảm bảo rộng bằng ô input */
+    background: #ffffff !important;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 9999;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
+}
+
+
+
+.suggest-item {
+    display: flex !important; /* Quan trọng để hiện ảnh và chữ song song */
+    align-items: center;
+    padding: 12px; /* Tăng padding để mục không bị "nhỏ xíu" */
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    min-height: 60px; /* Đảm bảo chiều cao tối thiểu cho mỗi dòng */
+    background: #fff !important;
+}
+
+.suggest-item:hover {
+    background-color: #f8f8f8 !important;
+}
+
+.suggest-item img {
+    width: 45px !important;
+    height: 45px !important;
+    object-fit: cover;
+    margin-right: 12px;
+    border-radius: 4px;
+    flex-shrink: 0; /* Không cho ảnh bị bóp nhỏ */
+    border: 2px solid orange;
+    border-radius: 6px;
+
+}
+
+.suggest-item span {
+    color: black !important; /* Ép chữ màu tối để nhìn thấy được */
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    display: block !important;
+    white-space: normal; /* Cho phép xuống dòng nếu tên dài */
+}
+
+
+
