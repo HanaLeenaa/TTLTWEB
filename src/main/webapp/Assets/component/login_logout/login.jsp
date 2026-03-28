@@ -14,61 +14,56 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    />
 </head>
 <body>
 <jsp:include page="/Assets/component/recycleFiles/header.jsp" />
-<form action="${pageContext.request.contextPath}/login" method="post">
-    <div class="container1">
 
+<div class="login-container">
+    <!-- Ảnh-->
+    <div class="login-left">
+        <img src="https://png.pngtree.com/thumb_back/fh260/background/20230706/pngtree-d-illustration-of-a-gaming-enthusiast-with-smartphone-game-console-controller-image_3796915.jpg" alt="Login Image">
+    </div>
+
+    <!-- Form đăng nhập-->
+    <div class="login-right">
         <c:if test="${not empty sessionScope.loginMessage}">
-            <p style="color: red; text-align: center;">
-                    ${sessionScope.loginMessage}
-            </p>
-
-            <%
-                session.removeAttribute("loginMessage");
-            %>
+            <p class="error-msg">${sessionScope.loginMessage}</p>
+            <% session.removeAttribute("loginMessage"); %>
         </c:if>
 
-
         <c:if test="${not empty error}">
-                    ${error}
+            <p class="error-msg">${error}</p>
         </c:if>
 
         <h2 class="title">ĐĂNG NHẬP</h2>
-        <input class="input"
-               type="text"
-               type="email"
-               name="username"
-               id="username"
-               placeholder="Tên đăng nhập/Email"><br>
 
-        <input class="input"
-               type="password"
-               name="password"
-               id="password"
-               placeholder="Mật Khẩu"><br>
+        <form action="${pageContext.request.contextPath}/login" method="post">
+            <input class="input" type="text" name="username" placeholder="Tên đăng nhập/Email">
+            <input class="input" type="password" name="password" placeholder="Mật khẩu">
+            <button class="button" type="submit">Đăng nhập</button>
+        </form>
 
-        <button class="button" type="submit">Đăng nhập</button>
-
-        <div style="text-align:center; margin-top:15px;">
+        <div class="social-login">
             <a href="${pageContext.request.contextPath}/google-login" class="google-btn">
                 <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
             </a>
         </div>
 
-        <p id="message"></p>
-        <a href="">Quên mật khẩu</a>
+        <div class="social-login">
+            <a href="${pageContext.request.contextPath}/google-login" class="google-btn">
+                <i class="fa-brands fa-facebook"></i></i> Đăng nhập bằng Facebook
+            </a>
+        </div>
+
+        <a href="#" class="forgot">Quên mật khẩu?</a>
+
         <div class="register">
-        <span>Bạn chưa có tài khoản?</span>
-        <a href="" class="link1">Đăng ký tại đây</a>
+            <span>Bạn chưa có tài khoản?</span>
+            <a href="${pageContext.request.contextPath}/Assets/component/login_logout/register.jsp" class="link1">Đăng ký tại đây</a>
         </div>
     </div>
-</form>
+</div>
+
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 </body>
 </html>
