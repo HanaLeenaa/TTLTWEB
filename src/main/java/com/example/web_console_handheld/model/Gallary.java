@@ -13,6 +13,11 @@ public class Gallary {
         this.img = img;
     }
 public Gallary() {}
+    public Gallary(int productId, String imagePath) {
+        this.product_id = productId;
+        this.img = imagePath;
+    }
+
     public int getID() {
         return ID;
     }

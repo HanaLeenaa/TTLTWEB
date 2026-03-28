@@ -379,6 +379,12 @@
         })
             .then(res => res.json())
             .then(data => {
+                //neu chua login => chuyen qua trang login
+                if (data.notLoggedIn){
+                    window.location.href = data.redirect;
+                    return;
+                }
+
                 showToast(data.message);
 
                 document.getElementById("cart_num").innerText = data.total;

@@ -266,14 +266,20 @@
 
 <script>
     function showToast(msg){
-        const  toast = document.getElementById("cart-toast");
-        toast.innerText = msg;
-        toast.style.display = "block";
-
+        window.scrollTo({
+            top:0,
+            behavior: "smooth"
+        });
         setTimeout(() => {
-            toast.style.display = "none";
+            const toast = document.getElementById("cart-toast");
+            toast.innerText = msg;
+            toast.style.display = "block";
 
-        }, 3000);
+            setTimeout(() => {
+                toast.style.display = "none";
+
+            }, 3000);
+        }, 300);
     }
 </script>
 

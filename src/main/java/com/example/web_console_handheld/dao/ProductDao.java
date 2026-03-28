@@ -489,8 +489,8 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public void insert(Product p) {
-        get().useHandle(handle ->
+    public int insert(Product p) {
+       return get().withHandle(handle ->
                 handle.createUpdate("""
             INSERT INTO products (
                 categories_id,
@@ -555,7 +555,8 @@ public class ProductDao extends BaseDao {
                         .bind("connect", p.getConnect())
                         .bind("endow", p.getEndow())
 
-                        .execute()
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class).one()
         );
 }
 
