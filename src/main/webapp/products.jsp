@@ -161,24 +161,46 @@
         </button>
 
 
-        <!--  San Pham -->
+        <!-- Card San Pham -->
         <div id="product-list">
 
             <c:forEach var="c" items="${products}">
-                <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
-                    <div class="product-item sony handheldpc">
+                <div class="product-item sony handheldpc">
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
                         <img src="${c.image}" alt="">
+                        <h4>${c.name}</h4>
+                    </a>
 
-                        <c:if test="${c.ispremium}">
-                            <div class="tag">Premium</div>
-                        </c:if>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 0;">
-                        <div class="product-info">
-                            <h4>${c.name}</h4>
-                            <p class="price">${c.price}đ</p>
+                    <c:if test="${c.ispremium}">
+                        <div class="tag">Premium</div>
+                    </c:if>
+
+                    <div class="price-actions">
+                        <p class="price">${c.price}đ</p>
+                        <div class="actions">
+                            <!-- Nút thêm vào giỏ hàng -->
+                            <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">
+                                <input type="hidden" name="productId" value="${c.ID}">
+                                <input type="hidden" name="name" value="${c.name}">
+                                <input type="hidden" name="price" value="${c.price}">
+                                <input type="hidden" name="image" value="${c.image}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="button" class="btn-add" onclick="addToCart(this.form)">
+                                    <i class="fa fa-cart-plus"></i>
+                                </button>
+                            </form>
+
+                            <!-- Nút yêu thích -->
+                            <button type="button" class="btn-fav" onclick="toggleWishlist(this, '${c.ID}')">
+                                <i class="fa fa-heart"></i>
+                            </button>
+
                         </div>
                     </div>
-                </a>
+
+                </div>
+
             </c:forEach>
 
 
@@ -224,7 +246,7 @@
         </div>
 
         <div id="no-products-message" style="display:none; text-align: center; margin-top: 20px;">
-            ❌ Không có sản phẩm nào phù hợp với tiêu chí lọc.
+            Không có sản phẩm nào phù hợp với tiêu chí lọc.
         </div>
 
     </div>
@@ -272,8 +294,6 @@
                 }
             }
 
-            // Đối với Checkbox (Pin/Category/Brand), trình duyệt tự xử lý check/uncheck
-            // Chúng ta chỉ cần đợi một chút để DOM cập nhật rồi mới Submit
             setTimeout(() => {
                 document.getElementById('filterForm').submit();
             }, 150);
@@ -290,6 +310,60 @@
             p.innerText = currentText.replace(/\./g, ',');
         });
     });
+</script>
+
+
+<script>
+function addToCart(form) {
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new URLSearchParams(formData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        // cập nhật số lượng giỏ hàng trên header
+        document.getElementById("cart_num").textContent = data.total;
+        alert(data.message);
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
+<script>
+const contextPath = '${pageContext.request.contextPath}';
+
+function toggleWishlist(btn, productId) {
+    // đổi màu tim
+    btn.classList.toggle('active');
+
+    // gọi servlet
+    fetch(contextPath + '/AddWishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'productId=' + encodeURIComponent(productId)
+
+    })
+    .then(res => {
+        console.log("Status:", res.status);
+        return res.text(); // đọc raw text để debug
+    })
+    .then(text => {
+        console.log("Raw response:", text);
+        try {
+            const data = JSON.parse(text);
+            alert(data.message); // hiện thông báo
+            // cập nhật số lượng wishlist trên header nếu có
+            if (document.getElementById("wishlist_num")) {
+                document.getElementById("wishlist_num").textContent = data.total;
+            }
+        } catch(e) {
+            console.error("JSON parse error:", e);
+        }
+    })
+    .catch(err => console.error("Fetch error:", err));
+}
 </script>
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>

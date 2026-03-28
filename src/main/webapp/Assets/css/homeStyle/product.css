@@ -13,7 +13,7 @@ main{
 }
 #content{
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 280px 1fr; /* 2 cột và cột t2 phần còn lại */
     gap: 20px;
     align-items: start;
 }
@@ -205,6 +205,18 @@ main{
     align-items: stretch /* ép các ô trong hàng có chiều cao bằng card cao nhất */
 
 }
+
+#product-list > a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
 .product-info{
     flex-grow: 1; /* tự động nở ra để lắp khoảng trống */
     min-height: 130px;
@@ -252,10 +264,10 @@ main{
     font-weight: bold;
 
 }
-.tag{
+.tag {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     background: #E95221;
     color: white;
     padding: 4px 10px;
@@ -263,8 +275,8 @@ main{
     border-radius: 3px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     z-index: 5;
-
 }
+
 .product-item:hover{
     border-color: rgba(0,0,0,0.12); /* Border mờ, nhẹ */
     box-shadow: 0 8px 18px rgba(0,0,0,0.10); /* Bóng mềm */
@@ -295,6 +307,47 @@ main{
     }
 
 }
+
+.price-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.price-actions .actions {
+    display: flex;
+    gap: 8px;
+}
+.price-actions button {
+    margin-left: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+}
+.price-actions button:hover {
+    background: #e85221;
+    color: #fff;
+}
+
+.btn-fav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+}
+.btn-fav.active {
+    background: #e85221;
+    color: #fff;
+}
+
 
 /* Bộ lọc mặc định trên desktop */
 .filter {
