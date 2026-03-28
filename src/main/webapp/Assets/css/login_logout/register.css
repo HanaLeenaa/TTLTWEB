@@ -1,43 +1,137 @@
-.container1{
-    width: 400px;
+.login-container {
+    display: flex;
+    width: 1000px;
+    max-width: 95%;
+    height: 600px;
+    margin: 50px auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     border-radius: 10px;
-    margin: auto;
-    padding: 30px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.login-left {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.login-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.login-right {
+    flex: 1;
+    padding: 50px 40px;
     background-color: #fffbfb;
-    margin-bottom: 100px;
-    margin-top: 50px;
-}
-.form-register{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
-    padding: 10px 5px 20px 5px;
 }
-h2{
+
+.login-right .title {
     color: #e95221;
+    margin-bottom: 15px;
+    font-size: 28px;
+    font-weight: bold;
 }
-a{
+
+.login-right p {
+    margin-bottom: 20px;
+}
+
+.login-right a {
+    color: #e95221;
     text-decoration: none;
-    color: #e95221;
+    font-weight: bold;
 }
-.input{
-    box-sizing: border-box;
+
+.input {
     width: 100%;
     padding: 14px;
     margin-bottom: 15px;
     border-radius: 5px;
     border: 1px solid #e1e1e1;
+    box-sizing: border-box;
+    font-size: 15px;
 }
-.button{
+
+.input.error-border {
+    border: 2px solid red;
+}
+
+.input.success-border {
+    border: 2px solid green;
+}
+
+.button {
     width: 100%;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    color: #fff;
-    background-color: #e95221;
-    cursor: pointer;
-    border: 1px solid #e95221;
+    padding: 15px 0;
     border-radius: 5px;
+    border: 1px solid #e95221;
+    background-color: #e95221;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+.button:hover {
+    background-color: #fff;
+    color: #e95221;
+}
+
+.social-login {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.social-login a {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #444;
+    font-weight: bold;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
-.button:hover{
-    color: #e95221;
-    background-color: #fff;
+.social-login a:first-child {
+    margin-right: 10px;
+}
+.social-login a i {
+    margin-right: 8px;
+}
+.social-login a:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+@media screen and (max-width: 900px) {
+    .login-container {
+        flex-direction: column;
+        height: auto;
+    }
+    .login-left, .login-right {
+        flex: unset;
+        width: 100%;
+        height: auto;
+    }
+    .login-left img {
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+    }
+    .login-right {
+        padding: 30px 20px;
+    }
 }
