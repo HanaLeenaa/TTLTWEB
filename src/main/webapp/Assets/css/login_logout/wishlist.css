@@ -1,0 +1,227 @@
+body {
+    background-color: #fff;
+    color: #545759;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0;
+}
+
+/* Layout chính: sidebar filter + content */
+#content {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* trái 280px, phải chiếm hết */
+    gap: 20px;
+    align-items: start;
+}
+
+/* Panel lọc */
+.filter {
+    background: #fff;
+    margin: 20px 0 0 20px;
+    height: fit-content;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 10px;
+}
+.filter .title {
+    font-weight: 700;
+    color: #000;
+    padding: 10px 15px;
+}
+.filter .title:not(:first-child) {
+    margin-top: 25px;
+    border-top: 1px solid #e3e3e3;
+    padding-top: 15px;
+}
+.filter .choice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.filter .choice:hover {
+    background-color: #f9f9f9;
+}
+.filter .choice label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-size: 14px;
+    color: #000;
+}
+.filter .choice input[type="checkbox"],
+.filter .choice input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #E95221; /* màu cam khi chọn */
+}
+
+/* Nội dung bên phải */
+.contain {
+    background: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+/* Header: tiêu đề + sort */
+.contain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Sort dropdown */
+.sort {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+.sort-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.sort-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    width: 150px;
+    z-index: 100;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.sort-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.sort-menu li:hover {
+    background: #f2f2f2;
+}
+.sort.open .sort-menu {
+    display: block;
+}
+
+/* Grid sản phẩm */
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+    align-items: stretch;
+}
+.product-item {
+    position: relative; /* để icon định vị theo khung sản phẩm */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    transition: 0.25s ease;
+}
+.product-item img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+
+.product-item a {
+    text-decoration: none;
+    color: inherit;        /* giữ màu chữ theo h4 */
+}
+
+.product-item h4 {
+    font-size: 15px;
+    margin: 8px 0;
+    color: #000;
+}
+.product-item .price {
+    color: #E95221;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Trường hợp không có sản phẩm */
+.no-product {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #666;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    background: #fafafa;
+    width: 100%;
+}
+
+/* Nút hành động */
+.price-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+.price-actions .action-form {
+    flex: 1; /* form chiếm đều không gian */
+}
+.price-actions .btn-buy {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    background: #E95221;
+    color: #fff;
+}
+.price-actions .btn-buy:hover {
+    background: #d4411a;
+}
+
+/* Icon xoá */
+.remove-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+.remove-icon:hover {
+    color: #E95221; /* đổi màu khi hover */
+}
+
+.tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;   /* đổi sang trái */
+    background: #E95221;
+    color: white;
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    z-index: 5;
+}
