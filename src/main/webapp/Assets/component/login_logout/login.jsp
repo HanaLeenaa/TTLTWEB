@@ -61,6 +61,13 @@
                placeholder="Mật Khẩu"><br>
 
         <button class="button" type="submit">Đăng nhập</button>
+
+        <div style="text-align:center; margin-top:15px;">
+            <a href="${pageContext.request.contextPath}/google-login" class="google-btn">
+                <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
+            </a>
+        </div>
+
         <p id="message"></p>
         <a href="">Quên mật khẩu</a>
         <div class="register">
