@@ -20,7 +20,14 @@ public class WishlistServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        // Kiểm tra đăng nhập
+        Object user = (session != null) ? session.getAttribute("auth") : null;
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
         if (wishlist == null) wishlist = new ArrayList<>();
 
@@ -31,7 +38,6 @@ public class WishlistServlet extends HttpServlet {
         String priceRange = request.getParameter("priceRange");
         String sort = request.getParameter("sort");
 
-        // brandIds luôn là list, không null
         List<Integer> brandIds = Optional.ofNullable(request.getParameterValues("brandId"))
                 .map(arr -> Arrays.stream(arr)
                         .filter(s -> s != null && !s.isEmpty())
@@ -82,7 +88,6 @@ public class WishlistServlet extends HttpServlet {
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
-        // giữ trạng thái filter để hiển thị checked/selected
         request.setAttribute("selectedCategoryId", categoryId);
         request.setAttribute("selectedBrandIds", brandIds);
         request.setAttribute("selectedPriceRange", priceRange);
