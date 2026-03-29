@@ -46,7 +46,10 @@ public class AddWishlistServlet extends HttpServlet {
             session.setAttribute("wishlist", wishlist);
         }
 
-        response.setContentType("application/json");
-        response.getWriter().write("{\"message\":\"Đã thêm vào yêu thích\",\"total\":" + wishlist.size() + "}");
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(
+                "{\"added\":true,\"message\":\"Đã thêm vào yêu thích\",\"total\":" + wishlist.size() + "}"
+        );
+
     }
 }
