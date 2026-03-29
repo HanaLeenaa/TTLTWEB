@@ -47,7 +47,9 @@ public class RemoveWishlistServlet extends HttpServlet {
             session.setAttribute("wishlist", wishlist);
         }
 
-        out.print("{\"message\":\"Đã xóa khỏi yêu thích\",\"total\":" + (wishlist != null ? wishlist.size() : 0) + "}");
+        out.print(
+                "{\"removed\":true,\"message\":\"Đã xóa khỏi yêu thích\",\"total\":" + (wishlist != null ? wishlist.size() : 0) + "}"
+        );
         out.flush();
     }
 }

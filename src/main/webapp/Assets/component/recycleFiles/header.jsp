@@ -160,7 +160,7 @@
 
                                     <div class="dropdown-item"
                                          onclick="window.location.href='${pageContext.request.contextPath}/wishlist'">
-                                         Yêu thích
+                                         Sản phẩm yêu thích
                                     </div>
 
 
