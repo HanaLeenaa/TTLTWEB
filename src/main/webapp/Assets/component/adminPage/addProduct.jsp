@@ -20,6 +20,15 @@
             <p class="breadcrumb">Admin /Quản lý sản phẩm / Thêm sản phẩm</p>
             <h1>Thêm sản phẩm</h1>
         </div>
+
+        <%--Them thong bao thanh cong--%>
+        <c:if test="${param.success == '1'}">
+            <div class="alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                Thêm sản phẩm mới thành công!
+            </div>
+        </c:if>
+
         <a href="${pageContext.request.contextPath}/admin/products" class="btn-back">
             <i class="fa-solid fa-arrow-left"></i>Quay lại</a>
     </div>
@@ -38,7 +47,6 @@
                     <input type="text" name="name" id="productName" required placeholder="Ví dụ: Xbox Series X 1TB">
                 </div>
 
-                <%--ANH CHINH--%>
                 <div class="image-block">
                     <h4>Ảnh chính sản phẩm</h4>
 
@@ -58,13 +66,11 @@
                     </div>
                 </div>
 
-                <!-- GALLERY ẢNH PHỤ -->
                 <div class="image-block">
                     <h4>Gallery ảnh phụ</h4>
 
                     <div class="sub-images-grid">
 
-                        <!-- Ảnh phụ 1 -->
                         <div class="sub-image-card">
                             <label>Ảnh phụ 1 (URL)</label>
                             <input type="text" name="galleryUrl1" class="subImageUrl" data-preview="subPreview1" placeholder="Dán link ảnh phụ 1">
@@ -78,7 +84,6 @@
                             </div>
                         </div>
 
-                        <!-- Ảnh phụ 2 -->
                         <div class="sub-image-card">
                             <label>Ảnh phụ 2 (URL)</label>
                             <input type="text" name="galleryUrl2" class="subImageUrl" data-preview="subPreview2" placeholder="Dán link ảnh phụ 2">
@@ -92,7 +97,6 @@
                             </div>
                         </div>
 
-                        <!-- Ảnh phụ 3 -->
                         <div class="sub-image-card">
                             <label>Ảnh phụ 3 (URL)</label>
                             <input type="text" name="galleryUrl3" class="subImageUrl" data-preview="subPreview3" placeholder="Dán link ảnh phụ 3">
@@ -227,7 +231,6 @@
             </div>
         </div>
 
-        <!-- Action -->
         <div class="card sticky-card">
             <button type="submit" class="btn-save">Lưu sản phẩm</button>
             <a href="${pageContext.request.contextPath}/admin/products" class="btn-cancel">Huỷ</a>
@@ -300,6 +303,18 @@
             }
         });
     });
+</script>
+<%--Thông báo thêm sản phẩm mới thành công--%>
+<script>
+    setTimeout(() =>{
+        const alertBox = document.querySelector('.alert-success');
+        if (alertBox){
+            alertBox.style.transaction = "0.4s ease";
+            alertBox.style.opacity = "0";
+            alertBox.style.transform = "translateY(-6px)";
+            setTimeout(() => alertBox.remove(), 400);
+        }
+    }, 4000);
 </script>
 </body>
 </html>

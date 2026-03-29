@@ -405,3 +405,21 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/*Thông báo cập nhật sản phẩm thành công*/
+.alert-success {
+    margin: 18px 0 24px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: #ecfdf5;
+    color: #1e88e5;
+    border: 1px solid #0b74f8;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.08);
+}
+
+.alert-success i {
+    font-size: 18px;
+}
