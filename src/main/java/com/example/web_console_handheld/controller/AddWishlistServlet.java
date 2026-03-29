@@ -18,7 +18,14 @@ public class AddWishlistServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        Object user = (session != null) ? session.getAttribute("auth") : null;
+
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"message\":\"Bạn cần đăng nhập để thêm wishlist\"}");
+            return;
+        }
 
         String idParam = request.getParameter("productId");
         if (idParam == null || idParam.isEmpty()) {

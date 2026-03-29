@@ -21,9 +21,25 @@ public class RemoveWishlistServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        HttpSession session = request.getSession(false);
+        // Kiểm tra đăng nhập
+        Object user = (session != null) ? session.getAttribute("auth") : null;
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            out.print("{\"message\":\"Bạn cần đăng nhập để xoá wishlist\"}");
+            out.flush();
+            return;
+        }
 
-        HttpSession session = request.getSession();
+        String idParam = request.getParameter("productId");
+        if (idParam == null || idParam.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"message\":\"Thiếu productId\"}");
+            out.flush();
+            return;
+        }
+
+        int productId = Integer.parseInt(idParam);
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
 
         if (wishlist != null) {
@@ -35,4 +51,3 @@ public class RemoveWishlistServlet extends HttpServlet {
         out.flush();
     }
 }
-
