@@ -89,7 +89,7 @@ public class AdminProductAddServlet extends HttpServlet {
                 saveGallaryImage(req, productId, "galleryUrl2", "galleryFile2", uploadPath);
                 saveGallaryImage(req, productId, "galleryUrl3", "galleryFile3", uploadPath);
             }
-            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            resp.sendRedirect(req.getContextPath() + "/admin/products/add?success=1");
 
         } catch (Exception e) {
             e.printStackTrace();
