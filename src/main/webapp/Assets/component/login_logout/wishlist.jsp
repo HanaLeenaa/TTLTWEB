@@ -25,11 +25,10 @@
                 </div>
 
                 <!-- CATEGORY -->
-                <div class="title">LOẠI SẢN PHẨM</div>
                 <c:forEach var="cat" items="${categories}">
                     <div class="choice">
                         <input type="checkbox" name="categoryId" value="${cat.ID}"
-                            <c:if test="${selectedCategoryId != null && selectedCategoryId == cat.ID}">checked</c:if> />
+                            <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if> />
                         <label>${cat.name}</label>
                     </div>
                 </c:forEach>
@@ -61,50 +60,41 @@
                         <label>${b.brand_name}</label>
                     </div>
                 </c:forEach>
-
             </div>
         </form>
 
         <!-- Cột phải: danh sách sản phẩm -->
         <div class="contain">
             <div class="contain-header">
-                        <div class="Loai">Danh sách sản phẩm yêu thích</div>
-                        <%--Chức năng sắp xếp theo giá tăng/giảm dần và mới nhất--%>
-                        <form method="get" id="sortForm" action="${pageContext.request.contextPath}/product">
-                            <c:if test="${not empty keyword}">
-                                <input type="hidden" name="q" value="${keyword}">
-                            </c:if>
-                            <!-- category -->
-                            <input type="hidden" name="categoryId" value="${param.categoryId}">
+                 <div class="Loai">Danh sách sản phẩm yêu thích</div>
+                      <%--Chức năng sắp xếp theo giá tăng/giảm dần và mới nhất--%>
+                        <form method="get" id="sortForm" action="${pageContext.request.contextPath}/wishlist">
+                            <!-- giữ lại các filter khi sort -->
+                            <c:forEach var="c" items="${selectedCategoryIds}">
+                                <input type="hidden" name="categoryId" value="${c}">
+                            </c:forEach>
 
-                            <!-- price -->
-                            <input type="hidden" name="priceRange" value="${param.priceRange}">
+                            <input type="hidden" name="priceRange" value="${selectedPriceRange}">
 
-                            <!-- brand (multiple checkbox) -->
-                            <c:forEach var="b" items="${paramValues.brandId}">
+                            <c:forEach var="b" items="${selectedBrandIds}">
                                 <input type="hidden" name="brandId" value="${b}">
                             </c:forEach>
 
-                            <!-- useTime -->
-                            <c:forEach var="u" items="${paramValues.useTime}">
-                                <input type="hidden" name="useTime" value="${u}">
-                            </c:forEach>
                             <div class="sort">
                                 <i class="fa-solid fa-arrow-down-wide-short"></i>
                                 <label>Sắp xếp:</label>
 
                                 <div class="sort-box" onclick="toggleSortMenu()">
-                                <span class="sort-selected">
-                                    <c:choose>
-                                        <c:when test="${param.sort == 'price_asc'}">Giá tăng dần</c:when>
-                                        <c:when test="${param.sort == 'price_desc'}">Giá giảm dần</c:when>
-                                        <c:when test="${param.sort == 'newest'}">Hàng mới nhất</c:when>
-                                        <c:otherwise>Mặc định</c:otherwise>
-                                    </c:choose>
-                                </span>
+                                    <span class="sort-selected">
+                                        <c:choose>
+                                            <c:when test="${param.sort == 'price_asc'}">Giá tăng dần</c:when>
+                                            <c:when test="${param.sort == 'price_desc'}">Giá giảm dần</c:when>
+                                            <c:when test="${param.sort == 'newest'}">Hàng mới nhất</c:when>
+                                            <c:otherwise>Mặc định</c:otherwise>
+                                        </c:choose>
+                                    </span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </div>
-                                <%--hidden input gui len servlet--%>
                                 <input type="hidden" name="sort" id="sortInput" value="${param.sort}">
 
                                 <ul class="sort-menu" id="sortMenu">
@@ -154,6 +144,46 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+
+            <!-- pagination-->
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+
+                    <c:url var="pageUrl" value="/product">
+                        <c:param name="page" value="${i}" />
+
+                        <c:if test="${not empty keyword}">
+                            <c:param name="q" value="${keyword}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.categoryId}">
+                            <c:param name="categoryId" value="${param.categoryId}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.priceRange}">
+                            <c:param name="priceRange" value="${param.priceRange}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.sort}">
+                            <c:param name="sort" value="${param.sort}" />
+                        </c:if>
+
+                        <c:forEach var="b" items="${paramValues.brandId}">
+                            <c:param name="brandId" value="${b}" />
+                        </c:forEach>
+
+                        <c:forEach var="u" items="${paramValues.useTime}">
+                            <c:param name="useTime" value="${u}" />
+                        </c:forEach>
+                    </c:url>
+
+                    <a class="${i == currentPage ? 'active' : ''}" href="${pageUrl}">
+                            ${i}
+                    </a>
+
+                </c:forEach>
+            </div>
+
         </div>
     </div>
 </main>
