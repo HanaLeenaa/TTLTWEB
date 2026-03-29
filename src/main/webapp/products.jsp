@@ -1,9 +1,3 @@
-<%-- Created by IntelliJ IDEA.--%>
-<%--  User: HUU DAT--%>
-<%--  Date: 12/6/2025--%>
-<%--  Time: 6:46 PM--%>
-<%--  To change this template use File | Settings | File Templates.--%>
-
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -51,9 +45,8 @@
             <div class="title">LOẠI SẢN PHẨM</div>
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
-                <!-- doi radio -> checkbox -->
                     <input type="checkbox" name="categoryId" value="${cat.ID}"
-                        ${fn:contains(fn:join(paramValues.categoryId, ','), cat.ID) ? 'checked' : ''} />
+                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if> />
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>
@@ -67,8 +60,8 @@
                     <input type="radio" name="priceRange" value="${p}" ${price == p ? 'checked' : ''} />
                     <label>
                         <c:choose>
-                            <c:when test="${p=='under500'}">Dưới 500,000đ</c:when>
-                            <c:when test="${p=='500-1m'}">500,000đ - 1 triệu</c:when>
+                            <c:when test="${p=='under500'}">Dưới 500.000đ</c:when>
+                            <c:when test="${p=='500-1m'}">500.000đ - 1 triệu</c:when>
                             <c:when test="${p=='1-2m'}">1 - 2 triệu</c:when>
                             <c:when test="${p=='2-3m'}">2 - 3 triệu</c:when>
                             <c:otherwise>Trên 3 triệu</c:otherwise>
@@ -192,7 +185,8 @@
                             </form>
 
                             <!-- Nút yêu thích -->
-                            <button type="button" class="btn-fav" onclick="toggleWishlist(this, '${c.ID}')">
+                            <button type="button" class="btn-fav" data-id="${c.ID}"
+                                    onclick="toggleWishlist(this, '${c.ID}')">
                                 <i class="fa fa-heart"></i>
                             </button>
 
@@ -254,6 +248,7 @@
 
 </main>
 
+
 <%-- chức năng sắp xếp sản phẩm theo giá tăng, giảm dần--%>
 <script>
     function toggleSortMenu() {
@@ -289,7 +284,7 @@
                     this.wasChecked = false;
                 } else {
                     // Reset trạng thái các radio cùng name
-                    document.querySelectorAll(`input[name="\${this.name}"]`).forEach(r => r.wasChecked = false);
+                    document.querySelectorAll('input[name="' + this.name + '"]').forEach(r => r.wasChecked = false);
                     this.wasChecked = true;
                 }
             }
@@ -300,18 +295,6 @@
         });
     });
 </script>
-
-<%-- doi dau '.' sang ',' --%>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const prices = document.querySelectorAll('.price');
-        prices.forEach(p => {
-            let currentText = p.innerText;
-            p.innerText = currentText.replace(/\./g, ',');
-        });
-    });
-</script>
-
 
 <script>
 function addToCart(form) {
@@ -332,39 +315,42 @@ function addToCart(form) {
 </script>
 
 <script>
-const contextPath = '${pageContext.request.contextPath}';
-
 function toggleWishlist(btn, productId) {
-    // đổi màu tim
-    btn.classList.toggle('active');
+    const isActive = btn.classList.contains('active');
+    const url = contextPath + (isActive ? '/RemoveWishlist' : '/AddWishlist');
 
-    // gọi servlet
-    fetch(contextPath + '/AddWishlist', {
+    fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
-
     })
     .then(res => {
-        console.log("Status:", res.status);
-        return res.text(); // đọc raw text để debug
+        if (res.status === 401) {
+            alert("Bạn cần đăng nhập để thêm vào yêu thích");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
     })
-    .then(text => {
-        console.log("Raw response:", text);
-        try {
-            const data = JSON.parse(text);
-            alert(data.message); // hiện thông báo
-            // cập nhật số lượng wishlist trên header nếu có
-            if (document.getElementById("wishlist_num")) {
-                document.getElementById("wishlist_num").textContent = data.total;
-            }
-        } catch(e) {
-            console.error("JSON parse error:", e);
+    .then(data => {
+        if (!data) return;
+
+        if (data.added) {
+            btn.classList.add('active'); // thêm tim
+        } else if (data.removed) {
+            btn.classList.remove('active'); // bỏ tim
+        }
+
+        alert(data.message);
+
+        if (document.getElementById("wishlist_num")) {
+            document.getElementById("wishlist_num").textContent = data.total;
         }
     })
     .catch(err => console.error("Fetch error:", err));
 }
 </script>
+
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 </body>
