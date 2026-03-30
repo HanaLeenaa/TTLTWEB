@@ -38,4 +38,24 @@ public class EmailService {
             throw new MessagingException("Email encoding error", e);
         }
     }
+
+    // Gửi email đổi mật khẩu
+    public static void sendResetPasswordEmail(String toEmail, String link) {
+        try {
+            Message message = new MimeMessage(getMailSession());
+            message.setFrom(new InternetAddress("no-reply@webconsole.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Đổi mật khẩu");
+
+            String htmlContent = "<p>Xin chào,</p>"
+                    + "<p>Click vào link dưới đây để đổi mật khẩu:</p>"
+                    + "<a href='" + link + "'>" + link + "</a>"
+                    + "<p>Link có hiệu lực trong 15 phút.</p>";
+
+            message.setContent(htmlContent, "text/html; charset=UTF-8");
+            Transport.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
