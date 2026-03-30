@@ -268,4 +268,93 @@ public class UserDao extends BaseDao{
                         .bind("email", email)
                         .execute());
     }
+
+    public boolean isResetTokenValid(String token) {
+        String sql = "SELECT reset_token_expiry FROM users WHERE reset_token = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Timestamp expiry = rs.getTimestamp("reset_token_expiry");
+                if (expiry == null) return false;
+
+                // so sánh thời gian hiện tại với thời gian hết hạn
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime expiryTime = expiry.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+                return now.isBefore(expiryTime);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updatePasswordByToken(String token, String newPassword) {
+        String sql = """
+        UPDATE users
+        SET password = ?, 
+            reset_token = NULL,
+            reset_token_expiry = NULL,
+            updated_at = NOW()
+        WHERE reset_token = ?""";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            // hash password bằng BCrypt
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            ps.setString(1, hashedPassword);
+            ps.setString(2, token);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                u.setActive(rs.getBoolean("active"));
+                return u;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void saveResetToken(String email, String token, LocalDateTime expireAt) {
+        String sql = """
+        UPDATE users
+        SET reset_token = ?, 
+            reset_token_expiry = ?
+        WHERE email = ?""";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ps.setTimestamp(2, Timestamp.valueOf(expireAt));
+            ps.setString(3, email);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
