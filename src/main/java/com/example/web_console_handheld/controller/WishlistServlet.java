@@ -2,6 +2,7 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.BrandDao;
 import com.example.web_console_handheld.dao.CategoryDao;
+import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,13 +16,13 @@ import java.util.stream.Stream;
 public class WishlistServlet extends HttpServlet {
     private BrandDao brandDao = new BrandDao();
     private CategoryDao categoryDao = new CategoryDao();
+    private ProductDao productDao = new ProductDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        // Kiểm tra đăng nhập
         Object user = (session != null) ? session.getAttribute("auth") : null;
         if (user == null) {
             response.sendRedirect("login.jsp");
@@ -31,9 +32,18 @@ public class WishlistServlet extends HttpServlet {
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
         if (wishlist == null) wishlist = new ArrayList<>();
 
+        // Lấy danh sách ID sản phẩm trong wishlist
+        List<Integer> wishlistIds = wishlist.stream()
+                .map(Product::getID)
+                .toList();
+
         // ====== Đọc param từ form ======
-        String catParam = request.getParameter("categoryId");
-        Integer categoryId = (catParam != null && !catParam.isEmpty()) ? Integer.parseInt(catParam) : null;
+        List<Integer> categoryIds = Optional.ofNullable(request.getParameterValues("categoryId"))
+                .map(arr -> Arrays.stream(arr)
+                        .filter(s -> s != null && !s.isEmpty())
+                        .map(Integer::parseInt)
+                        .toList())
+                .orElse(List.of());
 
         String priceRange = request.getParameter("priceRange");
         String sort = request.getParameter("sort");
@@ -45,54 +55,37 @@ public class WishlistServlet extends HttpServlet {
                         .toList())
                 .orElse(List.of());
 
-        // ====== Lọc bằng stream chain ======
-        Stream<Product> stream = wishlist.stream();
+        List<Integer> useTimes = Optional.ofNullable(request.getParameterValues("useTime"))
+                .map(arr -> Arrays.stream(arr)
+                        .filter(s -> s != null && !s.isEmpty())
+                        .map(Integer::parseInt)
+                        .toList())
+                .orElse(List.of());
 
-        if (categoryId != null) {
-            stream = stream.filter(p -> p.getCategories_id() == categoryId);
-        }
-
-        if (priceRange != null) {
-            switch (priceRange) {
-                case "under500" -> stream = stream.filter(p -> p.getPriceValue() < 500000);
-                case "500-1m" -> stream = stream.filter(p -> p.getPriceValue() >= 500000 && p.getPriceValue() <= 1000000);
-                case "1-2m" -> stream = stream.filter(p -> p.getPriceValue() >= 1000000 && p.getPriceValue() <= 2000000);
-                case "2-3m" -> stream = stream.filter(p -> p.getPriceValue() >= 2000000 && p.getPriceValue() <= 3000000);
-                case "over3m" -> stream = stream.filter(p -> p.getPriceValue() > 3000000);
-            }
-        }
-
-        if (!brandIds.isEmpty()) {
-            stream = stream.filter(p -> brandIds.contains(p.getBrand_id()));
-        }
-
-        List<Product> filtered = stream.toList();
-
-        // ====== Sắp xếp ======
-        if ("price_asc".equals(sort)) {
-            filtered = filtered.stream()
-                    .sorted(Comparator.comparing(Product::getPriceValue))
-                    .toList();
-        } else if ("price_desc".equals(sort)) {
-            filtered = filtered.stream()
-                    .sorted(Comparator.comparing(Product::getPriceValue).reversed())
-                    .toList();
-        } else if ("newest".equals(sort)) {
-            filtered = filtered.stream()
-                    .sorted(Comparator.comparing(Product::getCreatedAt).reversed())
-                    .toList();
-        }
+        // ====== Gọi DAO để lọc ======
+        List<Product> filtered = productDao.filterWishlist(
+                wishlistIds,
+                categoryIds,
+                priceRange,
+                brandIds,
+                useTimes,
+                sort
+        );
 
         // ====== Set attribute cho JSP ======
         request.setAttribute("wishlist", filtered);
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
-        request.setAttribute("selectedCategoryId", categoryId);
+        request.setAttribute("selectedCategoryIds", categoryIds);
         request.setAttribute("selectedBrandIds", brandIds);
         request.setAttribute("selectedPriceRange", priceRange);
         request.setAttribute("selectedSort", sort);
+        request.setAttribute("selectedUseTimes", useTimes);
 
         request.getRequestDispatcher("/Assets/component/login_logout/wishlist.jsp").forward(request, response);
     }
+
 }
+
+
