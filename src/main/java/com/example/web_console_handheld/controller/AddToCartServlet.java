@@ -29,7 +29,10 @@ public class AddToCartServlet extends HttpServlet {
         if (user == null) {
             //Chua login
             session.setAttribute("loginMessage", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
-            response.sendRedirect(request.getContextPath() +"/login");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String json = "{ \"notLoggedIn\": true, \"redirect\": \""  + request.getContextPath() + "/login\" }";
+            response.getWriter().write(json);
             return;
         }
 

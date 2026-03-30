@@ -7,102 +7,108 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/product-detail")
 public class ProductDetailServlet extends HttpServlet {
-    private ProductDao productDao = new ProductDao();
-    private CategoryDao categoryDao = new CategoryDao();
-    private BrandDao brandDao = new BrandDao();
-    private GallaryDao gallaryDao = new GallaryDao();
-    private ReviewDao reviewDao = new ReviewDao();
+    private final ProductDao productDao = new ProductDao();
+    private final CategoryDao categoryDao = new CategoryDao();
+    private final BrandDao brandDao = new BrandDao();
+    private final GallaryDao gallaryDao = new GallaryDao();
+    private final ReviewDao reviewDao = new ReviewDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
-
         if (idParam == null) {
             response.sendRedirect("product");
             return;
         }
 
-        int id = Integer.parseInt(idParam);
-        Category category = categoryDao.getCategoryByProductId(id);
-        Brand brand = brandDao.getBrandByProductId(id);
-        List<Product> relateProductList = productDao.getProductListByBrandAndCategory(brand.getID(), category.getID(), id);
-        List<Gallary> gallaryList = gallaryDao.getListGallaryBy_product_id(id);
-        List<Review> reviewList = reviewDao.getAllQuantity(id);
-        double avg;
-        List<Review> allReviewByID = reviewDao.getReviewByID(id);
-        double all = allReviewByID.size();
-        Review Devision = reviewDao.sum(id);
-        double DevisionNum = Devision.getRating();
-        if(DevisionNum == 0 && all == 0){
-            avg = 0.0;
-        }else{
-            avg = DevisionNum / all;
-        }
-        int reviewQuantity = reviewList.size();
-        double avg5 = 0, avg4 = 0, avg3 = 0, avg2 = 0, avg1 = 0;
-        List<Review> five = reviewDao.countReview5Stars(id);
-        int fiveStars = five.size();
-        List<Review> four = reviewDao.countReview4Stars(id);
-        int fourStars = four.size();
-        List<Review> three = reviewDao.countReview3Stars(id);
-        int threeStars = three.size();
-        List<Review> two = reviewDao.countReview2Stars(id);
-        int twoStars = two.size();
-        List<Review> one = reviewDao.countReview1Stars(id);
-        int oneStar = one.size();
-        if (reviewQuantity > 0) {
-            avg5 = fiveStars * 100.0 / reviewQuantity;
-            avg4 = fourStars * 100.0 / reviewQuantity;
-            avg3 = threeStars * 100.0 / reviewQuantity;
-            avg2 = twoStars * 100.0 / reviewQuantity;
-            avg1 = oneStar * 100.0 / reviewQuantity;
-        }
-
-        request.setAttribute("avg5", avg5);
-        request.setAttribute("avg4", avg4);
-        request.setAttribute("avg3", avg3);
-        request.setAttribute("avg2", avg2);
-        request.setAttribute("avg1", avg1);
-        request.setAttribute("fiveStars", fiveStars);
-        request.setAttribute("fourStars", fourStars);
-        request.setAttribute("threeStars", threeStars);
-        request.setAttribute("twoStars", twoStars);
-        request.setAttribute("oneStar", oneStar);
-        request.setAttribute("avg", avg);
-
-        request.setAttribute("quantity", reviewQuantity);
-        request.setAttribute("reviews", reviewList);
-        request.setAttribute("gallary", gallaryList);
-        request.setAttribute("brand", brand);
-        request.setAttribute("category", category);
-        request.setAttribute("relateProductList", relateProductList);
-
-        Product product = productDao.getProductDetailByID(id);
+        int productId = Integer.parseInt(idParam);
+        // Product, Category, Brand
+        Product product = productDao.getProductDetailByID(productId);
         if (product == null) {
             response.sendRedirect("product");
             return;
         }
 
-        String[] endowList = new String[0];
-        if (product.getEndow() != null && !product.getEndow().isBlank()) {
-            endowList = product.getEndow().split("\\r?\\n");
+        Category category = categoryDao.getCategoryByProductId(productId);
+        Brand brand = brandDao.getBrandByProductId(productId);
+
+        // Related products
+        List<Product> relateProductList = productDao.getProductListByBrandAndCategory(
+                brand.getID(), category.getID(), productId);
+
+        // Gallary
+        List<Gallary> gallaryList = gallaryDao.getListGallaryBy_product_id(productId);
+
+        // Reviews
+        List<Review> allReviews = reviewDao.getReviewByID(productId);
+        double totalRating = reviewDao.sum(productId).getRating();
+        int reviewQuantity = allReviews.size();
+        double avgRating = (reviewQuantity == 0) ? 0.0 : totalRating / reviewQuantity;
+
+        //
+        int fiveStars = reviewDao.countReview5Stars(productId).size();
+        int fourStars = reviewDao.countReview4Stars(productId).size();
+        int threeStars = reviewDao.countReview3Stars(productId).size();
+        int twoStars = reviewDao.countReview2Stars(productId).size();
+        int oneStar = reviewDao.countReview1Stars(productId).size();
+
+        double avg5 = reviewQuantity > 0 ? fiveStars * 100.0 / reviewQuantity : 0;
+        double avg4 = reviewQuantity > 0 ? fourStars * 100.0 / reviewQuantity : 0;
+        double avg3 = reviewQuantity > 0 ? threeStars * 100.0 / reviewQuantity : 0;
+        double avg2 = reviewQuantity > 0 ? twoStars * 100.0 / reviewQuantity : 0;
+        double avg1 = reviewQuantity > 0 ? oneStar * 100.0 / reviewQuantity : 0;
+
+        // kiêm tra có thể review
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        Integer orderIdCanReview = null;
+        boolean canReview = false;
+        if (currentUser != null) {
+            orderIdCanReview = reviewDao.getOrderIdCanReview(currentUser.getId(), productId);
+            canReview = orderIdCanReview != null && orderIdCanReview > 0;
         }
 
-        String desc = product.getShort_description();
-        String[] descLines = new String[0];
-        if (desc != null && !desc.isBlank()) {
-            descLines = desc.split("\\r?\\n");
-        }
+        // Chia nhỏ sản phẩm, mô tả.
+        String[] endowList = (product.getEndow() != null && !product.getEndow().isBlank())
+                ? product.getEndow().split("\\r?\\n")
+                : new String[0];
 
-        request.setAttribute("descLines", descLines);
-        request.setAttribute("endowList", endowList);
+        String[] descLines = (product.getShort_description() != null && !product.getShort_description().isBlank())
+                ? product.getShort_description().split("\\r?\\n")
+                : new String[0];
+
         request.setAttribute("product", product);
+        request.setAttribute("category", category);
+        request.setAttribute("brand", brand);
+        request.setAttribute("gallary", gallaryList);
+        request.setAttribute("relateProductList", relateProductList);
+
+        request.setAttribute("reviews", allReviews);
+        request.setAttribute("quantity", reviewQuantity);
+        request.setAttribute("avg", avgRating);
+        request.setAttribute("fiveStars", fiveStars);
+        request.setAttribute("fourStars", fourStars);
+        request.setAttribute("threeStars", threeStars);
+        request.setAttribute("twoStars", twoStars);
+        request.setAttribute("oneStar", oneStar);
+        request.setAttribute("avg5", avg5);
+        request.setAttribute("avg4", avg4);
+        request.setAttribute("avg3", avg3);
+        request.setAttribute("avg2", avg2);
+        request.setAttribute("avg1", avg1);
+
+        request.setAttribute("endowList", endowList);
+        request.setAttribute("descLines", descLines);
+
+        request.setAttribute("canReview", canReview);
+        request.setAttribute("orderIdCanReview", orderIdCanReview);
 
         request.getRequestDispatcher("/Assets/Details/productDetails.jsp").forward(request, response);
     }

@@ -8,6 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,20 +246,19 @@
     </div>
 </div>
 
-
-<!--
-  reviews
- -->
+<%--review--%>
 <div class="review-section">
     <div class="container">
-        <h2>Đánh giá & nhận xét <span id="product_name"></span></h2>
+        <h2>Đánh giá & nhận xét <span id="product_name">${product.name}</span></h2>
 
         <div class="overall-rating">
             <div class="score">
                 <h3>${avg}/5</h3>
                 <div class="stars">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
                 <p>${quantity} đánh giá</p>
@@ -302,30 +302,54 @@
             </div>
         </div>
 
-        <a href="./reviews.html" class="review-button">Đánh giá ngay</a>
+        <c:choose>
+            <c:when test="${canReview}">
+                <button class="review-button" onclick="openReviewModal()">
+                    Đánh giá ngay
+                </button>
+            </c:when>
+
+            <c:otherwise>
+                <button class="review-button" onclick="alert('Bạn cần mua sản phẩm này trước khi đánh giá!')">
+                    Đánh giá ngay
+                </button>
+            </c:otherwise>
+        </c:choose>
 
         <!-- List reviews -->
-        <c:forEach var="c" items="${reviews}">
-            <div class="review-item">
-                <h4>
-                        ${c.username}
-                    <span class="stars">
-                <c:forEach begin="1" end="${c.rating}" var="i">
-                    <i class="fas fa-star text-warning" style="font-size: 10px"></i>
-                </c:forEach>
-            </span>
-                </h4>
-
-                <p>Nhận xét: ${c.review_text}</p>
-                <div class="review-date">${c.reviewDate}</div>
-            </div>
-        </c:forEach>
-
-
+        <c:if test="${not empty reviews}">
+            <c:forEach var="c" items="${reviews}">
+                <div class="review-item">
+                    <h4>
+                            ${c.username}
+                        <span class="stars">
+                            <c:forEach begin="1" end="${c.rating != null ? c.rating : 0}" var="i">
+                                <i class="fas fa-star text-warning" style="font-size: 10px"></i>
+                            </c:forEach>
+                        </span>
+                    </h4>
+                    <p>Nhận xét: ${c.review_text}</p>
+                    <div class="review-date">
+                        <c:out value="${c.reviewDate}"/>
+                    </div>
+                </div>
+            </c:forEach>
+        </c:if>
     </div>
 </div>
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
+
+<script>
+    function handleReviewClick() {
+        const canReview = ${canReview};
+        if (canReview) {
+            openReviewModal();
+        } else {
+            alert("Bạn cần mua sản phẩm này trước khi đánh giá!");
+        }
+    }
+</script>
 
 <script>
     let qty = 1;
@@ -379,6 +403,12 @@
         })
             .then(res => res.json())
             .then(data => {
+                //neu chua login => chuyen qua trang login
+                if (data.notLoggedIn){
+                    window.location.href = data.redirect;
+                    return;
+                }
+
                 showToast(data.message);
 
                 document.getElementById("cart_num").innerText = data.total;
@@ -386,7 +416,6 @@
     }
 
 </script>
-</body>
 <script>
     new Swiper('.related-swiper', {
         slidesPerView: 4,

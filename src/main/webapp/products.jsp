@@ -1,9 +1,3 @@
-<%-- Created by IntelliJ IDEA.--%>
-<%--  User: HUU DAT--%>
-<%--  Date: 12/6/2025--%>
-<%--  Time: 6:46 PM--%>
-<%--  To change this template use File | Settings | File Templates.--%>
-
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -51,9 +45,8 @@
             <div class="title">LOẠI SẢN PHẨM</div>
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
-                <!-- doi radio -> checkbox -->
                     <input type="checkbox" name="categoryId" value="${cat.ID}"
-                        ${fn:contains(fn:join(paramValues.categoryId, ','), cat.ID) ? 'checked' : ''} />
+                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if> />
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>
@@ -67,8 +60,8 @@
                     <input type="radio" name="priceRange" value="${p}" ${price == p ? 'checked' : ''} />
                     <label>
                         <c:choose>
-                            <c:when test="${p=='under500'}">Dưới 500,000đ</c:when>
-                            <c:when test="${p=='500-1m'}">500,000đ - 1 triệu</c:when>
+                            <c:when test="${p=='under500'}">Dưới 500.000đ</c:when>
+                            <c:when test="${p=='500-1m'}">500.000đ - 1 triệu</c:when>
                             <c:when test="${p=='1-2m'}">1 - 2 triệu</c:when>
                             <c:when test="${p=='2-3m'}">2 - 3 triệu</c:when>
                             <c:otherwise>Trên 3 triệu</c:otherwise>
@@ -161,24 +154,47 @@
         </button>
 
 
-        <!--  San Pham -->
+        <!-- Card San Pham -->
         <div id="product-list">
 
             <c:forEach var="c" items="${products}">
-                <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
-                    <div class="product-item sony handheldpc">
+                <div class="product-item sony handheldpc">
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
                         <img src="${c.image}" alt="">
+                        <h4>${c.name}</h4>
+                    </a>
 
-                        <c:if test="${c.ispremium}">
-                            <div class="tag">Premium</div>
-                        </c:if>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 0;">
-                        <div class="product-info">
-                            <h4>${c.name}</h4>
-                            <p class="price">${c.price}đ</p>
+                    <c:if test="${c.ispremium}">
+                        <div class="tag">Premium</div>
+                    </c:if>
+
+                    <div class="price-actions">
+                        <p class="price">${c.price}đ</p>
+                        <div class="actions">
+                            <!-- Nút thêm vào giỏ hàng -->
+                            <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">
+                                <input type="hidden" name="productId" value="${c.ID}">
+                                <input type="hidden" name="name" value="${c.name}">
+                                <input type="hidden" name="price" value="${c.price}">
+                                <input type="hidden" name="image" value="${c.image}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="button" class="btn-add" onclick="addToCart(this.form)">
+                                    <i class="fa fa-cart-plus"></i>
+                                </button>
+                            </form>
+
+                            <!-- Nút yêu thích -->
+                            <button type="button" class="btn-fav" data-id="${c.ID}"
+                                    onclick="toggleWishlist(this, '${c.ID}')">
+                                <i class="fa fa-heart"></i>
+                            </button>
+
                         </div>
                     </div>
-                </a>
+
+                </div>
+
             </c:forEach>
 
 
@@ -224,13 +240,14 @@
         </div>
 
         <div id="no-products-message" style="display:none; text-align: center; margin-top: 20px;">
-            ❌ Không có sản phẩm nào phù hợp với tiêu chí lọc.
+            Không có sản phẩm nào phù hợp với tiêu chí lọc.
         </div>
 
     </div>
 
 
 </main>
+
 
 <%-- chức năng sắp xếp sản phẩm theo giá tăng, giảm dần--%>
 <script>
@@ -267,13 +284,11 @@
                     this.wasChecked = false;
                 } else {
                     // Reset trạng thái các radio cùng name
-                    document.querySelectorAll(`input[name="\${this.name}"]`).forEach(r => r.wasChecked = false);
+                    document.querySelectorAll('input[name="' + this.name + '"]').forEach(r => r.wasChecked = false);
                     this.wasChecked = true;
                 }
             }
 
-            // Đối với Checkbox (Pin/Category/Brand), trình duyệt tự xử lý check/uncheck
-            // Chúng ta chỉ cần đợi một chút để DOM cập nhật rồi mới Submit
             setTimeout(() => {
                 document.getElementById('filterForm').submit();
             }, 150);
@@ -281,16 +296,61 @@
     });
 </script>
 
-<%-- doi dau '.' sang ',' --%>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const prices = document.querySelectorAll('.price');
-        prices.forEach(p => {
-            let currentText = p.innerText;
-            p.innerText = currentText.replace(/\./g, ',');
-        });
-    });
+function addToCart(form) {
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new URLSearchParams(formData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        // cập nhật số lượng giỏ hàng trên header
+        document.getElementById("cart_num").textContent = data.total;
+        alert(data.message);
+    })
+    .catch(err => console.error(err));
+}
 </script>
+
+<script>
+function toggleWishlist(btn, productId) {
+    const isActive = btn.classList.contains('active');
+    const url = contextPath + (isActive ? '/RemoveWishlist' : '/AddWishlist');
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'productId=' + encodeURIComponent(productId)
+    })
+    .then(res => {
+        if (res.status === 401) {
+            alert("Bạn cần đăng nhập để thêm vào yêu thích");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (!data) return;
+
+        if (data.added) {
+            btn.classList.add('active'); // thêm tim
+        } else if (data.removed) {
+            btn.classList.remove('active'); // bỏ tim
+        }
+
+        alert(data.message);
+
+        if (document.getElementById("wishlist_num")) {
+            document.getElementById("wishlist_num").textContent = data.total;
+        }
+    })
+    .catch(err => console.error("Fetch error:", err));
+}
+</script>
+
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 </body>

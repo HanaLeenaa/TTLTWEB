@@ -5,7 +5,9 @@ import com.example.web_console_handheld.model.Category;
 import com.example.web_console_handheld.model.Product;
 import com.example.web_console_handheld.utils.DBConnection;
 import com.sun.jdi.connect.spi.Connection;
+import jakarta.servlet.ServletResponse;
 
+import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -161,21 +163,19 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public int countFilter(
-            Integer categoryId,
-            String priceRange,
-            List<Integer> brandIds,
-            List<Integer> useTimes
-    ) {
+    public int countFilter(List<Integer> categoryIds,
+                           String priceRange,
+                           List<Integer> brandIds,
+                           List<Integer> useTimes) {
 
         StringBuilder sql = new StringBuilder("""
-                    SELECT COUNT(*)
-                    FROM products
-                    WHERE active = 1
-                """);
+            SELECT COUNT(*)
+            FROM products
+            WHERE active = 1
+        """);
 
-        if (categoryId != null) {
-            sql.append(" AND categories_id = :categoryId");
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
@@ -199,8 +199,8 @@ public class ProductDao extends BaseDao {
         return get().withHandle(handle -> {
             var q = handle.createQuery(sql.toString());
 
-            if (categoryId != null) {
-                q.bind("categoryId", categoryId);
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                q.bindList("categoryIds", categoryIds);
             }
             if (brandIds != null && !brandIds.isEmpty()) {
                 q.bindList("brandIds", brandIds);
@@ -213,28 +213,24 @@ public class ProductDao extends BaseDao {
         });
     }
 
-
-
     // lọc sản phẩm
-    public List<Product> filterSortPage(
-            Integer categoryId,
-            String priceRange,
-            List<Integer> brandIds,
-            List<Integer> useTimes,
-            String sort,
-            int offset,
-            int limit
-    ) {
+    public List<Product> filterSortPage(List<Integer> categoryIds,
+                                        String priceRange,
+                                        List<Integer> brandIds,
+                                        List<Integer> useTimes,
+                                        String sort,
+                                        int offset,
+                                        int limit) {
 
         StringBuilder sql = new StringBuilder("""
-                    SELECT *
-                    FROM products
-                    WHERE active = 1
-                """);
+        SELECT *
+        FROM products
+        WHERE active = 1
+    """);
 
         // ===== FILTER =====
-        if (categoryId != null) {
-            sql.append(" AND categories_id = :categoryId");
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
@@ -257,13 +253,13 @@ public class ProductDao extends BaseDao {
 
         // ===== SORT =====
         if (sort == null || sort.isEmpty()) {
-            sql.append(" ORDER BY ispremium DESC, ID ASC");
+            sql.append(" ORDER BY id ASC, ispremium DESC");
         } else {
             switch (sort) {
-                case "price_asc" -> sql.append(" ORDER BY ispremium DESC, price ASC");
-                case "price_desc" -> sql.append(" ORDER BY ispremium DESC, price DESC");
-                case "newest" -> sql.append(" ORDER BY ispremium DESC, createdAt DESC");
-                default -> sql.append(" ORDER BY ispremium DESC, ID ASC");
+                case "price_asc" -> sql.append(" ORDER BY price ASC, ispremium DESC");
+                case "price_desc" -> sql.append(" ORDER BY price DESC, ispremium DESC");
+                case "newest" -> sql.append(" ORDER BY createdAt DESC, ispremium DESC");
+                default -> sql.append(" ORDER BY id ASC, ispremium DESC");
             }
         }
 
@@ -273,8 +269,8 @@ public class ProductDao extends BaseDao {
         return get().withHandle(handle -> {
             var q = handle.createQuery(sql.toString());
 
-            if (categoryId != null) {
-                q.bind("categoryId", categoryId);
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                q.bindList("categoryIds", categoryIds);
             }
             if (brandIds != null && !brandIds.isEmpty()) {
                 q.bindList("brandIds", brandIds);
@@ -360,7 +356,7 @@ public class ProductDao extends BaseDao {
     // ================= SEARCH + FILTER + SORT + PAGINATION =================
     public List<Product> searchByNameFilterPage(
             String keyword,
-            Integer categoryId,
+            List<Integer> categoryIds,
             String priceRange,
             List<Integer> brandIds,
             List<Integer> useTimes,
@@ -377,8 +373,8 @@ public class ProductDao extends BaseDao {
                 """);
 
         // ===== FILTER =====
-        if (categoryId != null) {
-            sql.append(" AND categories_id = :categoryId");
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
@@ -419,7 +415,9 @@ public class ProductDao extends BaseDao {
                     .bind("limit", limit)
                     .bind("offset", offset);
 
-            if (categoryId != null) q.bind("categoryId", categoryId);
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                q.bindList("categoryIds", categoryIds);
+            }
             if (brandIds != null && !brandIds.isEmpty()) q.bindList("brandIds", brandIds);
             if (useTimes != null && !useTimes.isEmpty()) q.bindList("useTimes", useTimes);
 
@@ -430,7 +428,7 @@ public class ProductDao extends BaseDao {
     // ================= COUNT SEARCH + FILTER =================
     public int countSearchByNameFilter(
             String keyword,
-            Integer categoryId,
+            List<Integer> categoryIds,
             String priceRange,
             List<Integer> brandIds,
             List<Integer> useTimes
@@ -443,8 +441,8 @@ public class ProductDao extends BaseDao {
                       AND name LIKE :kw
                 """);
 
-        if (categoryId != null) {
-            sql.append(" AND categories_id = :categoryId");
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
@@ -469,7 +467,9 @@ public class ProductDao extends BaseDao {
             var q = handle.createQuery(sql.toString())
                     .bind("kw", "%" + keyword + "%");
 
-            if (categoryId != null) q.bind("categoryId", categoryId);
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                q.bindList("categoryIds", categoryIds);
+            }
             if (brandIds != null && !brandIds.isEmpty()) q.bindList("brandIds", brandIds);
             if (useTimes != null && !useTimes.isEmpty()) q.bindList("useTimes", useTimes);
 
@@ -489,8 +489,8 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public void insert(Product p) {
-        get().useHandle(handle ->
+    public int insert(Product p) {
+        return get().withHandle(handle ->
                 handle.createUpdate("""
             INSERT INTO products (
                 categories_id,
@@ -555,9 +555,10 @@ public class ProductDao extends BaseDao {
                         .bind("connect", p.getConnect())
                         .bind("endow", p.getEndow())
 
-                        .execute()
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class).one()
         );
-}
+    }
 
     public void deleteById(int id) {
         get().useHandle(handle ->
@@ -627,6 +628,177 @@ public class ProductDao extends BaseDao {
                         .execute()
         );
     }
+
+    public List<Product> getAllProductsPage(String priceRange,
+                                            List<Integer> categoryIds,
+                                            List<Integer> brandIds,
+                                            List<Integer> useTimes,
+                                            String sort,
+                                            int offset,
+                                            int limit) {
+        return get().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
+
+            // lọc theo price
+            if (priceRange != null) {
+                switch (priceRange) {
+                    case "under500" -> sql.append("AND price < 500000 ");
+                    case "500-1m" -> sql.append("AND price BETWEEN 500000 AND 1000000 ");
+                    case "1-2m" -> sql.append("AND price BETWEEN 1000000 AND 2000000 ");
+                    case "2-3m" -> sql.append("AND price BETWEEN 2000000 AND 3000000 ");
+                    case "over3m" -> sql.append("AND price > 3000000 ");
+                }
+            }
+
+            // lọc theo category
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                sql.append("AND categories_id IN (<categoryIds>) ");
+            }
+
+            // lọc theo brand
+            if (brandIds != null && !brandIds.isEmpty()) {
+                sql.append("AND brand_id IN (<brandIds>) ");
+            }
+
+            // lọc theo useTime
+            if (useTimes != null && !useTimes.isEmpty()) {
+                sql.append("AND useTime IN (<useTimes>) ");
+            }
+
+            // sort
+            if ("price_asc".equals(sort)) {
+                sql.append("ORDER BY price ASC ");
+            } else if ("price_desc".equals(sort)) {
+                sql.append("ORDER BY price DESC ");
+            } else if ("newest".equals(sort)) {
+                sql.append("ORDER BY createdAt DESC "); // đúng tên cột trong DB
+            } else {
+                sql.append("ORDER BY ID ");
+            }
+
+            sql.append("LIMIT :limit OFFSET :offset");
+
+            var query = handle.createQuery(sql.toString())
+                    .bind("limit", limit)
+                    .bind("offset", offset);
+
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                query.bindList("categoryIds", categoryIds);
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                query.bindList("brandIds", brandIds);
+            }
+            if (useTimes != null && !useTimes.isEmpty()) {
+                query.bindList("useTimes", useTimes);
+            }
+
+            return query.mapToBean(Product.class).list();
+        });
+    }
+
+    public int countAllProducts(String priceRange,
+                                List<Integer> categoryIds,
+                                List<Integer> brandIds,
+                                List<Integer> useTimes) {
+        return get().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
+
+            // lọc theo price
+            if (priceRange != null) {
+                switch (priceRange) {
+                    case "under500" -> sql.append("AND price < 500000 ");
+                    case "500-1m" -> sql.append("AND price BETWEEN 500000 AND 1000000 ");
+                    case "1-2m" -> sql.append("AND price BETWEEN 1000000 AND 2000000 ");
+                    case "2-3m" -> sql.append("AND price BETWEEN 2000000 AND 3000000 ");
+                    case "over3m" -> sql.append("AND price > 3000000 ");
+                }
+            }
+
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                sql.append("AND categories_id IN (<categoryIds>) ");
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                sql.append("AND brand_id IN (<brandIds>) ");
+            }
+            if (useTimes != null && !useTimes.isEmpty()) {
+                sql.append("AND useTime IN (<useTimes>) ");
+            }
+
+            var query = handle.createQuery(sql.toString());
+
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                query.bindList("categoryIds", categoryIds);
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                query.bindList("brandIds", brandIds);
+            }
+            if (useTimes != null && !useTimes.isEmpty()) {
+                query.bindList("useTimes", useTimes);
+            }
+
+            return query.mapTo(Integer.class).one();
+        });
+    }
+
+
+    public List<Product> filterWishlist(List<Integer> wishlistIds,
+                                        List<Integer> categoryIds,
+                                        String priceRange,
+                                        List<Integer> brandIds,
+                                        List<Integer> useTimes,
+                                        String sort) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE active=1 ");
+
+        if (wishlistIds != null && !wishlistIds.isEmpty()) {
+            sql.append("AND id IN (<wishlistIds>) ");
+        }
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append("AND categories_id IN (<categoryIds>) ");
+        }
+        if (priceRange != null) {
+            switch (priceRange) {
+                case "under500" -> sql.append("AND price < 500000 ");
+                case "500-1m" -> sql.append("AND price BETWEEN 500000 AND 1000000 ");
+                case "1-2m" -> sql.append("AND price BETWEEN 1000000 AND 2000000 ");
+                case "2-3m" -> sql.append("AND price BETWEEN 2000000 AND 3000000 ");
+                case "over3m" -> sql.append("AND price > 3000000 ");
+            }
+        }
+        if (brandIds != null && !brandIds.isEmpty()) {
+            sql.append("AND brand_id IN (<brandIds>) ");
+        }
+        if (useTimes != null && !useTimes.isEmpty()) {
+            sql.append("AND useTime IN (<useTimes>) ");
+        }
+
+        if ("price_asc".equals(sort)) {
+            sql.append("ORDER BY price ASC ");
+        } else if ("price_desc".equals(sort)) {
+            sql.append("ORDER BY price DESC ");
+        } else if ("newest".equals(sort)) {
+            sql.append("ORDER BY created_at DESC ");
+        } else {
+            sql.append("ORDER BY id ASC ");
+        }
+
+        return get().withHandle(handle -> {
+            var q = handle.createQuery(sql.toString());
+            if (wishlistIds != null && !wishlistIds.isEmpty()) {
+                q.bindList("wishlistIds", wishlistIds);
+            }
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                q.bindList("categoryIds", categoryIds);
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                q.bindList("brandIds", brandIds);
+            }
+            if (useTimes != null && !useTimes.isEmpty()) {
+                q.bindList("useTimes", useTimes);
+            }
+            return q.mapToBean(Product.class).list();
+        });
+    }
+
 
 
 }
