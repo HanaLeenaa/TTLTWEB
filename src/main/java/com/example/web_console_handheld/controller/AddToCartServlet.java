@@ -27,14 +27,14 @@ public class AddToCartServlet extends HttpServlet {
         System.out.println("USER = " + user);
 
         if (user == null) {
-            //Chua login
-            session.setAttribute("loginMessage", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            String json = "{ \"notLoggedIn\": true, \"redirect\": \""  + request.getContextPath() + "/login\" }";
+            String json = "{ \"message\": \"Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng\" }";
             response.getWriter().write(json);
             return;
         }
+
 
         int productId = Integer.parseInt(request.getParameter("productId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));

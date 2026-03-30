@@ -317,13 +317,23 @@ function addToCart(form) {
         method: 'POST',
         body: new URLSearchParams(formData)
     })
-    .then(res => res.json())
+    .then(res => {
+        if (res.status === 401) {
+            // chưa đăng nhập
+            alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
+    })
     .then(data => {
+        if (!data) return;
+
         // cập nhật số lượng giỏ hàng trên header
         document.getElementById("cart_num").textContent = data.total;
         alert(data.message);
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Fetch error:", err));
 }
 </script>
 
