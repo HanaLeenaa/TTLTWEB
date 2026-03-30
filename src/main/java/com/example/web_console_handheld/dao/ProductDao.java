@@ -193,7 +193,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND use_time IN (<useTimes>)");
+            sql.append(" AND useTime IN (<useTimes>)");
         }
 
         return get().withHandle(handle -> {
@@ -248,7 +248,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND use_time IN (<useTimes>)");
+            sql.append(" AND useTime IN (<useTimes>)");
         }
 
         // ===== SORT =====
@@ -662,7 +662,7 @@ public class ProductDao extends BaseDao {
 
             // lọc theo useTime
             if (useTimes != null && !useTimes.isEmpty()) {
-                sql.append("AND use_time IN (<useTimes>) ");
+                sql.append("AND useTime IN (<useTimes>) ");
             }
 
             // sort
@@ -721,7 +721,7 @@ public class ProductDao extends BaseDao {
                 sql.append("AND brand_id IN (<brandIds>) ");
             }
             if (useTimes != null && !useTimes.isEmpty()) {
-                sql.append("AND use_time IN (<useTimes>) ");
+                sql.append("AND useTime IN (<useTimes>) ");
             }
 
             var query = handle.createQuery(sql.toString());
@@ -768,7 +768,7 @@ public class ProductDao extends BaseDao {
             sql.append("AND brand_id IN (<brandIds>) ");
         }
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append("AND use_time IN (<useTimes>) ");
+            sql.append("AND useTime IN (<useTimes>) ");
         }
 
         if ("price_asc".equals(sort)) {
