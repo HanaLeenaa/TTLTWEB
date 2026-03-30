@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 
 @WebServlet("/resend-otp")
 public class ResendOtpServlet extends HttpServlet {
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
@@ -22,15 +21,17 @@ public class ResendOtpServlet extends HttpServlet {
         try {
             User tempUser = (User) session.getAttribute("tempUser");
 
-            //Không có user tạm
             if (tempUser == null) {
                 session.setAttribute("msg", "Phiên đăng ký đã hết hạn. Vui lòng đăng ký lại.");
                 resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/register.jsp");
                 return;
             }
 
-            // Tạo OTP mới
-            String rawOtp = OtpUtil.generateOtp();
+            // Xóa OTP cũ khỏi danh sách active
+            String oldOtpHash = (String) session.getAttribute("otpHash");
+
+            // Tạo OTP mới duy nhất
+            String rawOtp = OtpUtil.generateUniqueOtp();
             String otpHash = PasswordUtil.hash(rawOtp);
             LocalDateTime expiry = LocalDateTime.now().plusSeconds(60);
 
@@ -43,7 +44,7 @@ public class ResendOtpServlet extends HttpServlet {
             session.setAttribute("msg", "Mã OTP mới đã được gửi. Vui lòng kiểm tra email.");
             resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("msg", "Không thể gửi email OTP. Vui lòng thử lại sau.");
             resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");

@@ -36,10 +36,14 @@ public class ProductServlet extends HttpServlet {
         int offset = (page - 1) * PAGE_SIZE;
 
         /* ================= PARAMS ================= */
-        Integer categoryId = null;
-        try {
-            categoryId = Integer.parseInt(request.getParameter("categoryId"));
-        } catch (Exception ignored) {}
+        List<Integer> categoryIds = null;
+        String[] catArr = request.getParameterValues("categoryId");
+        if (catArr != null) {
+            categoryIds = Arrays.stream(catArr)
+                    .filter(s -> s != null && !s.isEmpty())
+                    .map(Integer::parseInt)
+                    .toList();
+        }
 
         String priceRange = request.getParameter("priceRange");
         String sort = request.getParameter("sort");
@@ -49,6 +53,7 @@ public class ProductServlet extends HttpServlet {
         String[] brandArr = request.getParameterValues("brandId");
         if (brandArr != null) {
             brandIds = Arrays.stream(brandArr)
+                    .filter(s -> s != null && !s.isEmpty()) // Lọc bỏ chuỗi rỗng
                     .map(Integer::parseInt)
                     .toList();
         }
@@ -57,6 +62,7 @@ public class ProductServlet extends HttpServlet {
         String[] useArr = request.getParameterValues("useTime");
         if (useArr != null) {
             useTimes = Arrays.stream(useArr)
+                    .filter(s -> s != null && !s.isEmpty())
                     .map(Integer::parseInt)
                     .toList();
         }
@@ -68,46 +74,25 @@ public class ProductServlet extends HttpServlet {
         boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
 
         if (hasKeyword) {
-            keyword = keyword.trim();
-
+            // tìm theo keyword
             products = productDao.searchByNameFilterPage(
-                    keyword,
-                    categoryId,
-                    priceRange,
-                    brandIds,
-                    useTimes,
-                    sort,
-                    offset,
-                    PAGE_SIZE
+                    keyword, categoryIds, priceRange, brandIds, useTimes, sort, offset, PAGE_SIZE
             );
-
             totalProduct = productDao.countSearchByNameFilter(
-                    keyword,
-                    categoryId,
-                    priceRange,
-                    brandIds,
-                    useTimes
+                    keyword, categoryIds, priceRange, brandIds, useTimes
             );
-
             request.setAttribute("keyword", keyword);
         } else {
-            products = productDao.filterSortPage(
-                    categoryId,
-                    priceRange,
-                    brandIds,
-                    useTimes,
-                    sort,
-                    offset,
-                    PAGE_SIZE
-            );
-
-            totalProduct = productDao.countFilter(
-                    categoryId,
-                    priceRange,
-                    brandIds,
-                    useTimes
-            );
+            // nếu categoryIds null hoặc rỗng thì lấy toàn bộ
+            if (categoryIds == null || categoryIds.isEmpty()) {
+                products = productDao.getAllProductsPage(priceRange, categoryIds, brandIds, useTimes, sort, offset, PAGE_SIZE);
+                totalProduct = productDao.countAllProducts(priceRange, categoryIds, brandIds, useTimes);
+            } else {
+                products = productDao.filterSortPage(categoryIds, priceRange, brandIds, useTimes, sort, offset, PAGE_SIZE);
+                totalProduct = productDao.countFilter(categoryIds, priceRange, brandIds, useTimes);
+            }
         }
+
 
         int totalPage = (int) Math.ceil((double) totalProduct / PAGE_SIZE);
         if (page > totalPage && totalPage > 0) page = totalPage;
@@ -118,7 +103,7 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("totalPage", totalPage);
 
         // giữ trạng thái filter
-        request.setAttribute("selectedCategoryId", categoryId);
+        request.setAttribute("selectedCategoryIds", categoryIds);
         request.setAttribute("selectedBrandIds", brandIds);
         request.setAttribute("selectedUseTimes", useTimes);
         request.setAttribute("selectedPriceRange", priceRange);

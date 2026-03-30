@@ -50,14 +50,14 @@ public class ProfileServlet extends HttpServlet {
         if (tab == null || tab.isEmpty()) {
             tab = "orders";
         }
+        List<Order> orders = Collections.emptyList();
+
         if ("orders".equals(tab)) {
-            List<Order> orders =
-                    dao.getOrdersByUserId(user.getId());
-            request.setAttribute("orders", orders);
+            orders = dao.getOrdersByUserId(user.getId());
         }
 
 
-        request.setAttribute("orders", Collections.emptyList());
+        request.setAttribute("orders", orders);
         request.setAttribute("reviews", Collections.emptyList());
         request.setAttribute("user", user);
         request.setAttribute("tab", tab);

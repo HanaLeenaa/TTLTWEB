@@ -29,6 +29,7 @@ public class AdminOrderServlet extends HttpServlet {
             request.setAttribute("orderItems", dao.getOrderItemsByOrderId(id));
         }
 
+        request.setAttribute("activePage", "orders");
         request.getRequestDispatcher("/Assets/component/adminPage/ordersManagement.jsp").forward(request, response);
 
     }

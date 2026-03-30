@@ -30,6 +30,8 @@ public class AdminUserServlet extends HttpServlet {
         }
 
         req.setAttribute("users", userDao.getAll());
+
+        req.setAttribute("activePage", "users");
         req.getRequestDispatcher("/Assets/component/adminPage/userManagement.jsp")
                 .forward(req, resp);
     }

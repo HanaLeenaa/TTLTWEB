@@ -43,14 +43,11 @@ public class Cart implements Serializable {
         item.increaseQuantity(1);
     }
     }
-    public void decrease(int productID){
+    public void decrease(int productID) {
         CartItem item = cartItems.get(productID);
-        if (item != null){
-            if (item.getQuantity() > 1){
+        if (item != null) {
+            if (item.getQuantity() > 1) {
                 item.setQuantity(item.getQuantity() - 1);
-
-            }else{
-                cartItems.remove(productID);
             }
         }
     }

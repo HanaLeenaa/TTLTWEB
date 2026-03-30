@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 12/6/2025
-  Time: 6:56 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -203,9 +196,6 @@
     </div>
 
     <c:set var="cart" value="${sessionScope.cart}" />
-    <form id="mainForm"
-          action="${pageContext.request.contextPath}/payment"
-          method="get">
 
     <table class="cart-table">
         <tbody id="cart-items">
@@ -248,6 +238,7 @@
                                    name="selectedItems"
                                     value="${item.product.ID}"
                                     class="select-item"
+                                    form="mainForm"
                                     data-price="${item.product.priceValue}"
                                     data-id="${item.product.ID}">
                         </td>
@@ -311,6 +302,10 @@
     </table>
 
 
+
+    <form id="mainForm"
+          action="${pageContext.request.contextPath}/payment"
+          method="get">
         <button type="submit" class="btn-order">Đặt hàng</button>
     </form>
 

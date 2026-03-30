@@ -17,6 +17,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>header</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/searchSuggest.css">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -157,6 +158,12 @@
                                         Trang cá nhân
                                     </div>
 
+                                    <div class="dropdown-item"
+                                         onclick="window.location.href='${pageContext.request.contextPath}/wishlist'">
+                                         Sản phẩm yêu thích
+                                    </div>
+
+
                                     <div class="dropdown-item logout"
                                          onclick="window.location.href='${pageContext.request.contextPath}/logout'">
                                         Đăng xuất
@@ -217,35 +224,97 @@
             </div>
         </div>
     </div>
+    <div id="cart-toast"
+         style="
+         position: absolute;
+         top: 60px;
+         right: 12px;
+         background: #4CAF50;
+         color: white;
+         padding: 12px 20px;
+         border-radius: 8px;
+         display: none;
+         z-index: 9999;
+         font-size: 14px;
+         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+     ">
+    </div>
+
 </header>
 
 <script>
     const input = document.getElementById("searchInput");
     const box = document.getElementById("suggestBox");
+    const contextPath = "${pageContext.request.contextPath}";
+    let debounceTimeout = null;
 
-    input.addEventListener("keyup", function (e) {
+    input.addEventListener("input", function () {
         const keyword = this.value.trim();
 
-        if (keyword.length < 2) {
+        if (keyword.length < 1) {
             box.innerHTML = "";
+            box.style.display = "none";
             return;
         }
 
-        fetch("${pageContext.request.contextPath}/search-suggest?q=" + encodeURIComponent(keyword))
-            .then(res => res.json())
-            .then(data => {
-                box.innerHTML = "";
-                data.forEach(p => {
-                    box.innerHTML += `
-                    <div class="suggest-item"
-                         onclick="window.location.href='product-detail?slug=${p.metatitle}'">
-                        <img src="${p.image}" width="40">
-                        <span>${p.name}</span>
-                    </div>
-                `;
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            fetch(contextPath + "/search-suggest?q=" + encodeURIComponent(keyword))
+                .then(res => res.json())
+                .then(data => {
+                    box.innerHTML = "";
+
+                    if (data && data.length > 0) {
+                        data.forEach(p => {
+                            const item = document.createElement("div");
+                            item.className = "suggest-item";
+
+                            item.innerHTML = `
+                                <a href="${pageContext.request.contextPath}/product-detail?id=\${p.id}"
+                                   style="display:flex;align-items:center;text-decoration:none">
+                                    <img src="\${p.image}" style="width:80px;height:auto;border:2px solid blue;margin-right:10px">
+                                    <span style="color:green;font-size:16px">\${p.name}</span>
+                                </a>
+                            `;
+
+                            box.appendChild(item);
+                        });
+                        box.style.display = "block";
+                    } else {
+                        box.style.display = "none";
+                    }
+                })
+                .catch(err => {
+                    console.error("Lỗi fetch:", err);
+                    box.style.display = "none";
                 });
-            });
+        }, 300);
     });
+
+    document.addEventListener("click", (e) => {
+        if (!box.contains(e.target) && e.target !== input) {
+            box.style.display = "none";
+        }
+    });
+</script>
+
+<script>
+    function showToast(msg){
+        window.scrollTo({
+            top:0,
+            behavior: "smooth"
+        });
+        setTimeout(() => {
+            const toast = document.getElementById("cart-toast");
+            toast.innerText = msg;
+            toast.style.display = "block";
+
+            setTimeout(() => {
+                toast.style.display = "none";
+
+            }, 3000);
+        }, 300);
+    }
 </script>
 
 </body>

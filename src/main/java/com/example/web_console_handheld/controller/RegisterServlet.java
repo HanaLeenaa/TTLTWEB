@@ -113,8 +113,8 @@ public class RegisterServlet extends HttpServlet {
 
             session.setAttribute("tempUser", tempUser);
 
-            // tạo OTP
-            String rawOtp = OtpUtil.generateOtp();
+            // tạo OTP duy nhất toàn server
+            String rawOtp = OtpUtil.generateUniqueOtp();
             String otpHash = PasswordUtil.hash(rawOtp);
             LocalDateTime expiry = LocalDateTime.now().plusSeconds(60);
 
@@ -123,6 +123,9 @@ public class RegisterServlet extends HttpServlet {
 
             // gửi email OTP
             EmailService.sendOtp(email, rawOtp);
+
+            // Khi OTP hết hạn hoặc người dùng xác thực xong gọi
+            OtpUtil.expireOtp(rawOtp);
 
             setMsg(session, "Đăng ký thành công! Vui lòng kiểm tra email để nhập mã OTP.");
             resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");

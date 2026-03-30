@@ -117,30 +117,33 @@ public class UserDao extends BaseDao{
 
     // cập nhật thông tin người dùng
     public boolean updateProfile(User u) {
-        String sql = """
+        String sql = """ 
         UPDATE users
-        SET email = ?,
+        SET username = ?,
+            email = ?,
             phoneNum = ?,
             location = ?,
             updated_at = NOW()
-        WHERE id = ?
-    """;
+        WHERE id = ?""";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, u.getEmail());
-            ps.setString(2, u.getPhoneNum());
-            ps.setString(3, u.getLocation());
-            ps.setInt(4, u.getId());
+            ps.setString(1, u.getUsername());
+            ps.setString(2, u.getEmail());
+            ps.setString(3, u.getPhoneNum());
+            ps.setString(4, u.getLocation());
+            ps.setInt(5, u.getId());
 
-            return ps.executeUpdate() > 0;
+            int rows = ps.executeUpdate();
+            return rows > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
+
     public void updateAddress(int userId, String address) {
         get().useHandle(handle ->
                 handle.createUpdate(
@@ -234,10 +237,10 @@ public class UserDao extends BaseDao{
 
             while (rs.next()) {
                 User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setFullname(rs.getString("fullname"));
+                u.setId(rs.getInt("ID"));
+                u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
-                u.setRole(rs.getString("role"));
+//                u.setRole(rs.getString("role"));
                 u.setActive(rs.getBoolean("active"));
                 list.add(u);
             }
@@ -246,74 +249,23 @@ public class UserDao extends BaseDao{
         }
         return list;
     }
-    // Tìm user theo email
-    public User findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setPassword(rs.getString("password"));
-                return u;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+    public User getUserByEmail(String email) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE email = :email")
+                        .bind("email", email)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null));
     }
 
-    // Lưu token reset password với thời hạn expireAt
-    public void saveResetToken(String email, String token, LocalDateTime expireAt) {
-        String sql = "UPDATE users SET reset_token=?, reset_token_expire=? WHERE email=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, token);
-            // Chuyển LocalDateTime sang Timestamp theo múi giờ hệ thống
-            ps.setTimestamp(2, Timestamp.valueOf(expireAt.atZone(ZoneId.systemDefault()).toLocalDateTime()));
-
-            ps.setString(3, email);
-            int updated = ps.executeUpdate();
-            System.out.println("SaveResetToken - updated rows: " + updated);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }}
-
-    // Kiểm tra token còn hợp lệ
-    public boolean isResetTokenValid(String token) {
-        String sql = "SELECT 1 FROM users WHERE reset_token=? AND reset_token_expire > ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, token);
-            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Cập nhật mật khẩu theo token và xóa token
-    public boolean updatePasswordByToken(String token, String newPassword) {
-        String sql = "UPDATE users SET password=?, reset_token=NULL, reset_token_expire=NULL, updated_at=NOW() WHERE reset_token=?";
-        String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, hashed);
-            ps.setString(2, token);
-            int updated = ps.executeUpdate();
-            return updated > 0; // true nếu update thành công
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void insertGoogleUser(String email, String name) {
+        get().withHandle(handle ->
+                handle.createUpdate("""
+                INSERT INTO users(username, email, password, active, created_at, provider)
+                VALUES(:username, :email, '', true, NOW(), 'google')""")
+                        .bind("username", name)
+                        .bind("email", email)
+                        .execute());
     }
 }

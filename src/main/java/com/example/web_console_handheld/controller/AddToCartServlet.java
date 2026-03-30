@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.model.Cart;
+import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,7 +29,10 @@ public class AddToCartServlet extends HttpServlet {
         if (user == null) {
             //Chua login
             session.setAttribute("loginMessage", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng");
-            response.sendRedirect(request.getContextPath() +"/login");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String json = "{ \"notLoggedIn\": true, \"redirect\": \""  + request.getContextPath() + "/login\" }";
+            response.getWriter().write(json);
             return;
         }
 
@@ -61,8 +65,14 @@ public class AddToCartServlet extends HttpServlet {
 
         session.setAttribute("cart", cart);
 
-        session.setAttribute("addSuccess", true);
-        response.sendRedirect(request.getHeader("Referer"));
+        int total = 0;
+        for (CartItem item : cart.getCartItems().values()){
+            total += item.getQuantity();
+        }
+        response.setContentType("application/json");
+
+        String json = "{ \"message\": \"Thêm " +"'" + p.getName() +  "'" + " vào giỏ thành công!\", \"total\": " + total + "}";
+        response.getWriter().write(json);
     }
 }
 
