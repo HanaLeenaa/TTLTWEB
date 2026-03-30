@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/RemoveWishlist")
@@ -22,7 +23,6 @@ public class RemoveWishlistServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         HttpSession session = request.getSession(false);
-        // Kiểm tra đăng nhập
         Object user = (session != null) ? session.getAttribute("auth") : null;
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -41,14 +41,15 @@ public class RemoveWishlistServlet extends HttpServlet {
 
         int productId = Integer.parseInt(idParam);
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
+        if (wishlist == null) wishlist = new ArrayList<>();
 
-        if (wishlist != null) {
-            wishlist.removeIf(p -> p.getID() == productId);
-            session.setAttribute("wishlist", wishlist);
-        }
+        boolean removed = wishlist.removeIf(p -> p.getID() == productId);
+        session.setAttribute("wishlist", wishlist);
 
         out.print(
-                "{\"removed\":true,\"message\":\"Đã xóa khỏi yêu thích\",\"total\":" + (wishlist != null ? wishlist.size() : 0) + "}"
+                "{\"removed\":" + removed +
+                        ",\"message\":\"" + (removed ? "Đã xóa khỏi yêu thích" : "Sản phẩm không có trong wishlist") + "\"" +
+                        ",\"total\":" + wishlist.size() + "}"
         );
         out.flush();
     }

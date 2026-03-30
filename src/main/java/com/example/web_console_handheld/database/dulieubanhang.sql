@@ -3,9 +3,8 @@ CREATE DATABASE dulieubanhang
   COLLATE utf8mb4_unicode_ci;
 USE dulieubanhang;
 
--- ==========================================================
--- 1. XÓA BẢNG CŨ (DROP TABLES) - Thứ tự ngược để tránh lỗi khóa ngoại
--- ==========================================================
+-- 1. XÓA BẢNG CŨ
+
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews, 
                      gallary, products, otp_tokens, brands, categories, 
@@ -13,9 +12,7 @@ DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews,
                      contact, icon, logo;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- ==========================================================
--- 2. TẠO CÁC BẢNG 
--- ==========================================================
+-- 2. TẠO CÁC BẢNG
 
 CREATE TABLE admin (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -179,9 +176,7 @@ CREATE TABLE history (
     FOREIGN KEY (bill_id) REFERENCES bill(ID)
 );
 
--- ==========================================================
--- 3. DỮ LIỆU MẪU (DML)
--- ==========================================================
+-- 3. THÊM DỮ LIỆU
 
 INSERT INTO admin(username, password, fullname) 
 VALUES ('Admin', '$2a$10$EsoqYldgsgbopnxoOvxf7ujIcrjbb.BX5v86K9JCzC6s4PUtfC3hm', N'Administrator');
@@ -2825,3 +2820,5 @@ INSERT INTO blog VALUES
 -- Huỳnh Như -21/03
 -- THEM FIELD "product_image" vao order_items
 ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500)
+
+ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';

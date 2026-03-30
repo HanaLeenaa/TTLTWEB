@@ -2,12 +2,10 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.model.Product;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +39,25 @@ public class AddWishlistServlet extends HttpServlet {
         if (wishlist == null) wishlist = new ArrayList<>();
 
         boolean exists = wishlist.stream().anyMatch(p -> p.getID() == productId);
-        if (!exists && product != null) {
+
+        if (exists) {
+            // Nếu đã có thì xóa (toggle off)
+            wishlist.removeIf(p -> p.getID() == productId);
+            session.setAttribute("wishlist", wishlist);
+
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"removed\":true,\"message\":\"Đã xóa khỏi yêu thích\",\"total\":" + wishlist.size() + "}"
+            );
+        } else if (product != null) {
+            // Nếu chưa có thì thêm (toggle on)
             wishlist.add(product);
             session.setAttribute("wishlist", wishlist);
+
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"added\":true,\"message\":\"Đã thêm vào yêu thích\",\"total\":" + wishlist.size() + "}"
+            );
         }
-
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(
-                "{\"added\":true,\"message\":\"Đã thêm vào yêu thích\",\"total\":" + wishlist.size() + "}"
-        );
-
     }
 }

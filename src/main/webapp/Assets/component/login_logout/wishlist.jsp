@@ -119,9 +119,12 @@
                     <c:otherwise>
                         <c:forEach var="c" items="${wishlist}">
                             <div class="product-item">
+
+                                <!-- Nút xóa -->
                                 <button type="button" class="remove-icon" onclick="removeWishlist('${c.ID}')">
-                                        x
+                                    x
                                 </button>
+
                                 <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
                                     <img src="${c.image}" alt="">
                                     <h4>${c.name}</h4>
@@ -138,10 +141,10 @@
                                             Mua ngay
                                         </button>
                                     </form>
-
                                 </div>
                             </div>
                         </c:forEach>
+
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -231,6 +234,26 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+<script>
+function toggleWishlist(productId, btn) {
+    fetch('${pageContext.request.contextPath}/AddWishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'productId=' + encodeURIComponent(productId)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.added) {
+            btn.classList.add("active");
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
+        } else if (data.removed) {
+            btn.classList.remove("active");
+            btn.innerHTML = '<i class="fa fa-heart-o"></i>';
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
 
 </body>
 </html>

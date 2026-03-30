@@ -747,11 +747,14 @@ public class ProductDao extends BaseDao {
                                         List<Integer> brandIds,
                                         List<Integer> useTimes,
                                         String sort) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE active=1 ");
-
-        if (wishlistIds != null && !wishlistIds.isEmpty()) {
-            sql.append("AND id IN (<wishlistIds>) ");
+        // Nếu wishlist rỗng thì trả về rỗng
+        if (wishlistIds == null || wishlistIds.isEmpty()) {
+            return List.of();
         }
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE active=1 ");
+        sql.append("AND id IN (<wishlistIds>) ");
+
         if (categoryIds != null && !categoryIds.isEmpty()) {
             sql.append("AND categories_id IN (<categoryIds>) ");
         }
@@ -783,9 +786,7 @@ public class ProductDao extends BaseDao {
 
         return get().withHandle(handle -> {
             var q = handle.createQuery(sql.toString());
-            if (wishlistIds != null && !wishlistIds.isEmpty()) {
-                q.bindList("wishlistIds", wishlistIds);
-            }
+            q.bindList("wishlistIds", wishlistIds);
             if (categoryIds != null && !categoryIds.isEmpty()) {
                 q.bindList("categoryIds", categoryIds);
             }
@@ -798,6 +799,7 @@ public class ProductDao extends BaseDao {
             return q.mapToBean(Product.class).list();
         });
     }
+
 
 
 

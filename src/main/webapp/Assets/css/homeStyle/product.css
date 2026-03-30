@@ -348,6 +348,17 @@ main{
     color: #fff;
 }
 
+/* Tim rỗng (chưa nhấn) */
+.btn-fav i.fa-heart-o {
+    color: ##999;
+}
+
+/* Tim đầy (đã nhấn) */
+.btn-fav.active i.fa-heart {
+    color: #fff;
+}
+
+
 
 /* Bộ lọc mặc định trên desktop */
 .filter {
