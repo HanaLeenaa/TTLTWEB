@@ -80,7 +80,36 @@
             align-items: center;
             gap: 12px;
         }
+        .search-wrapper{
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-bottom: 18px;
+        }
+        .search-box{
+            position: relative;
+            width: 300px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 44px 10px 14px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background-color: #cce5ff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
 
+        .search-box i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0b74f8;
+            font-size: 22px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -94,11 +123,23 @@
     </a>
 </div>
 
+<div class="search-wrapper">
+    <form action="${pageContext.request.contextPath}/admin/products" method="get">
+    <div class="search-box">
+        <input type="text" name="keyword" placeholder="Tìm sản phẩm..."
+            value="${param.keyword}">
+            <i class="fa-solid fa-magnifying-glass"></i>
+</div>
+    </form>
+</div>
+
 <table>
     <tr>
         <th>ID</th>
+        <th>Hình ảnh</th>
         <th>Tên</th>
         <th>Giá</th>
+        <th>Số lượng</th>
         <th>Active</th>
         <th>Premium</th>
         <th>Hành động</th>
@@ -107,8 +148,19 @@
     <c:forEach items="${products}" var="p">
         <tr>
             <td>${p.ID}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${p.image.startsWith('http')}">
+                        <img src="${p.image}" width="80" alt="${p.name}">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${p.image}" width="80" alt="${p.name}">
+                    </c:otherwise>
+                </c:choose>
+            </td>
             <td>${p.name}</td>
             <td>${p.price}</td>
+            <td>${p.stock_quantity}</td>
             <td>${p.active}</td>
             <td>${p.ispremium}</td>
             <td>

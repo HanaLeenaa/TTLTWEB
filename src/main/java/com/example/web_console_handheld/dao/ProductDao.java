@@ -800,8 +800,16 @@ public class ProductDao extends BaseDao {
         });
     }
 
-
-
-
+    public List<Product> adminSearchByName(String keyword) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT * FROM products 
+                WHERE name LIKE :kw
+                ORDER BY ID ASC 
+            """).bind("kw", "%" + keyword + "%")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 }
 

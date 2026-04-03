@@ -240,7 +240,7 @@ public class UserDao extends BaseDao{
                 u.setId(rs.getInt("ID"));
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
-//                u.setRole(rs.getString("role"));
+                u.setRole(rs.getString("role"));
                 u.setActive(rs.getBoolean("active"));
                 list.add(u);
             }

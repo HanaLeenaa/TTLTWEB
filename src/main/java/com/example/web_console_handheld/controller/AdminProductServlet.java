@@ -19,9 +19,19 @@ public class AdminProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Product> list = productDAO.getAll();
+        String keyword = request.getParameter("keyword");
+        List<Product> list;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            list = productDAO.adminSearchByName(keyword.trim());
+        }else{
+            list = productDAO.getAll();
+        }
+
         request.setAttribute("products", list);
         request.setAttribute("contentPage", "/Assets/component/adminPage/productManagement.jsp");
+
+
 
         request.setAttribute("activePage", "products");
         request.getRequestDispatcher( "/Assets/component/adminPage/admin.jsp").forward(request, response);
