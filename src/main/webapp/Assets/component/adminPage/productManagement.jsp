@@ -10,6 +10,8 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/Assets/css/AdminPage/productManagement.css">
 
     <style>
         h2 {
@@ -170,9 +172,9 @@
                     <i class="fa-regular fa-pen-to-square"></i> Sửa
                 </a>
 
-                <a class="btn-delete"
-                   href="${pageContext.request.contextPath}/admin/products/delete?id=${p.ID}"
-                   onclick="return confirm('Xóa sản phẩm này?')">
+                <a class="btn-delete openDeleteModal"
+                   href="#"
+                   data-url="${pageContext.request.contextPath}/admin/products/delete?id=${p.ID}">
                     <i class="fa-regular fa-trash-can"></i> Xóa
                 </a>
                 </div>
@@ -181,6 +183,98 @@
     </c:forEach>
 </table>
 
+<%--Confirm xóa sản phẩm--%>
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>Xác nhận xóa</h3>
+        <p>Bạn có muốn xóa sản phẩm này không?</p>
+
+        <div class="modal-actions">
+            <button id="cancelDelete" class="btn-cancel">Hủy</button>
+            <a id="confirmDeleteBtn" href="#" class="btn-confirm-delete">Xóa</a>
+        </div>
+    </div>
+</div>
+
+<%--Popup thông báo xóa thành công/thất bại--%>
+<div id="resultModal" class="alert-overlay">
+    <div id="resultBox" class="alert-box">
+        <h3 id="resultTitle"></h3>
+        <p id="resultMessage"></p>
+        <button id="closeResultModal" class="alert-btn">Đóng</button>
+    </div>
+</div>
+
+<%--xử lý popup--%>
+<script>
+    const deleteModal = document.getElementById("deleteModal");
+    const confirmDelete = document.getElementById("confirmDeleteBtn");
+    const cancelDelete = document.getElementById("cancelDelete");
+
+    document.querySelectorAll(".openDeleteModal").forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const deleteUrl = this.getAttribute("data-url");
+            confirmDelete.setAttribute("href", deleteUrl);
+            deleteModal.style.display = "flex";
+        });
+    });
+    cancelDelete.addEventListener("click", function () {
+        deleteModal.style.display = "none";
+    });
+
+    deleteModal.addEventListener("click", function (e) {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = "none";
+        }
+    });
+
+    //popup result
+    const resultModal = document.getElementById("resultModal");
+    const resultBox = document.getElementById("resultBox");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const closeResultModal = document.getElementById("closeResultModal");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get("success");
+    const error = urlParams.get("error");
+    if (success === "deleted"){
+        resultBox.className = "alert-box success";
+        resultTitle.textContent = "Thành công";
+        resultMessage.textContent = "Sản phẩm đã được xóa thành công!";
+        resultModal.style.display = "flex";
+    }
+
+    if (error === "deletefail") {
+        resultBox.className = "alert-box error";
+        resultTitle.textContent = "Thất bại";
+        resultMessage.textContent = "Không thể xóa sản phẩm.";
+        resultModal.style.display = "flex";
+    }
+
+    if (error === "invalidid") {
+        resultBox.className = "alert-box error";
+        resultTitle.textContent = "Lỗi";
+        resultMessage.textContent = "ID sản phẩm không hợp lệ.";
+        resultModal.style.display = "flex";
+    }
+
+    closeResultModal.addEventListener("click", function () {
+        resultModal.style.display = "none";
+
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+    });
+
+    resultModal.addEventListener("click", function (e) {
+        if (e.target === resultModal) {
+            resultModal.style.display = "none";
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+    });
+</script>
 </body>
 </html>
 
