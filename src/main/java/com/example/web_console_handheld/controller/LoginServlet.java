@@ -24,7 +24,11 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("auth", user);
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
-            request.setAttribute("error", "Bạn nhập sai tên hoặc mật khẩu");
+            if (as.isBlocked(username, password)) {
+                request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên!");
+            }else {
+                request.setAttribute("error", "Bạn nhập sai tên hoặc mật khẩu");
+            }
             request.getRequestDispatcher("/Assets/component/login_logout/login.jsp").forward(request, response);
         }
     }

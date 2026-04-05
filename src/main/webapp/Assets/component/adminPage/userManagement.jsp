@@ -54,7 +54,6 @@
             font-size: 14px;
         }
 
-        /* ROLE */
         .role-badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -67,7 +66,6 @@
         .role-staff { background: #74b9ff; color: #fff; }
         .role-user  { background: #dfe6e9; }
 
-        /* STATUS */
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -86,16 +84,34 @@
             padding: 4px;
         }
 
-        button {
-            padding: 4px 8px;
+        .action-col a,
+        .action-col button {
+            text-decoration: none;
+            color: white;
+            padding: 8px 14px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .btn-edit {
+            background: #3498db;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
         }
 
         .btn-lock {
-            background: #ff7675;
+            background: #e95211;
             color: white;
+        }
+        .btn-lock:hover {
+            background: #ae2c00;
         }
 
         .btn-unlock {
@@ -104,8 +120,11 @@
         }
 
         .btn-delete {
-            background: #d63031;
+            background: red;
             color: white;
+        }
+        .btn-delete:hover {
+            background: #d63031;
         }
     </style>
 </head>
@@ -173,16 +192,11 @@
                         <!-- ACTION -->
                         <td class="action-col">
 
-                            <!-- ĐỔI QUYỀN -->
-                            <form action="${pageContext.request.contextPath}/admin/change-role"
-                                  method="post">
-                                <input type="hidden" name="userId" value="${u.id}">
-                                <select name="role" onchange="this.form.submit()">
-                                    <option value="USER" ${u.role=='USER'?'selected':''}>USER</option>
-                                    <option value="STAFF" ${u.role=='STAFF'?'selected':''}>STAFF</option>
-                                    <option value="ADMIN" ${u.role=='ADMIN'?'selected':''}>ADMIN</option>
-                                </select>
-                            </form>
+                            <%--SỬA USER --%>
+                            <a href="${pageContext.request.contextPath}/admin/edit-user?id=${u.id}"
+                                class="btn-edit">
+                                Sửa
+                            </a>
 
                             <!-- KHOÁ / MỞ -->
                             <form action="${pageContext.request.contextPath}/admin/toggle-user"
