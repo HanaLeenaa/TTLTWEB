@@ -126,6 +126,84 @@
         .btn-delete:hover {
             background: #d63031;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            width: 400px;
+            max-width: 90%;
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.22);
+            text-align: center;
+            animation: popupFade 0.2s ease;
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 22px;
+            color: #222;
+        }
+
+        .modal-box p {
+            color: #000000;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .modal-actions button {
+            min-width: 110px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: #dfe6e9;
+            color: #2d3436 !important;
+        }
+
+        .btn-confirm-delete {
+            background: #e74c3c;
+            color: white !important;
+        }
+
+        @keyframes popupFade {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -141,6 +219,14 @@
 
         <div class="box">
             <h2>👤 Quản lý người dùng</h2>
+
+            <div style="margin-bottom: 16px;">
+                <a href="${pageContext.request.contextPath}/admin/deleted-users"
+                   style="display: inline-block; padding: 8px 14px; background: #6c5ce7;color: white;
+                        text-decoration: none; border-radius: 8px; font-size: 14px;">
+                    Xem danh sách đã xóa
+                </a>
+            </div>
 
             <table>
                 <thead>
@@ -207,14 +293,12 @@
                                         ${u.active ? 'Khoá' : 'Mở'}
                                 </button>
                             </form>
-
-                            <!-- XOÁ -->
-                            <form action="${pageContext.request.contextPath}/admin/delete-user"
-                                  method="post"
-                                  onsubmit="return confirm('Xoá user này?');">
-                                <input type="hidden" name="userId" value="${u.id}">
-                                <button type="submit" class="btn-delete">Xoá</button>
-                            </form>
+                                    <%--NÚT XÓA POPUP --%>
+                            <button type="button"
+                                    class="btn-delete"
+                                    onclick="openDeleteModal('${u.id}', '${u.username}')">
+                                Xóa
+                            </button>
 
                         </td>
                     </tr>
@@ -235,5 +319,47 @@
     </div>
 </div>
 
+<%--MODAL XÓA--%>
+<div id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3>Xác nhận xóa</h3>
+        <p id="deleteMessage">
+            Bạn có chắc chắn muốn xóa tài khoản này không?
+        </p>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+            <button type="button" class="btn-confirm-delete" onclick="submitDeleteForm()">Xóa</button>
+        </div>
+    </div>
+</div>
+
+<form id="deleteForm" action="${pageContext.request.contextPath}/admin/delete-user" method="post" style="display: none;">
+    <input type="hidden" name="userId" id="deleteUserId">
+</form>
+
+<script>
+    function openDeleteModal(userId, username) {
+        document.getElementById("deleteUserId").value = userId;
+        document.getElementById("deleteMessage").innerHTML =
+            "Bạn có chắc muốn xóa tài khoản <b>" + username + "</b> không?<br>User sẽ bị ẩn khỏi danh sách và không thể đăng nhập.";
+        document.getElementById("deleteModal").classList.add("show");
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.remove("show");
+    }
+
+    function submitDeleteForm() {
+        document.getElementById("deleteForm").submit();
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("deleteModal");
+        if (event.target === modal) {
+            closeDeleteModal();
+        }
+    }
+</script>
 </body>
 </html>

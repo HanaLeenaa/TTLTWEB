@@ -35,6 +35,8 @@ public class AuthDao extends BaseDao {
                     user.setPhoneNum(rs.getString("phoneNum"));
                     user.setLocation(rs.getString("location"));
                     user.setActive(rs.getBoolean("active"));
+                    user.setRole(rs.getString("role"));
+                    user.setDeleted(rs.getBoolean("deleted"));
                     return user;
                 }
             }

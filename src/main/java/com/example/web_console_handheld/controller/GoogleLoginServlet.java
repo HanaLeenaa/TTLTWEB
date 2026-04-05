@@ -14,8 +14,8 @@ import java.util.Map;
 public class GoogleLoginServlet extends HttpServlet {
 
     // Thông tin OAuth lấy từ Google Cloud Console
-    private static final String CLIENT_ID = "apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "your_secret";
+    private static final String CLIENT_ID = ".apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "";
     private static final String REDIRECT_URI = "http://localhost:8080/Web_Console_HandHeld_war_exploded/google-login";
     private static final String SCOPE = "email profile openid";
 
@@ -109,6 +109,14 @@ public class GoogleLoginServlet extends HttpServlet {
             if (user == null) {
                 session.setAttribute("loginMessage", "Không tạo được user");
                 resp.sendRedirect("login.jsp");
+                return;
+            }
+
+            //Kiểm tra tài khoản có bị xóa không
+            if (user.isDeleted()) {
+                req.setAttribute("error",
+                        "Tài khoản của bạn đã bị xóa khỏi hệ thống. Vui lòng liên hệ quản trị viên!");
+                req.getRequestDispatcher("/Assets/component/login_logout/login.jsp").forward(req, resp);
                 return;
             }
 
