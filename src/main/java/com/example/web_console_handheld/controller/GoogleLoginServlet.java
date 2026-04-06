@@ -14,9 +14,9 @@ import java.util.Map;
 public class GoogleLoginServlet extends HttpServlet {
 
     // Thông tin OAuth lấy từ Google Cloud Console
-    private static final String CLIENT_ID = ".apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = " ";
-    private static final String REDIRECT_URI = "http://localhost:8080/Web_Console_HandHeld_war_exploded/google-login";
+    private static final String CLIENT_ID = "";
+    private static final String CLIENT_SECRET = "";
+    private static final String REDIRECT_URI = "http://localhost:8080/TTLTWEB/google-login";
     private static final String SCOPE = "email profile openid";
 
     private final UserDao userDao = new UserDao();

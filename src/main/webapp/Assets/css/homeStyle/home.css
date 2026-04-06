@@ -848,3 +848,33 @@ h3{
     color: rgb(200, 200, 200);
     line-height: 1.4;
 }
+
+/* Gợi ý theo yêu thích */
+/* Section gợi ý */
+#suggestions-list {
+    margin-top: 40px;
+}
+
+#suggestions-list .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    border-left: 4px solid #E95221;
+    padding-left: 8px;
+}
+
+/* Grid gợi ý giống product */
+
+#suggestions-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;       /* cho phép cuộn ngang */
+    padding-bottom: 10px;   /* thêm khoảng trống dưới để tránh scrollbar đè */
+    scroll-snap-type: x mandatory; /* tuỳ chọn: snap khi cuộn */
+}
+
+#suggestions-list .product-item {
+    flex: 0 0 220px;        /* cố định chiều rộng mỗi card */
+    scroll-snap-align: start; /* tuỳ chọn: snap từng card */
+}

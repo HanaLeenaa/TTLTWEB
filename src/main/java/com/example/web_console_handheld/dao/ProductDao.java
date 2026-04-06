@@ -9,6 +9,8 @@ import jakarta.servlet.ServletResponse;
 
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -800,6 +802,31 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public List<Integer> getWishlistByUser(int userId) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT product_id FROM wishlist WHERE user_id = :userId";
+            return handle.createQuery(sql)
+                    .bind("userId", userId)
+                    .mapTo(Integer.class)
+                    .list();
+        });
+    }
+
+    public List<Product> getRelatedProducts(int productId, int limit) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT * FROM products " +
+                    "WHERE categories_id = (SELECT categories_id FROM products WHERE ID = :pid) " +
+                    "AND ID <> :pid " +
+                    "AND active = 1 " +
+                    "ORDER BY createdAt DESC " +
+                    "LIMIT :limit";
+            return handle.createQuery(sql)
+                    .bind("pid", productId)
+                    .bind("limit", limit)
+                    .mapToBean(Product.class)
+                    .list();
+        });
+    }
 
 
 

@@ -32,7 +32,6 @@ public class WishlistServlet extends HttpServlet {
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
         if (wishlist == null) wishlist = new ArrayList<>();
 
-        // Lấy danh sách ID sản phẩm trong wishlist
         List<Integer> wishlistIds = wishlist.stream()
                 .map(Product::getID)
                 .toList();
@@ -62,7 +61,7 @@ public class WishlistServlet extends HttpServlet {
                         .toList())
                 .orElse(List.of());
 
-        // ====== Gọi DAO để lọc ======
+        // ====== Gọi DAO để lọc wishlist ======
         List<Product> filtered = productDao.filterWishlist(
                 wishlistIds,
                 categoryIds,
@@ -72,8 +71,15 @@ public class WishlistServlet extends HttpServlet {
                 sort
         );
 
+        // ====== Lấy gợi ý từ wishlist ======
+        List<Product> suggestions = new ArrayList<>();
+        for (int pid : wishlistIds) {
+            suggestions.addAll(productDao.getRelatedProducts(pid, 5));
+        }
+
         // ====== Set attribute cho JSP ======
         request.setAttribute("wishlist", filtered);
+        request.setAttribute("suggestions", suggestions);
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
@@ -85,7 +91,4 @@ public class WishlistServlet extends HttpServlet {
 
         request.getRequestDispatcher("/Assets/component/login_logout/wishlist.jsp").forward(request, response);
     }
-
 }
-
-
