@@ -38,12 +38,13 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("smallest", productDao.getSmallestProduct());
         request.setAttribute("bloglist", blogDao.getBlogList());
 
+        String wishlistIdString = "";
+        List<Product> suggestions = new ArrayList<>();
+
         if (user != null) {
             try {
-                // lấy wishlist từ session (đã được AddWishlistServlet cập nhật)
                 List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
                 if (wishlist == null) {
-                    // nếu chưa có thì lấy từ DB
                     List<Integer> wishlistIds = wishlistDao.getWishlistByUser(user.getId());
                     wishlist = new ArrayList<>();
                     for (int pid : wishlistIds) {
@@ -53,30 +54,26 @@ public class HomeServlet extends HttpServlet {
                     session.setAttribute("wishlist", wishlist);
                 }
 
-                // tạo chuỗi wishlistIdString để JSP check tim
-                String wishlistIdString = wishlist.stream()
-                        .map(p -> String.valueOf(p.getID()))
-                        .collect(Collectors.joining(","));
-                request.setAttribute("wishlistIdString", wishlistIdString);
+                if (!wishlist.isEmpty()) {
+                    wishlistIdString = wishlist.stream()
+                            .map(p -> String.valueOf(p.getID()))
+                            .collect(Collectors.joining(","));
 
-                // tạo danh sách gợi ý từ wishlist
-                List<Product> suggestions = new ArrayList<>();
-                for (Product p : wishlist) {
-                    suggestions.addAll(productDao.getRelatedProducts(p.getID(), 5));
+                    long minPrice = wishlist.stream().mapToLong(Product::getPrice).min().orElse(0);
+                    long maxPrice = wishlist.stream().mapToLong(Product::getPrice).max().orElse(Long.MAX_VALUE);
+                    long minRange = (long)(minPrice * 0.8);
+                    long maxRange = (long)(maxPrice * 1.2);
+
+                    suggestions = productDao.getSuggestions(user.getId(), minRange, maxRange, 5);
                 }
-                request.setAttribute("suggestions", suggestions);
-
             } catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute("suggestions", List.of());
-                request.setAttribute("wishlistIdString", "");
             }
-        } else {
-            request.setAttribute("suggestions", List.of());
-            request.setAttribute("wishlistIdString", "");
         }
 
-        // QUAN TRỌNG: forward về JSP
+        request.setAttribute("wishlistIdString", wishlistIdString);
+        request.setAttribute("suggestions", suggestions);
+
         request.getRequestDispatcher("/index.jsp").forward(request, resp);
     }
 }

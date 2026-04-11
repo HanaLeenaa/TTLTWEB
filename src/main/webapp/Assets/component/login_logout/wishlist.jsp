@@ -192,20 +192,29 @@
     </div>
 </main>
 
-
 <script>
 function removeWishlist(productId) {
-    fetch('${pageContext.request.contextPath}/RemoveWishlist', {
+    fetch(contextPath + '/wishlist/toggle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
     })
-    .then(res => res.json())
+    .then(res => {
+        if (res.status === 401) {
+            alert("Bạn cần đăng nhập để xóa khỏi wishlist");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
+    })
     .then(data => {
+        if (!data) return;
         alert(data.message);
+        const wishlistNum = document.getElementById("wishlist_num");
+        if (wishlistNum) wishlistNum.textContent = data.total;
         location.reload();
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Fetch error:", err));
 }
 </script>
 
@@ -235,23 +244,34 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
-function toggleWishlist(productId, btn) {
-    fetch('${pageContext.request.contextPath}/AddWishlist', {
+function toggleWishlist(btn, productId) {
+    fetch(contextPath + '/wishlist/toggle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
     })
-    .then(res => res.json())
+    .then(res => {
+        if (res.status === 401) {
+            alert("Bạn cần đăng nhập để thêm vào yêu thích");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
+    })
     .then(data => {
+        if (!data) return;
         if (data.added) {
-            btn.classList.add("active");
+            btn.classList.add('active');
             btn.innerHTML = '<i class="fa fa-heart"></i>';
         } else if (data.removed) {
-            btn.classList.remove("active");
+            btn.classList.remove('active');
             btn.innerHTML = '<i class="fa fa-heart-o"></i>';
         }
+        alert(data.message);
+        const wishlistNum = document.getElementById("wishlist_num");
+        if (wishlistNum) wishlistNum.textContent = data.total;
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Fetch error:", err));
 }
 </script>
 

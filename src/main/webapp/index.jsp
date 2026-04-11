@@ -175,60 +175,70 @@
 </section>
 
 <!--goi y san pham theo yeu thich-->
-<div>
-    <h2>Sản phẩm gợi ý cho bạn</h2>
-    <div id="suggestions-list">
-        <c:forEach var="c" items="${suggestions}" begin="0" end="5">
-            <div class="product-item sony handheldpc">
-                <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
-                    <img src="${c.image}" alt="">
-                    <h4>${c.name}</h4>
-                </a>
-
-                <c:if test="${c.ispremium}">
-                    <div class="tag">Premium</div>
-                </c:if>
-
-                <div class="price-actions">
-                    <p class="price">${c.price}đ</p>
-                    <c:if test="${not empty c.priceOld}">
-                        <p class="old-price"><s>${c.priceOld}đ</s></p>
-                    </c:if>
-
-                    <div class="actions">
-                        <!-- Giỏ hàng -->
-                        <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">
-                            <input type="hidden" name="productId" value="${c.ID}">
-                            <input type="hidden" name="name" value="${c.name}">
-                            <input type="hidden" name="price" value="${c.price}">
-                            <input type="hidden" name="image" value="${c.image}">
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="button" class="btn-add" onclick="addToCart(this.form)">
-                                <i class="fa fa-cart-plus"></i>
-                            </button>
-                        </form>
-
-                        <!-- Yêu thích -->
-                        <c:choose>
-                            <c:when test="${fn:contains(wishlistIdString, c.ID)}">
-                                <button type="button" class="btn-fav active" data-id="${c.ID}"
-                                        onclick="toggleWishlist(this, '${c.ID}')">
-                                    <i class="fa fa-heart"></i>
-                                </button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="button" class="btn-fav" data-id="${c.ID}"
-                                        onclick="toggleWishlist(this, '${c.ID}')">
-                                    <i class="fa fa-heart"></i>
-                                </button>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
+<c:if test="${not empty auth}">
+     <c:if test="${not empty suggestions}">
+        <div>
+            <div class="suggestion-header">
+                <h2>Sản phẩm gợi ý cho bạn</h2>
+                <div class="view-all">
+                    <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
+                        Xem tất cả >
+                    </a>
                 </div>
             </div>
-        </c:forEach>
-    </div>
-</div>
+            <div id="suggestions-list">
+                <c:forEach var="c" items="${suggestions}" begin="0" end="4">
+                    <div class="product-item sony handheldpc">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
+                            <img src="${c.image}" alt="">
+                            <h4>${c.name}</h4>
+                        </a>
+
+                        <c:if test="${c.ispremium}">
+                            <div class="tag">Premium</div>
+                        </c:if>
+
+                        <div class="price-actions">
+                            <p class="price">${c.priceFormatted}đ</p>
+                            <c:if test="${c.priceOld > c.price}">
+                                <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
+                            </c:if>
+
+                            <div class="actions">
+                                <!-- Giỏ hàng -->
+                                <button class="add-cart"
+                                        data-id="${c.ID}"
+                                        data-name="${c.name}"
+                                        data-price="${c.price}"
+                                        data-image="${c.image}">
+                                    <i class="fa fa-cart-plus"></i>
+                                </button>
+
+                                <!-- Yêu thích -->
+                                <c:choose>
+                                    <c:when test="${fn:contains(wishlistIdString, c.ID)}">
+                                        <button type="button" class="btn-fav active"
+                                                data-id="${c.ID}"
+                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="button" class="btn-fav"
+                                                data-id="${c.ID}"
+                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+     </c:if>
+</c:if>
 
 
 <!--products section-->
@@ -353,7 +363,8 @@
 </section>
 <!--Footer-->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
-</body>
+
+<!-- Slide show + category click -->
 <script>
     const slides = document.querySelectorAll(".slides img");
     const dots = document.querySelectorAll(".dot");
@@ -393,80 +404,59 @@
             window.location.href = item.dataset.url;
         });
     });
+</script>
 
-        document.querySelectorAll('.add-cart').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();    // chặn submit
-            e.stopPropagation();   // chặn click lan lên <a>
+<script>
 
-            const data = new URLSearchParams();
-            data.append('productId', this.dataset.id);
-            data.append('quantity', 1);
-            data.append('name', this.dataset.name);
-            data.append('image', this.dataset.image);
-            data.append('price', this.dataset.price);
+// ===== Giỏ hàng =====
+document.querySelectorAll('.add-cart').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-            fetch('${pageContext.request.contextPath}/AddCart', {
-                method: 'POST',
-                body: data
-            })
-                .then(res => {
-                    if (res.redirected) {
-                        window.location.href = res.url; // chưa login
-                        return;
-                    }
-                    alert('Đã thêm vào giỏ hàng');
-                });
-        });
+        const data = new URLSearchParams();
+        data.append('productId', this.dataset.id);
+        data.append('quantity', 1);
+        data.append('name', this.dataset.name);
+        data.append('image', this.dataset.image);
+        data.append('price', this.dataset.price);
+
+        fetch(contextPath + '/AddCart', {
+            method: 'POST',
+            body: data
+        })
+        .then(res => {
+            if (res.redirected) {
+                window.location.href = res.url;
+                return null;
+            }
+            if (res.status === 401) {
+                alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
+                window.location.href = contextPath + "/login";
+                return null;
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (!data) return;
+            const cartNum = document.getElementById("cart_num");
+            if (cartNum) cartNum.textContent = data.total;
+            alert(data.message);
+        })
+        .catch(err => console.error("Fetch error:", err));
     });
+});
 
-
-</script>
-
-
-<script>
-function addToCart(form) {
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-        method: 'POST',
-        body: new URLSearchParams(formData)
-    })
-    .then(res => {
-        if (res.status === 401) {
-            // chưa đăng nhập
-            alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
-            window.location.href = contextPath + "/login";
-            return null;
-        }
-        return res.json();
-    })
-    .then(data => {
-        if (!data) return;
-
-        // cập nhật số lượng giỏ hàng trên header
-        document.getElementById("cart_num").textContent = data.total;
-        alert(data.message);
-    })
-    .catch(err => console.error("Fetch error:", err));
-}
-</script>
-
-<script>
+// ===== Wishlist (tim) =====
 function toggleWishlist(btn, productId) {
-    fetch(contextPath + '/AddWishlist', {
+    console.log("Clicked wishlist for product:", productId);
+
+    fetch(contextPath + '/wishlist/toggle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
     })
-    .then(res => {
-        if (res.status === 401) {
-            alert("Bạn cần đăng nhập để thêm vào yêu thích");
-            window.location.href = contextPath + "/login";
-            return null;
-        }
-        return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
         if (!data) return;
 
@@ -475,19 +465,17 @@ function toggleWishlist(btn, productId) {
             btn.innerHTML = '<i class="fa fa-heart"></i>';
         } else if (data.removed) {
             btn.classList.remove('active');
-            btn.innerHTML = '<i class="fa fa-heart-o"></i>';
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
         }
 
         alert(data.message);
 
-        // cập nhật số lượng wishlist nếu có hiển thị
         const wishlistNum = document.getElementById("wishlist_num");
-        if (wishlistNum) {
-            wishlistNum.textContent = data.total;
-        }
+        if (wishlistNum) wishlistNum.textContent = data.total;
     })
     .catch(err => console.error("Fetch error:", err));
 }
 </script>
 
+</body>
 </html>

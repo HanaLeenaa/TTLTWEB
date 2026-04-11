@@ -2830,6 +2830,9 @@ INSERT INTO blog VALUES
 
 -- Huỳnh Như -21/03
 -- THEM FIELD "product_image" vao order_items
-ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500)
+ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500);
 
 ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
+
+ALTER TABLE products ADD COLUMN stock INT DEFAULT 0,
+                     ADD COLUMN sales_count INT DEFAULT 0;

@@ -59,7 +59,7 @@ public class BuyNowServlet extends HttpServlet {
         ProductDao productDao = new ProductDao();
         Product product = productDao.getProductDetailByID(productId);
 
-        long price = Long.parseLong(product.getPrice().replaceAll("[^0-9]", ""));
+        long price = product.getPrice();
         long totalPrice = price * quantity;
         DecimalFormat df = new DecimalFormat("#,###");
         String totalPriceFormatted = df.format(totalPrice).replace(",", ".");
