@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/login_logout/wishlist.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/dark.css">
 
 </head>
 <!-- <div id="header"></div> -->

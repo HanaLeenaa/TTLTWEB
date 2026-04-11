@@ -1,0 +1,125 @@
+/* Toggle switch */
+.theme-switch {
+  margin-left: 20px;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.switch {
+  width: 56px;
+  height: 34px;
+  background: linear-gradient(45deg, #ffcc00, #ff9800);
+  border-radius: 34px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.4s;
+}
+
+.switch .icon {
+  font-size: 13px;
+  color: #fff;
+}
+
+.switch .icon i {
+  font-size: inherit;
+}
+
+.switch::after {
+  content: "";
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.4s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Khi bật dark mode */
+.theme-switch input:checked + .switch {
+  background: linear-gradient(45deg, #673ab7, #3f51b5);
+}
+
+.theme-switch input:checked + .switch::after {
+  transform: translateX(36px);
+}
+
+/* Dark mode cho body */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Header & Footer */
+body.dark-mode .main-header,
+body.dark-mode .footer {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+/* Menu */
+body.dark-mode .menu,
+body.dark-mode .menu3 {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+body.dark-mode .menu3:hover {
+  background-color: #333;
+}
+
+/* Sidebar bộ lọc */
+body.dark-mode .filter-panel {
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  color: #f5f5f5;
+}
+body.dark-mode .filter-panel a {
+  color: #90caf9;
+}
+
+/* Card sản phẩm */
+body.dark-mode .product-card {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #f5f5f5;
+}
+body.dark-mode .product-card .price {
+  color: #ff9800;
+}
+
+/* Nút bấm */
+body.dark-mode .btn,
+body.dark-mode button {
+  background-color: #3f51b5;
+  color: #fff;
+  border: none;
+}
+body.dark-mode .btn:hover {
+  background-color: #5c6bc0;
+}
+
+/* Link */
+body.dark-mode a {
+  color: #90caf9;
+}
+
+/* Ô input, search box */
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+body.dark-mode input::placeholder {
+  color: #aaa;
+}

@@ -18,6 +18,8 @@
     <title>header</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/searchSuggest.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/dark.css">
+
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -27,6 +29,7 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
     <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script
             src="https://kit.fontawesome.com/a076d05399.js"
             crossorigin="anonymous"
@@ -203,9 +206,20 @@
                             <p class="cart3">GIỎ HÀNG</p>
                         </div>
                     </a>
+                    <div class="theme-switch">
+                      <input type="checkbox" id="darkModeToggle">
+                      <label for="darkModeToggle" class="switch">
+                        <span class="icon sun"><i class="fa fa-sun"></i></span>
+                        <span class="icon moon"><i class="fa fa-moon"></i></span>
+                      </label>
+                    </div>
+
                 </div>
+
             </div>
         </div>
+
+
 
         <div class="menu">
             <div class="container">
@@ -315,6 +329,28 @@
             }, 3000);
         }, 300);
     }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const toggle = document.getElementById("darkModeToggle");
+  const body = document.body;
+
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark-mode");
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener("change", function() {
+    if (toggle.checked) {
+      body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
 </script>
 
 </body>
