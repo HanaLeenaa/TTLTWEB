@@ -228,9 +228,11 @@
                             <td>${o.receiver_name}</td>
                             <td>
                     <span class="status
-                        ${o.status == 'PENDING' ? 'pending' :
-                          o.status == 'SHIPPING' ? 'shipping' :
-                          o.status == 'COMPLETED' ? 'completed' : ''}">
+                        ${o.status == 'Chờ xác nhận' ? 'Chờ xác nhận' :
+                          o.status == 'Đã xác nhận' ? 'Đã xác nhận' :
+                          o.status == 'Đang giao' ? 'Đang giao' :
+                          o.status == 'Đã giao' ? 'Đã giao' :
+                          o.status == 'Đã huỷ' ? 'Đã huỷ' : ''}">
                             ${o.status}
                     </span>
                             </td>
