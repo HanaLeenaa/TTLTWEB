@@ -1,5 +1,6 @@
 package com.example.web_console_handheld.controller;
 
+import com.example.web_console_handheld.dao.AuthDao;
 import com.example.web_console_handheld.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,15 +18,34 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
+        AuthDao authDao = new AuthDao();
+        User rawUser = authDao.getUserByUserName(username);
+
+        if (rawUser != null){
+            if (rawUser.isDeleted()) {
+                request.setAttribute("error", "Tài khoản của bạn đã bị xóa khỏi hệ thống. Vui lòng liên hệ quản trị viên!");
+                request.getRequestDispatcher("/Assets/component/login_logout/login.jsp").forward(request, response);
+                return;
+            }
+
+            if (!rawUser.isActive()) {
+                request.setAttribute("error", "Tài khoản của bạn đã bị khóa.");
+                request.getRequestDispatcher("/Assets/component/login_logout/login.jsp").forward(request, response);
+                return;
+                }
+            }
+
         AuthService as = new AuthService();
         User user = as.checkLogin(username,password);
         if(user != null){
             HttpSession session = request.getSession();
             session.setAttribute("auth", user);
             response.sendRedirect(request.getContextPath() + "/home");
-        } else {
+            return;
+        }else {
             request.setAttribute("error", "Bạn nhập sai tên hoặc mật khẩu");
             request.getRequestDispatcher("/Assets/component/login_logout/login.jsp").forward(request, response);
+            return;
+        }
         }
     }
-}

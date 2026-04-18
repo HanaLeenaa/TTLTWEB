@@ -11,17 +11,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/admin/users")
-public class AdminUserServlet extends HttpServlet {
-
+@WebServlet("/admin/deleted-users")
+public class DeletedListUserServlet extends HttpServlet {
     private final UserDao userDao = new UserDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        HttpSession session = req.getSession(false);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
         Admin admin = (Admin) session.getAttribute("admin");
 
         if (admin == null) {
@@ -29,10 +27,9 @@ public class AdminUserServlet extends HttpServlet {
             return;
         }
 
-        req.setAttribute("users", userDao.getAllActiveUsers());
-
-        req.setAttribute("activePage", "users");
-        req.getRequestDispatcher("/Assets/component/adminPage/userManagement.jsp")
-                .forward(req, resp);
+        List<User> userList = userDao.getDeletedUsers();
+        req.setAttribute("userList", userList);
+        req.getRequestDispatcher("/Assets/component/adminPage/deletedUsers.jsp").forward(req, resp);
     }
 }
+

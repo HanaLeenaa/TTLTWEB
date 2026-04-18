@@ -54,10 +54,13 @@ public class Product {
     private String connect;
     @ColumnName("endow")
     private String endow;
+
+    private int stock_quantity;
+
     public Product(long price){
         this.price = price;
     }
-    public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information, long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active, String metatitle, boolean ispremium, String suports, String connect, String endow) {
+    public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information, long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active, String metatitle, boolean ispremium, String suports, String connect, String endow, int  stock_quantity) {
         this.ID = ID;
         this.categories_id = categories_id;
         this.brand_id = brand_id;
@@ -78,6 +81,7 @@ public class Product {
         this.suports = suports;
         this.connect = connect;
         this.endow = endow;
+        this.stock_quantity = stock_quantity;
     }
     public Product() {}
 
@@ -264,5 +268,13 @@ public class Product {
     }
     public void setPriceOldValue(long priceOldValue) {
         this.priceOld = priceOldValue;
+    }
+
+    public int getStock_quantity() {
+        return stock_quantity;
+    }
+
+    public void setStock_quantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 }

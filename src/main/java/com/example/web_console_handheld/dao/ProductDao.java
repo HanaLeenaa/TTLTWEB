@@ -800,8 +800,38 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public List<Product> adminSearchByName(String keyword) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT * FROM products 
+                WHERE name LIKE :kw
+                ORDER BY ID ASC 
+            """).bind("kw", "%" + keyword + "%")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 
+    //xóa dữ liệu trong bảng gallery và products dùng Transaction
+    public boolean deleteProductWithGallery(int productId) {
+        return get().inTransaction(handle -> {
+            // xóa gallery trước
+            handle.createUpdate("""
+                 DELETE FROM gallary
+                 WHERE product_id = :id
+                 """).bind("id", productId)
+                    .execute();
 
+            // xóa products sau
+            int rows = handle.createUpdate("""
+                DELETE FROM products
+                       WHERE ID = :id
+                """)
+                    .bind("id", productId)
+                    .execute();
 
+            return rows > 0;
+        });
+    }
 }
 
