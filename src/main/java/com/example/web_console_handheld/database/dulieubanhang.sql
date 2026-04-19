@@ -2836,3 +2836,38 @@ ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
 
 ALTER TABLE products ADD COLUMN stock INT DEFAULT 0,
                      ADD COLUMN sales_count INT DEFAULT 0;
+ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
+
+-- Huỳnh Như 03/04/2026
+ALTER TABLE products ADD COLUMN stock_quantity INT NOT NULL DEFAULT 0
+
+-- HUỳnh Như 05/04/2026
+ALTER TABLE users ADD COLUMN deleted boolean DEFAULT FALSE
+
+-- Huỳnh Như 17/04/2026 - Thêm bảng nhập kho và lưu log
+CREATE TABLE import_receipts(
+                                ID INT AUTO_INCREMENT PRIMARY KEY,
+                                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                status VARCHAR(50)
+);
+
+CREATE TABLE import_receipt_items (
+                                      ID INT AUTO_INCREMENT PRIMARY KEY,
+                                      receipt_id INT,
+                                      product_id INT,
+                                      quantity INT,
+
+                                      FOREIGN KEY (receipt_id) REFERENCES import_receipts(ID),
+                                      FOREIGN KEY (product_id) REFERENCES products(ID)
+
+);
+
+CREATE TABLE stock_movements (
+                                 ID INT AUTO_INCREMENT PRIMARY KEY,
+                                 product_id INT,
+                                 quantity INT,
+                                 type VARCHAR(50),
+                                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                                 FOREIGN KEY (product_id) REFERENCES products(ID)
+);

@@ -59,13 +59,14 @@ public class Product {
     private int stock;
     @ColumnName("sales_count")
     private int sales_count;
+    private int stock_quantity;
 
     public Product(long price){
         this.price = price;
     }
     public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information,
                    long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active,
-                   String metatitle, boolean ispremium, String suports, String connect, String endow, int stock, int sales_count) {
+                   String metatitle, boolean ispremium, String suports, String connect, String endow, int stock, int sales_count, int  stock_quantity) {
         this.ID = ID;
         this.categories_id = categories_id;
         this.brand_id = brand_id;
@@ -88,6 +89,7 @@ public class Product {
         this.endow = endow;
         this.stock = stock;
         this.sales_count = sales_count;
+        this.stock_quantity = stock_quantity;
     }
     public Product() {}
 
@@ -292,5 +294,11 @@ public class Product {
 
     public void setSales_count(int sales_count) {
         this.sales_count = sales_count;
+    public int getStock_quantity() {
+        return stock_quantity;    
+    }
+
+    public void setStock_quantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 }

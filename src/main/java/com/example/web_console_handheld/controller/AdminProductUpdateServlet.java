@@ -142,7 +142,7 @@ public class AdminProductUpdateServlet extends HttpServlet {
 
         part.write(fullPath);
 
-        return req.getContextPath() + "/Assets/image/" + newFileName;
+        return "/Assets/image/" + newFileName;
     }
 
     private String extractFileName(Part part) {

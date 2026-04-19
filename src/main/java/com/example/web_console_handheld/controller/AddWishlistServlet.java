@@ -1,5 +1,6 @@
 package com.example.web_console_handheld.controller;
 
+import jakarta.servlet.ServletException;
 import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.dao.WishlistDao;
 import com.example.web_console_handheld.model.Product;
@@ -34,15 +35,26 @@ public class AddWishlistServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write("{\"message\":\"Thiếu productId\"}");
+        Object user = session.getAttribute("auth");
+        if (user == null) {
+            // chưa login
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String json = "{ \"notLoggedIn\": true, \"redirect\": \"" + request.getContextPath() + "/login\" }";
+            response.getWriter().write(json);
             return;
         }
 
-        int productId = Integer.parseInt(idParam);
-        Product product = productDao.getProductDetailByID(productId);
+        // lấy productId từ request
+        int productId = Integer.parseInt(request.getParameter("productId"));
 
         // Lấy wishlist từ session để cập nhật giao diện ngay
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
         if (wishlist == null) wishlist = new ArrayList<>();
+        // lấy danh sách wishlistIds từ session
+        List<Integer> wishlistIds = (List<Integer>) session.getAttribute("wishlistIds");
+        if (wishlistIds == null) wishlistIds = new ArrayList<>();
 
         boolean existsInSession = wishlist.stream().anyMatch(p -> p.getID() == productId);
         boolean existsInDB = wishlistDao.exists(user.getId(), productId);

@@ -69,10 +69,20 @@
                     </div>
 
                     <div class="image-preview-wrapper main-preview">
-                        <img id="mainPreview"
-                             src="${not empty product.image ? product.image : ''}"
-                             alt="Ảnh chính preview"
-                             style="${not empty product.image ? 'display:block;' : 'display:none;'}">
+                        <c:choose>
+                            <c:when test="${not empty product.image && product.image.startsWith('http')}">
+                                <img id="mainPreview"
+                                src="${product.image}"
+                                alt="Ảnh chính preview"
+                                style="${not empty product.image ? 'display:block;' : 'display:none;'}">
+                            </c:when>
+                            <c:when test="${not empty product.image}">
+                                <img id="mainPreview"
+                                     src="${pageContext.request.contextPath}/${product.image}"
+                                     alt="Ảnh chính preview"
+                                     style="display:block;">
+                            </c:when>
+                        </c:choose>
                         <p id="mainPreviewText"
                            style="${not empty product.image ? 'display:none;' : 'display:block;'}">
                             Xem trước ảnh chính
@@ -98,10 +108,26 @@
                                    data-preview="subPreview1" accept="image/*">
 
                             <div class="sub-preview-box">
-                                <img id="subPreview1"
-                                     src="${gallaryList.size() > 0 ? gallaryList[0].img : ''}"
-                                     alt="Ảnh phụ 1"
-                                     style="${gallaryList.size() > 0 ? 'display:block;' : 'display:none;'}">
+                                <c:choose>
+                                    <c:when test="${gallaryList.size() > 0 && gallaryList[0].img.startsWith('http')}">
+                                        <img id="subPreview1"
+                                        src="${gallaryList[0].img}"
+                                        alt="Ảnh phụ 1"
+                                        style="${gallaryList.size() > 0 ? 'display:block;' : 'display:none;'}">
+                                    </c:when>
+                                    <c:when test="${gallaryList.size() > 0}">
+                                        <img id="subPreview1"
+                                             src="${pageContext.request.contextPath}/${gallaryList[0].img}"
+                                             alt="Ảnh phụ 1"
+                                             style="display:block;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img id="subPreview1"
+                                             src=""
+                                             alt="Ảnh phụ 1"
+                                             style="display:none;">
+                                    </c:otherwise>
+                                </c:choose>
                                 <span>Preview 1</span>
                             </div>
                         </div>
@@ -119,10 +145,26 @@
                                    data-preview="subPreview2" accept="image/*">
 
                             <div class="sub-preview-box">
-                                <img id="subPreview2"
-                                     src="${gallaryList.size() > 1 ? gallaryList[1].img : ''}"
-                                     alt="Ảnh phụ 2"
-                                     style="${gallaryList.size() > 1 ? 'display:block;' : 'display:none;'}">
+                                <c:choose>
+                                    <c:when test="${gallaryList.size() > 1 && gallaryList[1].img.startsWith('http')}">
+                                        <img id="subPreview2"
+                                        src="${gallaryList[1].img}"
+                                        alt="Ảnh phụ 2"
+                                        style="${gallaryList.size() > 1 ? 'display:block;' : 'display:none;'}">
+                                    </c:when>
+                                    <c:when test="${gallaryList.size() > 1}">
+                                        <img id="subPreview2"
+                                             src="${pageContext.request.contextPath}/${gallaryList[1].img}"
+                                             alt="Ảnh phụ 2"
+                                             style="display:block;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img id="subPreview2"
+                                             src=""
+                                             alt="Ảnh phụ 2"
+                                             style="display:none;">
+                                    </c:otherwise>
+                                </c:choose>
                                 <span>Preview 2</span>
                             </div>
                         </div>
@@ -140,10 +182,26 @@
                                    data-preview="subPreview3" accept="image/*">
 
                             <div class="sub-preview-box">
-                                <img id="subPreview3"
-                                     src="${gallaryList.size() > 2 ? gallaryList[2].img : ''}"
-                                     alt="Ảnh phụ 3"
-                                     style="${gallaryList.size() > 2 ? 'display:block;' : 'display:none;'}">
+                                <c:choose>
+                                    <c:when test="${gallaryList.size() > 2 && gallaryList[2].img.startsWith('http')}">
+                                        <img id="subPreview3"
+                                        src="${gallaryList[2].img}"
+                                        alt="Ảnh phụ 3"
+                                        style="${gallaryList.size() > 2 ? 'display:block;' : 'display:none;'}">
+                                    </c:when>
+                                    <c:when test="${gallaryList.size() > 2}">
+                                        <img id="subPreview3"
+                                             src="${pageContext.request.contextPath}/${gallaryList[2].img}"
+                                             alt="Ảnh phụ 3"
+                                             style="display:block;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img id="subPreview3"
+                                             src=""
+                                             alt="Ảnh phụ 3"
+                                             style="display:none;">
+                                    </c:otherwise>
+                                </c:choose>
                                 <span>Preview 3</span>
                             </div>
                         </div>

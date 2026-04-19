@@ -73,40 +73,40 @@
 
                         <div class="sub-image-card">
                             <label>Ảnh phụ 1 (URL)</label>
-                            <input type="text" name="galleryUrl1" class="subImageUrl" data-preview="subPreview1" placeholder="Dán link ảnh phụ 1">
+                            <input type="text"  id="galleryUrl1" name="galleryUrl1" class="subImageUrl" data-preview="subPreview1" placeholder="Dán link ảnh phụ 1">
 
                             <label>Tải ảnh phụ 1</label>
-                            <input type="file" name="galleryFile1" class="subImageFile" data-preview="subPreview1" accept="image/*">
+                            <input type="file" id="galleryFile1" name="galleryFile1" class="subImageFile" data-preview="subPreview1" accept="image/*">
 
                             <div class="sub-preview-box">
                                 <img id="subPreview1" src="" alt="Ảnh phụ 1">
-                                <span>Preview 1</span>
+                                <span id="subPreviewText1">Preview 1</span>
                             </div>
                         </div>
 
                         <div class="sub-image-card">
                             <label>Ảnh phụ 2 (URL)</label>
-                            <input type="text" name="galleryUrl2" class="subImageUrl" data-preview="subPreview2" placeholder="Dán link ảnh phụ 2">
+                            <input type="text" id="galleryUrl2" name="galleryUrl2" class="subImageUrl" data-preview="subPreview2" placeholder="Dán link ảnh phụ 2">
 
                             <label>Tải ảnh phụ 2</label>
-                            <input type="file" name="galleryFile2" class="subImageFile" data-preview="subPreview2" accept="image/*">
+                            <input type="file" id="galleryFile2" name="galleryFile2" class="subImageFile" data-preview="subPreview2" accept="image/*">
 
                             <div class="sub-preview-box">
                                 <img id="subPreview2" src="" alt="Ảnh phụ 2">
-                                <span>Preview 2</span>
+                                <span id="subPreviewText2">Preview 2</span>
                             </div>
                         </div>
 
                         <div class="sub-image-card">
                             <label>Ảnh phụ 3 (URL)</label>
-                            <input type="text" name="galleryUrl3" class="subImageUrl" data-preview="subPreview3" placeholder="Dán link ảnh phụ 3">
+                            <input type="text" id="galleryUrl3" name="galleryUrl3" class="subImageUrl" data-preview="subPreview3" placeholder="Dán link ảnh phụ 3">
 
                             <label>Tải ảnh phụ 3</label>
-                            <input type="file" name="galleryFile3" class="subImageFile" data-preview="subPreview3" accept="image/*">
+                            <input type="file" id="galleryFile3" name="galleryFile3" class="subImageFile" data-preview="subPreview3" accept="image/*">
 
                             <div class="sub-preview-box">
                                 <img id="subPreview3" src="" alt="Ảnh phụ 3">
-                                <span>Preview 3</span>
+                                <span id="subPreviewText3">Preview 3</span>
                             </div>
                         </div>
 
@@ -240,76 +240,61 @@
 
     </form>
 </div>
-
-
 <script>
-    const imageMainUrl = document.getElementById("imageMainUrl");
-    const imageMainFile = document.getElementById("imageMainFile");
-    const mainPreview = document.getElementById("mainPreview");
-    const mainPreviewText = document.getElementById("mainPreviewText");
+    function setupImagePreview(urlInputId, fileInputId, previewImgId, previewTextId) {
+        const urlInput = document.getElementById(urlInputId);
+        const fileInput = document.getElementById(fileInputId);
+        const previewImg = document.getElementById(previewImgId);
+        const previewText = document.getElementById(previewTextId);
 
-    if (imageMainUrl) {
-        imageMainUrl.addEventListener("input", function () {
-            const url = this.value.trim();
-            if (url !== "") {
-                mainPreview.src = url;
-                mainPreview.style.display = "block";
-                mainPreviewText.style.display = "none";
-            } else if (!imageMainFile.files.length) {
-                mainPreview.style.display = "none";
-                mainPreviewText.style.display = "block";
+        if (!urlInput || !fileInput || !previewImg || !previewText) return;
+
+        function updatePreview() {
+            const file = fileInput.files[0];
+            const url = urlInput.value.trim();
+
+
+            if (file) {
+                previewImg.src = URL.createObjectURL(file);
+                previewImg.style.display = "block";
+                previewText.style.display = "none";
             }
-        });
-    }
-
-    if (imageMainFile) {
-        imageMainFile.addEventListener("change", function () {
-            if (this.files && this.files[0]) {
-                mainPreview.src = URL.createObjectURL(this.files[0]);
-                mainPreview.style.display = "block";
-                mainPreviewText.style.display = "none";
-            }
-        });
-    }
-
-    document.querySelectorAll(".subImageUrl").forEach(input => {
-        input.addEventListener("input", function () {
-            const previewId = this.dataset.preview;
-            const previewImg = document.getElementById(previewId);
-            const previewText = previewImg.nextElementSibling;
-            const url = this.value.trim();
-
-            if (url !== "") {
+            else if (url !== "") {
                 previewImg.src = url;
                 previewImg.style.display = "block";
                 previewText.style.display = "none";
-            } else {
+            }
+            else {
+                previewImg.src = "";
                 previewImg.style.display = "none";
                 previewText.style.display = "block";
             }
-        });
-    });
+        }
 
-    document.querySelectorAll(".subImageFile").forEach(input => {
-        input.addEventListener("change", function () {
-            const previewId = this.dataset.preview;
-            const previewImg = document.getElementById(previewId);
-            const previewText = previewImg.nextElementSibling;
+        urlInput.addEventListener("input", updatePreview);
+        fileInput.addEventListener("change", updatePreview);
 
-            if (this.files && this.files[0]) {
-                previewImg.src = URL.createObjectURL(this.files[0]);
-                previewImg.style.display = "block";
-                previewText.style.display = "none";
-            }
-        });
-    });
+
+        previewImg.onerror = function () {
+            previewImg.style.display = "none";
+            previewText.style.display = "block";
+        };
+
+
+        updatePreview();
+    }
+    setupImagePreview("imageMainUrl", "imageMainFile", "mainPreview", "mainPreviewText");
+    setupImagePreview("galleryUrl1", "galleryFile1", "subPreview1", "subPreviewText1");
+    setupImagePreview("galleryUrl2", "galleryFile2", "subPreview2", "subPreviewText2");
+    setupImagePreview("galleryUrl3", "galleryFile3", "subPreview3", "subPreviewText3");
 </script>
+
 <%--Thông báo thêm sản phẩm mới thành công--%>
 <script>
     setTimeout(() =>{
         const alertBox = document.querySelector('.alert-success');
         if (alertBox){
-            alertBox.style.transaction = "0.4s ease";
+            alertBox.style.transition = "0.4s ease";
             alertBox.style.opacity = "0";
             alertBox.style.transform = "translateY(-6px)";
             setTimeout(() => alertBox.remove(), 400);
