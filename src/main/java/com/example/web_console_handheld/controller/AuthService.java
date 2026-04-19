@@ -8,6 +8,12 @@ public class AuthService {
     AuthDao authDao = new AuthDao();
     public User checkLogin(String username, String password) {
         User user = authDao.getUserByUserName(username);
+
+        System.out.println("--- DEBUG LOGIN ---");
+        System.out.println("Username nhap: " + username);
+        System.out.println("User tim thay: " + (user != null ? user.getUsername() : "NULL"));
+        System.out.println("Hash tu DB: " + (user != null ? user.getPassword() : "NULL"));
+
         if (user == null) return null;
 
         // chặn tài khoản đã bị xóa mềm
