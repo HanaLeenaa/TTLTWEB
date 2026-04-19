@@ -176,6 +176,17 @@ CREATE TABLE history (
     FOREIGN KEY (bill_id) REFERENCES bill(ID)
 );
 
+CREATE TABLE wishlist (
+                          ID INT AUTO_INCREMENT PRIMARY KEY,
+                          user_id INT NOT NULL,
+                          product_id INT NOT NULL,
+                          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                          CONSTRAINT fk_wishlist_user FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE,
+                          CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES products(ID) ON DELETE CASCADE,
+                          UNIQUE KEY uq_user_product (user_id, product_id)
+);
+
+
 -- 3. THÊM DỮ LIỆU
 
 INSERT INTO admin(username, password, fullname) 
@@ -2819,8 +2830,12 @@ INSERT INTO blog VALUES
 
 -- Huỳnh Như -21/03
 -- THEM FIELD "product_image" vao order_items
-ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500)
+ALTER TABLE order_items ADD COLUMN product_image VARCHAR(500);
 
+ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
+
+ALTER TABLE products ADD COLUMN stock INT DEFAULT 0,
+                     ADD COLUMN sales_count INT DEFAULT 0;
 ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
 
 -- Huỳnh Như 03/04/2026

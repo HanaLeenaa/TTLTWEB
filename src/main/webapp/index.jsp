@@ -1,6 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.web_console_handheld.model.Product" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +12,7 @@
     <title>InfinityTech</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css" />
     <link rel="stylesheet" href="Assets/css/homeStyle/home.css">
+    <link rel="stylesheet" href="Assets/css/homeStyle/product.css">
     <link rel="stylesheet" href="Assets/css/recycleFilecss/header.css" />
     <link rel="stylesheet" href="Assets/css/recycleFilecss/footer.css" />
     <link
@@ -167,14 +171,79 @@
                 </div>
             </c:forEach>
         </div>
-
-
     </div>
 </section>
 
+<!--goi y san pham theo yeu thich-->
+<c:if test="${not empty auth}">
+     <c:if test="${not empty suggestions}">
+        <div>
+            <div class="suggestion-header">
+                <h2>Sản phẩm gợi ý cho bạn</h2>
+                <div class="view-all">
+                    <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
+                        Xem tất cả >
+                    </a>
+                </div>
+            </div>
+            <div id="suggestions-list">
+                <c:forEach var="c" items="${suggestions}" begin="0" end="4">
+                    <div class="product-item sony handheldpc">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
+                            <img src="${c.image}" alt="">
+                            <h4>${c.name}</h4>
+                        </a>
+
+                        <c:if test="${c.ispremium}">
+                            <div class="tag">Premium</div>
+                        </c:if>
+
+                        <div class="price-actions">
+                            <p class="price">${c.priceFormatted}đ</p>
+                            <c:if test="${c.priceOld > c.price}">
+                                <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
+                            </c:if>
+
+                            <div class="actions">
+                                <!-- Giỏ hàng -->
+                                <button class="add-cart"
+                                        data-id="${c.ID}"
+                                        data-name="${c.name}"
+                                        data-price="${c.price}"
+                                        data-image="${c.image}">
+                                    <i class="fa fa-cart-plus"></i>
+                                </button>
+
+                                <!-- Yêu thích -->
+                                <c:choose>
+                                    <c:when test="${fn:contains(wishlistIdString, c.ID)}">
+                                        <button type="button" class="btn-fav active"
+                                                data-id="${c.ID}"
+                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="button" class="btn-fav"
+                                                data-id="${c.ID}"
+                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+     </c:if>
+</c:if>
+
+
 <!--products section-->
 <section class="product-section">
-    <h2>Sản Phẩm Mới / Giá Ưu Đãi</h2>
+    <h2>Sản Phẩm Mới/Giá Ưu Đãi</h2>
     <div class="container">
         <div class="product-grid">
             <c:forEach var="c" items="${products}">
@@ -294,7 +363,8 @@
 </section>
 <!--Footer-->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
-</body>
+
+<!-- Slide show + category click -->
 <script>
     const slides = document.querySelectorAll(".slides img");
     const dots = document.querySelectorAll(".dot");
@@ -334,33 +404,78 @@
             window.location.href = item.dataset.url;
         });
     });
-
-        document.querySelectorAll('.add-cart').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();    // chặn submit
-            e.stopPropagation();   // chặn click lan lên <a>
-
-            const data = new URLSearchParams();
-            data.append('productId', this.dataset.id);
-            data.append('quantity', 1);
-            data.append('name', this.dataset.name);
-            data.append('image', this.dataset.image);
-            data.append('price', this.dataset.price);
-
-            fetch('${pageContext.request.contextPath}/AddCart', {
-                method: 'POST',
-                body: data
-            })
-                .then(res => {
-                    if (res.redirected) {
-                        window.location.href = res.url; // chưa login
-                        return;
-                    }
-                    alert('Đã thêm vào giỏ hàng');
-                });
-        });
-    });
-
-
 </script>
+
+<script>
+
+// ===== Giỏ hàng =====
+document.querySelectorAll('.add-cart').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const data = new URLSearchParams();
+        data.append('productId', this.dataset.id);
+        data.append('quantity', 1);
+        data.append('name', this.dataset.name);
+        data.append('image', this.dataset.image);
+        data.append('price', this.dataset.price);
+
+        fetch(contextPath + '/AddCart', {
+            method: 'POST',
+            body: data
+        })
+        .then(res => {
+            if (res.redirected) {
+                window.location.href = res.url;
+                return null;
+            }
+            if (res.status === 401) {
+                alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
+                window.location.href = contextPath + "/login";
+                return null;
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (!data) return;
+            const cartNum = document.getElementById("cart_num");
+            if (cartNum) cartNum.textContent = data.total;
+            alert(data.message);
+        })
+        .catch(err => console.error("Fetch error:", err));
+    });
+});
+
+// ===== Wishlist (tim) =====
+function toggleWishlist(btn, productId) {
+    console.log("Clicked wishlist for product:", productId);
+
+    fetch(contextPath + '/wishlist/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'productId=' + encodeURIComponent(productId)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data) return;
+
+        if (data.added) {
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
+        } else if (data.removed) {
+            btn.classList.remove('active');
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
+        }
+
+        alert(data.message);
+
+        const wishlistNum = document.getElementById("wishlist_num");
+        if (wishlistNum) wishlistNum.textContent = data.total;
+    })
+    .catch(err => console.error("Fetch error:", err));
+}
+</script>
+
+</body>
 </html>
