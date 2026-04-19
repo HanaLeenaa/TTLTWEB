@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +29,35 @@ public class RemoveWishlistServlet extends HttpServlet {
             return;
         }
 
-        // lấy productId từ request
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        HttpSession session = request.getSession(false);
+        Object user = (session != null) ? session.getAttribute("auth") : null;
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            out.print("{\"message\":\"Bạn cần đăng nhập để xoá wishlist\"}");
+            out.flush();
+            return;
+        }
 
-        // lấy danh sách wishlistIds từ session
-        List<Integer> wishlistIds = (List<Integer>) session.getAttribute("wishlistIds");
-        if (wishlistIds == null) wishlistIds = new ArrayList<>();
+        String idParam = request.getParameter("productId");
+        if (idParam == null || idParam.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"message\":\"Thiếu productId\"}");
+            out.flush();
+            return;
+        }
 
-        // xóa sản phẩm khỏi danh sách
-        wishlistIds.remove(Integer.valueOf(productId));
-        session.setAttribute("wishlistIds", wishlistIds);
+        int productId = Integer.parseInt(idParam);
+        List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
+        if (wishlist == null) wishlist = new ArrayList<>();
 
-        // trả về JSON cho JS
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        String json = "{ \"removed\": true, \"message\": \"Đã xóa khỏi yêu thích\", \"total\": " + wishlistIds.size() + " }";
-        response.getWriter().write(json);
+        boolean removed = wishlist.removeIf(p -> p.getID() == productId);
+        session.setAttribute("wishlist", wishlist);
+
+        out.print(
+                "{\"removed\":" + removed +
+                        ",\"message\":\"" + (removed ? "Đã xóa khỏi yêu thích" : "Sản phẩm không có trong wishlist") + "\"" +
+                        ",\"total\":" + wishlist.size() + "}"
+        );
+        out.flush();
     }
 }

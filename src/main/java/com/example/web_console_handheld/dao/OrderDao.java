@@ -270,7 +270,7 @@ public class OrderDao {
     }
     public double getTotalRevenue() {
         double total = 0;
-        String sql = "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE status = 'completed'";
+        String sql = "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE status = 'Đã giao'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

@@ -185,10 +185,23 @@
                             </form>
 
                             <!-- Nút yêu thích -->
-                            <button type="button" class="btn-fav" data-id="${c.ID}"
-                                    onclick="toggleWishlist(this, '${c.ID}')">
-                                <i class="fa fa-heart"></i>
-                            </button>
+                            <c:choose>
+                                <c:when test="${fn:contains(wishlistIdString, c.ID)}">
+                                    <!-- Nếu sản phẩm đã nằm trong wishlist -->
+                                    <button type="button" class="btn-fav active" data-id="${c.ID}"
+                                            onclick="toggleWishlist(this, '${c.ID}')">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <!-- Nếu sản phẩm chưa nằm trong wishlist -->
+                                    <button type="button" class="btn-fav" data-id="${c.ID}"
+                                            onclick="toggleWishlist(this, '${c.ID}')">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+
 
                         </div>
                     </div>
@@ -304,22 +317,29 @@ function addToCart(form) {
         method: 'POST',
         body: new URLSearchParams(formData)
     })
-    .then(res => res.json())
+    .then(res => {
+        if (res.status === 401) {
+            // chưa đăng nhập
+            alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
+            window.location.href = contextPath + "/login";
+            return null;
+        }
+        return res.json();
+    })
     .then(data => {
+        if (!data) return;
+
         // cập nhật số lượng giỏ hàng trên header
         document.getElementById("cart_num").textContent = data.total;
         alert(data.message);
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Fetch error:", err));
 }
 </script>
 
 <script>
 function toggleWishlist(btn, productId) {
-    const isActive = btn.classList.contains('active');
-    const url = contextPath + (isActive ? '/RemoveWishlist' : '/AddWishlist');
-
-    fetch(url, {
+    fetch(contextPath + '/AddWishlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
@@ -336,20 +356,25 @@ function toggleWishlist(btn, productId) {
         if (!data) return;
 
         if (data.added) {
-            btn.classList.add('active'); // thêm tim
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
         } else if (data.removed) {
-            btn.classList.remove('active'); // bỏ tim
+            btn.classList.remove('active');
+            btn.innerHTML = '<i class="fa fa-heart-o"></i>';
         }
 
         alert(data.message);
 
-        if (document.getElementById("wishlist_num")) {
-            document.getElementById("wishlist_num").textContent = data.total;
+        // cập nhật số lượng wishlist nếu có hiển thị
+        const wishlistNum = document.getElementById("wishlist_num");
+        if (wishlistNum) {
+            wishlistNum.textContent = data.total;
         }
     })
     .catch(err => console.error("Fetch error:", err));
 }
 </script>
+
 
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>

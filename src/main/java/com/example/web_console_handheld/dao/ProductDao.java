@@ -258,7 +258,7 @@ public class ProductDao extends BaseDao {
             switch (sort) {
                 case "price_asc" -> sql.append(" ORDER BY price ASC, ispremium DESC");
                 case "price_desc" -> sql.append(" ORDER BY price DESC, ispremium DESC");
-                case "newest" -> sql.append(" ORDER BY created_at DESC, ispremium DESC");
+                case "newest" -> sql.append(" ORDER BY createdAt DESC, ispremium DESC");
                 default -> sql.append(" ORDER BY id ASC, ispremium DESC");
             }
         }
@@ -490,7 +490,7 @@ public class ProductDao extends BaseDao {
     }
 
     public int insert(Product p) {
-       return get().withHandle(handle ->
+        return get().withHandle(handle ->
                 handle.createUpdate("""
             INSERT INTO products (
                 categories_id,
@@ -558,7 +558,7 @@ public class ProductDao extends BaseDao {
                         .executeAndReturnGeneratedKeys("id")
                         .mapTo(int.class).one()
         );
-}
+    }
 
     public void deleteById(int id) {
         get().useHandle(handle ->
@@ -662,7 +662,7 @@ public class ProductDao extends BaseDao {
 
             // lọc theo useTime
             if (useTimes != null && !useTimes.isEmpty()) {
-                sql.append("AND use_time IN (<useTimes>) ");
+                sql.append("AND useTime IN (<useTimes>) ");
             }
 
             // sort
@@ -721,7 +721,7 @@ public class ProductDao extends BaseDao {
                 sql.append("AND brand_id IN (<brandIds>) ");
             }
             if (useTimes != null && !useTimes.isEmpty()) {
-                sql.append("AND use_time IN (<useTimes>) ");
+                sql.append("AND useTime IN (<useTimes>) ");
             }
 
             var query = handle.createQuery(sql.toString());
@@ -747,11 +747,14 @@ public class ProductDao extends BaseDao {
                                         List<Integer> brandIds,
                                         List<Integer> useTimes,
                                         String sort) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE active=1 ");
-
-        if (wishlistIds != null && !wishlistIds.isEmpty()) {
-            sql.append("AND id IN (<wishlistIds>) ");
+        // Nếu wishlist rỗng thì trả về rỗng
+        if (wishlistIds == null || wishlistIds.isEmpty()) {
+            return List.of();
         }
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE active=1 ");
+        sql.append("AND id IN (<wishlistIds>) ");
+
         if (categoryIds != null && !categoryIds.isEmpty()) {
             sql.append("AND categories_id IN (<categoryIds>) ");
         }
@@ -768,7 +771,7 @@ public class ProductDao extends BaseDao {
             sql.append("AND brand_id IN (<brandIds>) ");
         }
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append("AND use_time IN (<useTimes>) ");
+            sql.append("AND useTime IN (<useTimes>) ");
         }
 
         if ("price_asc".equals(sort)) {
@@ -783,9 +786,7 @@ public class ProductDao extends BaseDao {
 
         return get().withHandle(handle -> {
             var q = handle.createQuery(sql.toString());
-            if (wishlistIds != null && !wishlistIds.isEmpty()) {
-                q.bindList("wishlistIds", wishlistIds);
-            }
+            q.bindList("wishlistIds", wishlistIds);
             if (categoryIds != null && !categoryIds.isEmpty()) {
                 q.bindList("categoryIds", categoryIds);
             }
@@ -799,7 +800,38 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public List<Product> adminSearchByName(String keyword) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT * FROM products 
+                WHERE name LIKE :kw
+                ORDER BY ID ASC 
+            """).bind("kw", "%" + keyword + "%")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 
+    //xóa dữ liệu trong bảng gallery và products dùng Transaction
+    public boolean deleteProductWithGallery(int productId) {
+        return get().inTransaction(handle -> {
+            // xóa gallery trước
+            handle.createUpdate("""
+                 DELETE FROM gallary
+                 WHERE product_id = :id
+                 """).bind("id", productId)
+                    .execute();
 
+            // xóa products sau
+            int rows = handle.createUpdate("""
+                DELETE FROM products
+                       WHERE ID = :id
+                """)
+                    .bind("id", productId)
+                    .execute();
+
+            return rows > 0;
+        });
+    }
 }
 

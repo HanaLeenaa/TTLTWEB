@@ -9,6 +9,7 @@ public class User {
     private Date dateOfBirth;
     private Timestamp createdAt, updatedAt, lastLogin;
     private boolean active;
+    private boolean deleted;
 private String role;
     public int getId() {
         return id;
@@ -96,4 +97,13 @@ private String role;
     public void setRole(String role) {
         this.role = role;
     }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }
+

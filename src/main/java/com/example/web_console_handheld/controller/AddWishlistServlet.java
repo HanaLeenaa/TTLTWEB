@@ -1,6 +1,8 @@
 package com.example.web_console_handheld.controller;
 
 import jakarta.servlet.ServletException;
+import com.example.web_console_handheld.dao.ProductDao;
+import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
@@ -12,10 +14,15 @@ import java.util.List;
 public class AddWishlistServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
+        HttpSession session = request.getSession(false);
+        Object user = (session != null) ? session.getAttribute("auth") : null;
 
-        request.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"message\":\"Bạn cần đăng nhập để thêm wishlist\"}");
+            return;
+        }
 
         Object user = session.getAttribute("auth");
         if (user == null) {
@@ -35,16 +42,26 @@ public class AddWishlistServlet extends HttpServlet {
         List<Integer> wishlistIds = (List<Integer>) session.getAttribute("wishlistIds");
         if (wishlistIds == null) wishlistIds = new ArrayList<>();
 
-        // thêm sản phẩm vào danh sách nếu chưa có
-        if (!wishlistIds.contains(productId)) {
-            wishlistIds.add(productId);
-        }
-        session.setAttribute("wishlistIds", wishlistIds);
+        boolean exists = wishlist.stream().anyMatch(p -> p.getID() == productId);
 
-        // trả về JSON cho JS
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        String json = "{ \"added\": true, \"message\": \"Đã thêm vào yêu thích\", \"total\": " + wishlistIds.size() + " }";
-        response.getWriter().write(json);
+        if (exists) {
+            // Nếu đã có thì xóa (toggle off)
+            wishlist.removeIf(p -> p.getID() == productId);
+            session.setAttribute("wishlist", wishlist);
+
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"removed\":true,\"message\":\"Đã xóa khỏi yêu thích\",\"total\":" + wishlist.size() + "}"
+            );
+        } else if (product != null) {
+            // Nếu chưa có thì thêm (toggle on)
+            wishlist.add(product);
+            session.setAttribute("wishlist", wishlist);
+
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"added\":true,\"message\":\"Đã thêm vào yêu thích\",\"total\":" + wishlist.size() + "}"
+            );
+        }
     }
 }

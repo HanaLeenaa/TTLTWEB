@@ -37,4 +37,14 @@ public class GallaryDao extends BaseDao{
                         .mapToBean(Gallary.class)
                         .list());
     }
+    // xóa ảnh cũ để cập nhật ảnh mới
+    public void deleteByProductId(int productId){
+        String sql = "DELETE FROM gallary WHERE product_id = :product_id";
+
+        get().useHandle(handle -> {
+            handle.createUpdate(sql)
+                    .bind("product_id", productId)
+                    .execute();
+        });
+    }
 }

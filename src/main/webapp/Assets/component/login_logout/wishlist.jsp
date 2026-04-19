@@ -118,9 +118,12 @@
                     <c:otherwise>
                         <c:forEach var="c" items="${wishlist}">
                             <div class="product-item">
+
+                                <!-- Nút xóa -->
                                 <button type="button" class="remove-icon" onclick="removeWishlist('${c.ID}')">
-                                        x
+                                    x
                                 </button>
+
                                 <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
                                     <img src="${c.image}" alt="">
                                     <h4>${c.name}</h4>
@@ -137,13 +140,53 @@
                                             Mua ngay
                                         </button>
                                     </form>
-
                                 </div>
                             </div>
                         </c:forEach>
+
                     </c:otherwise>
                 </c:choose>
             </div>
+
+            <!-- pagination-->
+            <div class="pagination">
+                <c:forEach begin="1" end="${totalPage}" var="i">
+
+                    <c:url var="pageUrl" value="/product">
+                        <c:param name="page" value="${i}" />
+
+                        <c:if test="${not empty keyword}">
+                            <c:param name="q" value="${keyword}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.categoryId}">
+                            <c:param name="categoryId" value="${param.categoryId}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.priceRange}">
+                            <c:param name="priceRange" value="${param.priceRange}" />
+                        </c:if>
+
+                        <c:if test="${not empty param.sort}">
+                            <c:param name="sort" value="${param.sort}" />
+                        </c:if>
+
+                        <c:forEach var="b" items="${paramValues.brandId}">
+                            <c:param name="brandId" value="${b}" />
+                        </c:forEach>
+
+                        <c:forEach var="u" items="${paramValues.useTime}">
+                            <c:param name="useTime" value="${u}" />
+                        </c:forEach>
+                    </c:url>
+
+                    <a class="${i == currentPage ? 'active' : ''}" href="${pageUrl}">
+                            ${i}
+                    </a>
+
+                </c:forEach>
+            </div>
+
         </div>
     </div>
 </main>
@@ -190,6 +233,26 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+<script>
+function toggleWishlist(productId, btn) {
+    fetch('${pageContext.request.contextPath}/AddWishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'productId=' + encodeURIComponent(productId)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.added) {
+            btn.classList.add("active");
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
+        } else if (data.removed) {
+            btn.classList.remove("active");
+            btn.innerHTML = '<i class="fa fa-heart-o"></i>';
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
 
 </body>
 </html>

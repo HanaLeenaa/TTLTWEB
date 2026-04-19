@@ -47,11 +47,21 @@ public class AdminProductAddServlet extends HttpServlet {
 
             //XU LY ANH CHINH
             String mainImage = req.getParameter("image");
+            if (mainImage != null){
+                mainImage = mainImage.trim();
+            }
+
             Part imageMainFile = req.getPart("imageMainFile");
+            //Nếu có file thì ưu tiên file
             if (imageMainFile != null && imageMainFile.getSize() > 0) {
                 mainImage = saveFile(imageMainFile, uploadPath);
+            }
 
-
+            // Nếu không có cả file và link => báo lỗi
+            if (mainImage == null || mainImage.isEmpty()){
+                req.setAttribute("error", "Vui lòng nhập link ảnh chính hoặc tải ảnh chính lên!");
+                req.getRequestDispatcher("/Assets/component/adminPage/addProduct.jsp").forward(req, resp);
+                return;
             }
             Product p = new Product();
 
@@ -89,7 +99,7 @@ public class AdminProductAddServlet extends HttpServlet {
                 saveGallaryImage(req, productId, "galleryUrl2", "galleryFile2", uploadPath);
                 saveGallaryImage(req, productId, "galleryUrl3", "galleryFile3", uploadPath);
             }
-            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            resp.sendRedirect(req.getContextPath() + "/admin/products/add?success=1");
 
         } catch (Exception e) {
             e.printStackTrace();

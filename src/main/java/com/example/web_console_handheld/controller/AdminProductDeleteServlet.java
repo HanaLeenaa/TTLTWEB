@@ -20,12 +20,19 @@ public class AdminProductDeleteServlet extends HttpServlet {
 
         String idParam = req.getParameter("id");
 
-        if (idParam != null) {
+        try {
             int id = Integer.parseInt(idParam);
-            productDao.deleteById(id);
+            ProductDao productDao = new ProductDao();
+            boolean deleted = productDao.deleteProductWithGallery(id);
+            if (deleted) {
+                resp.sendRedirect(req.getContextPath() + "/admin/products?success=deleted");
+            }else{
+                resp.sendRedirect(req.getContextPath() + "/admin/products?error=deletefail");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/admin/products?error=invalidid");
         }
-
-        resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 
 }

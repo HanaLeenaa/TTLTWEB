@@ -2,61 +2,69 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.ReviewDao;
 import com.example.web_console_handheld.model.User;
-import jakarta.servlet.annotation.WebServlet;
+
+import jakarta.servlet.*;
 import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
 @WebServlet("/add-review")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024)
+
 public class AddReviewServlet extends HttpServlet {
 
+    private ReviewDao reviewDao = new ReviewDao();
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
-        // Lấy user
-        User user = (User) request.getSession().getAttribute("user");
+
+        // check login
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("login");
             return;
         }
 
-        //Lấy dữ liệu
-        int productId, orderId, rating;
-        try {
-            productId = Integer.parseInt(request.getParameter("productId"));
-            orderId = Integer.parseInt(request.getParameter("orderId"));
-            rating = Integer.parseInt(request.getParameter("rating"));
-        } catch (Exception e) {
-            response.sendRedirect("product-detail?id=" + request.getParameter("productId"));
-            return;
-        }
+        // lấy dữ liệu
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        String comment = request.getParameter("comment");
 
-        String text = request.getParameter("review_text");
-        if (text == null) text = "";
+        // kiểm tra quyền review
+        int orderId = reviewDao.getOrderIdCanReviewV2(user.getId(), productId);
 
-        //Validate rating
-        if (rating < 1 || rating > 5) {
+        if (orderId == 0) {
+            // không đủ điều kiện
             response.sendRedirect("product-detail?id=" + productId);
             return;
         }
 
-        ReviewDao dao = new ReviewDao();
-        //Check user có quyền đánh giá đúng order
-        boolean isValid = dao.isValidOrder(user.getId(), productId, orderId);
-        if (!isValid) {
-            response.sendRedirect("product-detail?id=" + productId);
-            return;
+        // upload ảnh (nếu có)
+        Part filePart = request.getPart("image");
+        String fileName = null;
+
+        if (filePart != null && filePart.getSize() > 0) {
+            fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
+
+            String uploadPath = getServletContext().getRealPath("/uploads");
+            java.io.File uploadDir = new java.io.File(uploadPath);
+
+            if (!uploadDir.exists()) uploadDir.mkdir();
+
+            filePart.write(uploadPath + "/" + fileName);
         }
 
-        // Check đã đánh giá chưa
-        boolean alreadyReviewed = dao.hasUserReviewed(user.getId(), productId, orderId);
-        if (alreadyReviewed) {
-            response.sendRedirect("product-detail?id=" + productId);
-            return;
-        }
-
-        // Lưu review
-        dao.addReview(productId, user.getId(), orderId, rating, text);
+        // lưu review
+        reviewDao.insertReview(user.getId(), productId, orderId, rating, comment, fileName);
 
         response.sendRedirect("product-detail?id=" + productId);
     }

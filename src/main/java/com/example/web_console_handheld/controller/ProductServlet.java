@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,9 +31,7 @@ public class ProductServlet extends HttpServlet {
         try {
             page = Integer.parseInt(request.getParameter("page"));
         } catch (Exception ignored) {}
-
         if (page < 1) page = 1;
-
         int offset = (page - 1) * PAGE_SIZE;
 
         /* ================= PARAMS ================= */
@@ -53,7 +52,7 @@ public class ProductServlet extends HttpServlet {
         String[] brandArr = request.getParameterValues("brandId");
         if (brandArr != null) {
             brandIds = Arrays.stream(brandArr)
-                    .filter(s -> s != null && !s.isEmpty()) // Lọc bỏ chuỗi rỗng
+                    .filter(s -> s != null && !s.isEmpty())
                     .map(Integer::parseInt)
                     .toList();
         }
@@ -70,11 +69,9 @@ public class ProductServlet extends HttpServlet {
         /* ================= DATA ================= */
         List<Product> products;
         int totalProduct;
-
         boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
 
         if (hasKeyword) {
-            // tìm theo keyword
             products = productDao.searchByNameFilterPage(
                     keyword, categoryIds, priceRange, brandIds, useTimes, sort, offset, PAGE_SIZE
             );
@@ -113,6 +110,19 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("categories", new CategoryDao().getCategory());
         request.setAttribute("brands", new BrandDao().getBrands());
         request.setAttribute("energy", productDao.getEnergyProductList());
+
+        /* ================= WISHLIST IDS ================= */
+        HttpSession session = request.getSession(false);
+        List<Product> wishlist = (session != null) ? (List<Product>) session.getAttribute("wishlist") : null;
+        if (wishlist != null && !wishlist.isEmpty()) {
+            // tạo chuỗi ID để JSP dùng fn:contains
+            String wishlistIdString = wishlist.stream()
+                    .map(p -> String.valueOf(p.getID()))
+                    .reduce("", (a, b) -> a.isEmpty() ? b : a + "," + b);
+            request.setAttribute("wishlistIdString", wishlistIdString);
+        } else {
+            request.setAttribute("wishlistIdString", "");
+        }
 
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
