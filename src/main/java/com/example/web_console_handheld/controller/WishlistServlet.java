@@ -10,7 +10,6 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
 
 @WebServlet("/wishlist")
 public class WishlistServlet extends HttpServlet {
@@ -72,7 +71,7 @@ public class WishlistServlet extends HttpServlet {
                 sort
         );
 
-        // ====== Set attribute cho JSP ======
+        // set attribute cho JSP
         request.setAttribute("wishlist", filtered);
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());

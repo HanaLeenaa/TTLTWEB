@@ -1,5 +1,6 @@
 package com.example.web_console_handheld.controller;
 
+import jakarta.servlet.ServletException;
 import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,8 +12,6 @@ import java.util.List;
 
 @WebServlet("/AddWishlist")
 public class AddWishlistServlet extends HttpServlet {
-    private ProductDao productDao = new ProductDao();
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -25,18 +24,23 @@ public class AddWishlistServlet extends HttpServlet {
             return;
         }
 
-        String idParam = request.getParameter("productId");
-        if (idParam == null || idParam.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"message\":\"Thiếu productId\"}");
+        Object user = session.getAttribute("auth");
+        if (user == null) {
+            // chưa login
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String json = "{ \"notLoggedIn\": true, \"redirect\": \"" + request.getContextPath() + "/login\" }";
+            response.getWriter().write(json);
             return;
         }
 
-        int productId = Integer.parseInt(idParam);
-        Product product = productDao.getProductDetailByID(productId);
+        // lấy productId từ request
+        int productId = Integer.parseInt(request.getParameter("productId"));
 
-        List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
-        if (wishlist == null) wishlist = new ArrayList<>();
+        // lấy danh sách wishlistIds từ session
+        List<Integer> wishlistIds = (List<Integer>) session.getAttribute("wishlistIds");
+        if (wishlistIds == null) wishlistIds = new ArrayList<>();
 
         boolean exists = wishlist.stream().anyMatch(p -> p.getID() == productId);
 

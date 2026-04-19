@@ -25,7 +25,6 @@
                 </div>
 
                 <!-- CATEGORY -->
-                <div class="title">LOẠI SẢN PHẨM</div>
                 <c:forEach var="cat" items="${categories}">
                     <div class="choice">
                         <input type="checkbox" name="categoryId" value="${cat.ID}"

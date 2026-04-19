@@ -193,7 +193,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND useTime IN (<useTimes>)");
+            sql.append(" AND use_time IN (<useTimes>)");
         }
 
         return get().withHandle(handle -> {
@@ -248,7 +248,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND useTime IN (<useTimes>)");
+            sql.append(" AND use_time IN (<useTimes>)");
         }
 
         // ===== SORT =====
