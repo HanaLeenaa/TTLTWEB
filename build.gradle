@@ -1,0 +1,102 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'war'
+    id "org.hidetake.ssh" version "2.11.2"
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    // 1. Jakarta Servlet
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    // 2. JDBI & MySQL
+    implementation 'org.jdbi:jdbi3-core:3.45.1'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'org.jdbi:jdbi3-sqlobject:3.45.1'
+
+    // 3. SỬA LỖI EMAIL: Thêm thư viện Jakarta Mail
+    implementation 'org.eclipse.angus:jakarta.mail:2.0.3'
+
+    // 4. Thêm JSTL (Nếu bạn dùng thẻ c trong file JSP)
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+
+    // 5. Thêm thư viện JSON (Nếu code có dùng Gson hoặc Jackson)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 6. SỬA LỖI BCRYPT: Thêm thư viện mã hóa mật khẩu
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    // 7. Thêm thư viện Commons Codec (Nếu code có dùng mã hóa Base64/MD5)
+    implementation 'commons-codec:commons-codec:1.16.0'
+
+    // 8. SỬA LỖI GOOGLE LOGIN: Thêm thư viện Jackson JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+
+    // Thêm Apache Fluent HC (Nếu code Google Login của bạn có dùng để gọi API)
+    implementation 'org.apache.httpcomponents:fluent-hc:4.5.14'
+}
+
+
+apply plugin: 'org.hidetake.ssh'
+
+remotes {
+    host {
+        host = '192.168.240.151'
+        user = 'han'
+        password = 'han@12345'
+    }
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+task docker_app_start {
+    doLast {
+        println '--- Restarting Tomcat Container ---'
+        // Thay đổi cách gọi ssh.run
+        project.ssh.run {
+            session(remotes.host) {
+                execute 'sudo docker stop tomcat10', ignoreError: true
+                execute 'sudo docker rm tomcat10', ignoreError: true
+                execute 'sudo docker run -d --name tomcat10 --network host -v /usr/deploy:/usr/local/tomcat/webapps tomcat:10.1'
+            }
+        }
+    }
+}
+
+task docker_upload_file_to_server {
+    def warFile = layout.projectDirectory.file("build/libs/Web_Console_HandHeld.war")
+    doLast {
+        println '--- Uploading file ---'
+        // Thêm project. vào trước ssh.run
+        project.ssh.run {
+            session(remotes.host) {
+                execute 'sudo rm -rf /usr/deploy/lab.war', ignoreError: true
+                execute 'sudo rm -rf /usr/deploy/lab/', ignoreError: true
+                put from: warFile.asFile, into: "/usr/deploy/lab.war"
+            }
+        }
+    }
+}
+
+
+task docker_deploy {
+    // Thứ tự chạy: build -> upload -> start
+    dependsOn build
+    dependsOn docker_upload_file_to_server
+    dependsOn docker_app_start
+}
+
+// Thiết lập thứ tự rõ ràng
+docker_upload_file_to_server.mustRunAfter build
+docker_app_start.mustRunAfter docker_upload_file_to_server
+

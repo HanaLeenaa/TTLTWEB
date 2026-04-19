@@ -74,7 +74,6 @@ public class WishlistServlet extends HttpServlet {
         request.setAttribute("wishlist", suggestions);
         request.setAttribute("suggestions", suggestions);
         // set attribute cho JSP
-        request.setAttribute("wishlist", filtered);
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
