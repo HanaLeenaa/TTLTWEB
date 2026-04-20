@@ -1,4 +1,4 @@
-package com.example.web_console_handheld.controller.admin;
+package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.UserDao;
 import com.example.web_console_handheld.model.Admin;

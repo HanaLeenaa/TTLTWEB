@@ -9,6 +9,8 @@ import jakarta.servlet.ServletResponse;
 
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -193,7 +195,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND useTime IN (<useTimes>)");
+            sql.append(" AND use_time IN (<useTimes>)");
         }
 
         return get().withHandle(handle -> {
@@ -248,7 +250,7 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND useTime IN (<useTimes>)");
+            sql.append(" AND use_time IN (<useTimes>)");
         }
 
         // ===== SORT =====
@@ -614,7 +616,7 @@ public class ProductDao extends BaseDao {
                         .bind("full_description", p.getFull_description())
                         .bind("information", p.getInformation())
                         .bind("price", p.getPriceValue())
-                        .bind("priceOld", p.getPriceOld() == null ? 0 : Long.parseLong(p.getPriceOld().replace(".", "")))
+                        .bind("priceOld", p.getPriceOld())
                         .bind("image", p.getImage())
                         .bind("energy", p.getEnergy())
                         .bind("useTime", p.getUseTime())
@@ -800,8 +802,84 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public List<Integer> getWishlistByUser(int userId) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT product_id FROM wishlist WHERE user_id = :userId";
+            return handle.createQuery(sql)
+                    .bind("userId", userId)
+                    .mapTo(Integer.class)
+                    .list();
+        });
+    }
+
+    public List<Product> getSuggestions(int userId, long minPrice, long maxPrice, int limit) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT p.*, " +
+                    " (SELECT COUNT(*) FROM wishlist w " +
+                    "  JOIN products pw ON w.product_id = pw.ID " +
+                    "  WHERE w.user_id = :uid AND pw.categories_id = p.categories_id) AS category_score, " +
+                    " (SELECT COUNT(*) FROM wishlist w " +
+                    "  JOIN products pw ON w.product_id = pw.ID " +
+                    "  WHERE w.user_id = :uid AND pw.brand_id = p.brand_id) AS brand_score " +
+                    "FROM products p " +
+                    "WHERE p.active = 1 " +
+                    "AND p.stock > 0 " +
+                    "AND p.ID NOT IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
+                    "AND (p.categories_id IN ( " +
+                    "       SELECT DISTINCT categories_id FROM products " +
+                    "       WHERE ID IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
+                    "   ) " +
+                    "   OR p.brand_id IN ( " +
+                    "       SELECT DISTINCT brand_id FROM products " +
+                    "       WHERE ID IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
+                    "   )) " +
+                    "AND p.price BETWEEN :minPrice AND :maxPrice " +
+                    "ORDER BY (category_score + brand_score) DESC, p.sales_count DESC, p.createdAt DESC, RAND() " +
+                    "LIMIT :limit";
+
+            return handle.createQuery(sql)
+                    .bind("uid", userId)
+                    .bind("minPrice", minPrice)
+                    .bind("maxPrice", maxPrice)
+                    .bind("limit", limit)
+                    .mapToBean(Product.class)
+                    .list();
+        });
+    }
 
 
+    public List<Product> adminSearchByName(String keyword) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT * FROM products 
+                WHERE name LIKE :kw
+                ORDER BY ID ASC 
+            """).bind("kw", "%" + keyword + "%")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 
+    //xóa dữ liệu trong bảng gallery và products dùng Transaction
+    public boolean deleteProductWithGallery(int productId) {
+        return get().inTransaction(handle -> {
+            // xóa gallery trước
+            handle.createUpdate("""
+                 DELETE FROM gallary
+                 WHERE product_id = :id
+                 """).bind("id", productId)
+                    .execute();
+
+            // xóa products sau
+            int rows = handle.createUpdate("""
+                DELETE FROM products
+                       WHERE ID = :id
+                """)
+                    .bind("id", productId)
+                    .execute();
+
+            return rows > 0;
+        });
+    }
 }
 

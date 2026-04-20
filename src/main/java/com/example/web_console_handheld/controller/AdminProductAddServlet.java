@@ -47,17 +47,27 @@ public class AdminProductAddServlet extends HttpServlet {
 
             //XU LY ANH CHINH
             String mainImage = req.getParameter("image");
+            if (mainImage != null){
+                mainImage = mainImage.trim();
+            }
+
             Part imageMainFile = req.getPart("imageMainFile");
+            //Nếu có file thì ưu tiên file
             if (imageMainFile != null && imageMainFile.getSize() > 0) {
                 mainImage = saveFile(imageMainFile, uploadPath);
+            }
 
-
+            // Nếu không có cả file và link => báo lỗi
+            if (mainImage == null || mainImage.isEmpty()){
+                req.setAttribute("error", "Vui lòng nhập link ảnh chính hoặc tải ảnh chính lên!");
+                req.getRequestDispatcher("/Assets/component/adminPage/addProduct.jsp").forward(req, resp);
+                return;
             }
             Product p = new Product();
 
             p.setName(req.getParameter("name"));
-            p.setPrice(req.getParameter("price"));
-            p.setPriceOld(req.getParameter("priceOld"));
+            p.setPrice(Long.parseLong(req.getParameter("price")));
+            p.setPriceOld(Long.parseLong(req.getParameter("priceOld")));
             p.setImage(mainImage);
 
             p.setCategories_id(parseInt(req.getParameter("categories_id")));

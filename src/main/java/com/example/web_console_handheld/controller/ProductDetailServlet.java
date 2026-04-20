@@ -4,10 +4,7 @@ import com.example.web_console_handheld.dao.*;
 import com.example.web_console_handheld.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +18,9 @@ public class ProductDetailServlet extends HttpServlet {
     private final ReviewDao reviewDao = new ReviewDao();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String idParam = request.getParameter("id");
         if (idParam == null) {
             response.sendRedirect("product");
@@ -29,7 +28,6 @@ public class ProductDetailServlet extends HttpServlet {
         }
 
         int productId = Integer.parseInt(idParam);
-        // Product, Category, Brand
         Product product = productDao.getProductDetailByID(productId);
         if (product == null) {
             response.sendRedirect("product");
@@ -39,25 +37,27 @@ public class ProductDetailServlet extends HttpServlet {
         Category category = categoryDao.getCategoryByProductId(productId);
         Brand brand = brandDao.getBrandByProductId(productId);
 
-        // Related products
-        List<Product> relateProductList = productDao.getProductListByBrandAndCategory(
-                brand.getID(), category.getID(), productId);
+        List<Product> relateProductList = List.of();
+        if (brand != null && category != null) {
+            relateProductList = productDao.getProductListByBrandAndCategory(
+                    brand.getID(), category.getID(), productId);
+        }
 
-        // Gallary
         List<Gallary> gallaryList = gallaryDao.getListGallaryBy_product_id(productId);
 
-        // Reviews
+        // reviews
         List<Review> allReviews = reviewDao.getReviewByID(productId);
-        double totalRating = reviewDao.sum(productId).getRating();
         int reviewQuantity = allReviews.size();
-        double avgRating = (reviewQuantity == 0) ? 0.0 : totalRating / reviewQuantity;
 
-        //
-        int fiveStars = reviewDao.countReview5Stars(productId).size();
-        int fourStars = reviewDao.countReview4Stars(productId).size();
-        int threeStars = reviewDao.countReview3Stars(productId).size();
-        int twoStars = reviewDao.countReview2Stars(productId).size();
-        int oneStar = reviewDao.countReview1Stars(productId).size();
+        double totalRating = reviewDao.sumRating(productId);
+        double avgRating = reviewQuantity == 0 ? 0 : totalRating / reviewQuantity;
+
+        // count stars
+        int fiveStars = reviewDao.countByStar(productId, 5);
+        int fourStars = reviewDao.countByStar(productId, 4);
+        int threeStars = reviewDao.countByStar(productId, 3);
+        int twoStars = reviewDao.countByStar(productId, 2);
+        int oneStar = reviewDao.countByStar(productId, 1);
 
         double avg5 = reviewQuantity > 0 ? fiveStars * 100.0 / reviewQuantity : 0;
         double avg4 = reviewQuantity > 0 ? fourStars * 100.0 / reviewQuantity : 0;
@@ -65,25 +65,28 @@ public class ProductDetailServlet extends HttpServlet {
         double avg2 = reviewQuantity > 0 ? twoStars * 100.0 / reviewQuantity : 0;
         double avg1 = reviewQuantity > 0 ? oneStar * 100.0 / reviewQuantity : 0;
 
-        // kiêm tra có thể review
+        // check review
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        Integer orderIdCanReview = null;
+        User user = (User) session.getAttribute("user");
+
+        int orderIdCanReview = 0;
         boolean canReview = false;
-        if (currentUser != null) {
-            orderIdCanReview = reviewDao.getOrderIdCanReview(currentUser.getId(), productId);
-            canReview = orderIdCanReview != null && orderIdCanReview > 0;
+
+        if (user != null) {
+            orderIdCanReview = reviewDao.getOrderIdCanReviewV2(user.getId(), productId);
+            canReview = orderIdCanReview != 0;
         }
 
-        // Chia nhỏ sản phẩm, mô tả.
-        String[] endowList = (product.getEndow() != null && !product.getEndow().isBlank())
+        // split text
+        String[] endowList = product.getEndow() != null
                 ? product.getEndow().split("\\r?\\n")
                 : new String[0];
 
-        String[] descLines = (product.getShort_description() != null && !product.getShort_description().isBlank())
+        String[] descLines = product.getShort_description() != null
                 ? product.getShort_description().split("\\r?\\n")
                 : new String[0];
 
+        // set attribute
         request.setAttribute("product", product);
         request.setAttribute("category", category);
         request.setAttribute("brand", brand);
@@ -93,11 +96,13 @@ public class ProductDetailServlet extends HttpServlet {
         request.setAttribute("reviews", allReviews);
         request.setAttribute("quantity", reviewQuantity);
         request.setAttribute("avg", avgRating);
+
         request.setAttribute("fiveStars", fiveStars);
         request.setAttribute("fourStars", fourStars);
         request.setAttribute("threeStars", threeStars);
         request.setAttribute("twoStars", twoStars);
         request.setAttribute("oneStar", oneStar);
+
         request.setAttribute("avg5", avg5);
         request.setAttribute("avg4", avg4);
         request.setAttribute("avg3", avg3);
@@ -110,6 +115,7 @@ public class ProductDetailServlet extends HttpServlet {
         request.setAttribute("canReview", canReview);
         request.setAttribute("orderIdCanReview", orderIdCanReview);
 
-        request.getRequestDispatcher("/Assets/Details/productDetails.jsp").forward(request, response);
+        request.getRequestDispatcher("/Assets/Details/productDetails.jsp")
+                .forward(request, response);
     }
 }

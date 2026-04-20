@@ -246,7 +246,7 @@
     const input = document.getElementById("searchInput");
     const box = document.getElementById("suggestBox");
     const contextPath = "${pageContext.request.contextPath}";
-    let debounceTimeout = null;
+    let debounceTimeout = null; // chống gọi api liên tục khi người dùng gõ nhanh
 
     input.addEventListener("input", function () {
         const keyword = this.value.trim();
@@ -258,7 +258,7 @@
         }
 
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
+        debounceTimeout = setTimeout(() => { // chỉ gọi api sau khi user gõ được 300ms.
             fetch(contextPath + "/search-suggest?q=" + encodeURIComponent(keyword))
                 .then(res => res.json())
                 .then(data => {

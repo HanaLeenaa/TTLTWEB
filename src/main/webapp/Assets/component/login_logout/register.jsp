@@ -153,7 +153,7 @@
             <span class="error" id="phoneError"></span>
 
             <input id="password" class="input" type="password" name="password" placeholder="Mật khẩu (*)" required>
-            <span class="error" id="passError"></span>
+            <span class="errnameRegexor" id="passError"></span>
 
             <input id="confirmPassword" class="input" type="password" name="confirm_password" placeholder="Nhập lại mật khẩu (*)" required>
             <span class="error" id="confirmError"></span>

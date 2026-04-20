@@ -54,10 +54,20 @@ public class Product {
     private String connect;
     @ColumnName("endow")
     private String endow;
+
+    @ColumnName("stock")
+    private int stock;
+    @ColumnName("sales_count")
+    private int sales_count;
+
+    private int stock_quantity;
+
     public Product(long price){
         this.price = price;
     }
-    public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information, long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active, String metatitle, boolean ispremium, String suports, String connect, String endow) {
+    public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information,
+                   long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active,
+                   String metatitle, boolean ispremium, String suports, String connect, String endow, int stock, int sales_count, int  stock_quantity) {
         this.ID = ID;
         this.categories_id = categories_id;
         this.brand_id = brand_id;
@@ -78,6 +88,9 @@ public class Product {
         this.suports = suports;
         this.connect = connect;
         this.endow = endow;
+        this.stock = stock;
+        this.sales_count = sales_count;
+        this.stock_quantity = stock_quantity;
     }
     public Product() {}
 
@@ -137,33 +150,35 @@ public class Product {
         this.information = information;
     }
 
-    public  String getPrice() {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator('.');
-        DecimalFormat df = new DecimalFormat("#,###", symbols);
-        return df.format(this.price);
+    public long getPrice() {
+        return price; // dùng cho tính toán, lưu DB
     }
-
 
     public void setPrice(long price) {
         this.price = price;
     }
-    public void setPrice(String price) {
-        this.price = (long)Double.parseDouble(price);
-    }
 
-    public String getPriceOld() {
+    public String getPriceFormatted() {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator('.');
         DecimalFormat df = new DecimalFormat("#,###", symbols);
-        return df.format(this.priceOld);
+        return df.format(this.price); // dùng cho hiển thị
+    }
+
+    // Giá cũ
+    public long getPriceOld() {
+        return priceOld; // dùng cho tính toán, lưu DB
     }
 
     public void setPriceOld(long priceOld) {
         this.priceOld = priceOld;
     }
-    public void setPriceOld(String priceOld){
-        this.priceOld = (long)Double.parseDouble(priceOld);
+
+    public String getPriceOldFormatted() {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        DecimalFormat df = new DecimalFormat("#,###", symbols);
+        return df.format(this.priceOld); // dùng cho hiển thị
     }
 
     public String getImage() {
@@ -264,5 +279,29 @@ public class Product {
     }
     public void setPriceOldValue(long priceOldValue) {
         this.priceOld = priceOldValue;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public int getSales_count() {
+        return sales_count;
+    }
+
+    public void setSales_count(int sales_count) {
+        this.sales_count = sales_count;
+    }
+
+    public void setStock_quantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
+    }
+
+    public int getStock_quantity() {
+        return stock_quantity;
     }
 }

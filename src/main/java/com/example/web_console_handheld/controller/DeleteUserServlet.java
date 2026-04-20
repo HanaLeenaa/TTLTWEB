@@ -1,5 +1,4 @@
-package com.example.web_console_handheld.controller.admin;
-
+package com.example.web_console_handheld.controller;
 import com.example.web_console_handheld.dao.UserDao;
 import com.example.web_console_handheld.model.Admin;
 import com.example.web_console_handheld.model.User;
@@ -9,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/admin/delete-user")
 public class DeleteUserServlet extends HttpServlet {
@@ -31,13 +31,25 @@ public class DeleteUserServlet extends HttpServlet {
 
         User u = userDao.getUserById(userId);
 
+        // nếu user không tồn tại thì quay lại
+        if (u == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
+
         // Không cho xoá ADMIN
         if (u != null && "ADMIN".equals(u.getRole())) {
             resp.sendRedirect(req.getContextPath() + "/admin/users");
             return;
         }
 
-        userDao.delete(userId);
+        // Không xóa lại user đã bị xóa mềm
+        if (u.isDeleted()) {
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
+        // xóa mềm user
+        userDao.softDeleteUser(userId);
 
         resp.sendRedirect(req.getContextPath() + "/admin/users");
     }

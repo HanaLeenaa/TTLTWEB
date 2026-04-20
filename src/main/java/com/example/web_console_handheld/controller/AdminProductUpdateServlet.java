@@ -59,8 +59,8 @@ public class AdminProductUpdateServlet extends HttpServlet {
         p.setShort_description(req.getParameter("short_description"));
         p.setFull_description(req.getParameter("full_description"));
         p.setInformation(req.getParameter("information"));
-        p.setPrice(req.getParameter("price"));
-        p.setPriceOld(req.getParameter("priceOld"));
+        p.setPrice(Long.parseLong(req.getParameter("price")));
+        p.setPriceOld(Long.parseLong(req.getParameter("priceOld")));
         p.setImage(req.getParameter("image"));
         p.setEnergy(Integer.parseInt(req.getParameter("energy")));
         p.setUseTime(Integer.parseInt(req.getParameter("useTime")));
@@ -142,7 +142,7 @@ public class AdminProductUpdateServlet extends HttpServlet {
 
         part.write(fullPath);
 
-        return req.getContextPath() + "/Assets/image/" + newFileName;
+        return "/Assets/image/" + newFileName;
     }
 
     private String extractFileName(Part part) {

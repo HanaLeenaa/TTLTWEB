@@ -201,7 +201,7 @@ public class UserDao extends BaseDao{
     }
     /* ================= KHOÁ / MỞ ================= */
     public void toggleActive(int userId) {
-        String sql = "UPDATE users SET active = NOT active WHERE id=?";
+        String sql = "UPDATE users SET active = NOT active WHERE id=? AND deleted = false";
 
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -213,20 +213,7 @@ public class UserDao extends BaseDao{
             e.printStackTrace();
         }
     }
-    /* ================= XOÁ USER ================= */
-    public void delete(int userId) {
-        String sql = "DELETE FROM users WHERE id=?";
 
-        try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public List<User> getAll() {
         List<User> list = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -240,7 +227,7 @@ public class UserDao extends BaseDao{
                 u.setId(rs.getInt("ID"));
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
-//                u.setRole(rs.getString("role"));
+                u.setRole(rs.getString("role"));
                 u.setActive(rs.getBoolean("active"));
                 list.add(u);
             }
@@ -356,5 +343,84 @@ public class UserDao extends BaseDao{
             e.printStackTrace();
         }
     }
+    // lấy danh sách user đang hoạt đông (không bị admin xóa mềm)
+    public List<User> getAllActiveUsers() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE deleted = false ORDER BY id DESC";
 
-}
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setRole(rs.getString("role"));
+                u.setActive(rs.getBoolean("active"));
+                u.setDeleted(rs.getBoolean("deleted"));
+                list.add(u);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // lấy danh sách user ngừng hoạt đông (bị admin xóa mềm)
+    public List<User> getDeletedUsers() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE deleted = true ORDER BY id DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setRole(rs.getString("role"));
+                u.setActive(rs.getBoolean("active"));
+                u.setDeleted(rs.getBoolean("deleted"));
+                list.add(u);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Xóa mềm user => không xóa khỏi DB
+    public void softDeleteUser(int userId) {
+        String sql = "UPDATE users SET deleted = true, active = false WHERE id = ?";
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)){
+
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // khôi phục user đã xóa
+    public void restoreUser(int userId) {
+        String sql = "UPDATE users SET deleted = false , active = true WHERE id = ?";
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)){
+
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    }
+
