@@ -2856,3 +2856,10 @@ CREATE TABLE stock_movements (
 
                                  FOREIGN KEY (product_id) REFERENCES products(ID)
 );
+
+-- 25/04 Huỳnh Như - chức năng lịch sử nhập kho
+ALTER TABLE stock_movements
+    ADD user_id INT
+
+ALTER TABLE stock_movements
+    ADD FOREIGN KEY (user_id) REFERENCES admin(id);
