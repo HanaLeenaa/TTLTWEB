@@ -39,7 +39,6 @@ public class SearchSuggestServlet extends HttpServlet {
             Product p = list.get(i);
             String imgPath = p.getImage();
 
-            // CHỐT: Nếu là link https thì giữ nguyên, nếu là file nội bộ thì nối contextPath
             if (imgPath != null && !imgPath.toLowerCase().startsWith("http")) {
                 imgPath = contextPath + (imgPath.startsWith("/") ? "" : "/") + imgPath;
             }

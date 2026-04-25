@@ -66,8 +66,8 @@ public class AdminProductAddServlet extends HttpServlet {
             Product p = new Product();
 
             p.setName(req.getParameter("name"));
-            p.setPrice(req.getParameter("price"));
-            p.setPriceOld(req.getParameter("priceOld"));
+            p.setPrice(Long.parseLong(req.getParameter("price")));
+            p.setPriceOld(Long.parseLong(req.getParameter("priceOld")));
             p.setImage(mainImage);
 
             p.setCategories_id(parseInt(req.getParameter("categories_id")));

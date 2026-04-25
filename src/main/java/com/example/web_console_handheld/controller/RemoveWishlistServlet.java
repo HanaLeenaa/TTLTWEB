@@ -1,12 +1,9 @@
 package com.example.web_console_handheld.controller;
 
-import com.example.web_console_handheld.model.Product;
+import com.example.web_console_handheld.model.Product; // Bạn nhớ import class Product vào nhé
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,14 +16,18 @@ public class RemoveWishlistServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession(false);
-        Object user = (session != null) ? session.getAttribute("auth") : null;
+        PrintWriter out = response.getWriter(); // Khai báo biến out để dùng bên dưới
+        HttpSession session = request.getSession();
+
+        Object user = session.getAttribute("auth");
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            out.print("{\"message\":\"Bạn cần đăng nhập để xoá wishlist\"}");
+            String json = "{ \"notLoggedIn\": true, \"redirect\": \"" + request.getContextPath() + "/login\", \"message\":\"Bạn cần đăng nhập để xoá wishlist\" }";
+            out.write(json);
             out.flush();
             return;
         }
@@ -39,18 +40,23 @@ public class RemoveWishlistServlet extends HttpServlet {
             return;
         }
 
-        int productId = Integer.parseInt(idParam);
-        List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
-        if (wishlist == null) wishlist = new ArrayList<>();
+        try {
+            int productId = Integer.parseInt(idParam);
+            List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
+            if (wishlist == null) wishlist = new ArrayList<>();
 
-        boolean removed = wishlist.removeIf(p -> p.getID() == productId);
-        session.setAttribute("wishlist", wishlist);
+            boolean removed = wishlist.removeIf(p -> p.getID() == productId);
+            session.setAttribute("wishlist", wishlist);
 
-        out.print(
-                "{\"removed\":" + removed +
-                        ",\"message\":\"" + (removed ? "Đã xóa khỏi yêu thích" : "Sản phẩm không có trong wishlist") + "\"" +
-                        ",\"total\":" + wishlist.size() + "}"
-        );
+            out.print(
+                    "{\"removed\":" + removed +
+                            ",\"message\":\"" + (removed ? "Đã xóa khỏi yêu thích" : "Sản phẩm không có trong wishlist") + "\"" +
+                            ",\"total\":" + wishlist.size() + "}"
+            );
+        } catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"message\":\"ID sản phẩm không hợp lệ\"}");
+        }
         out.flush();
     }
 }

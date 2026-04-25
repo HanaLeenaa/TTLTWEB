@@ -316,6 +316,39 @@
             </c:otherwise>
         </c:choose>
 
+        <!-- REVIEW MODAL -->
+        <div id="reviewModal" style="display:none;">
+            <form action="${pageContext.request.contextPath}/add-review"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <input type="hidden" name="productId" value="${product.ID}">
+
+                <h3>Đánh giá sản phẩm</h3>
+
+                <!-- Rating -->
+                <label>Số sao:</label>
+                <select name="rating" required>
+                    <option value="5">5 sao</option>
+                    <option value="4">4 sao</option>
+                    <option value="3">3 sao</option>
+                    <option value="2">2 sao</option>
+                    <option value="1">1 sao</option>
+                </select>
+
+                <!-- Nội dung -->
+                <label>Nhận xét:</label>
+
+                <textarea name="comment"></textarea>
+                <label>Ảnh review:</label>
+                <input type="file" name="review_image" accept="image/*">
+
+                <br><br>
+                <button type="submit">Gửi đánh giá</button>
+                <button type="button" onclick="closeReviewModal()">Hủy</button>
+            </form>
+        </div>
+
         <!-- List reviews -->
         <c:if test="${not empty reviews}">
             <c:forEach var="c" items="${reviews}">
@@ -329,6 +362,12 @@
                         </span>
                     </h4>
                     <p>Nhận xét: ${c.review_text}</p>
+
+                    <c:if test="${not empty c.imgReviews}">
+                        <img src="${pageContext.request.contextPath}/uploads/${c.imgReviews}"
+                             style="width:100px; margin-top:10px;">
+                    </c:if>
+
                     <div class="review-date">
                         <c:out value="${c.reviewDate}"/>
                     </div>
@@ -339,6 +378,16 @@
 </div>
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
+
+<script>
+    function openReviewModal() {
+        document.getElementById("reviewModal").style.display = "block";
+    }
+
+    function closeReviewModal() {
+        document.getElementById("reviewModal").style.display = "none";
+    }
+</script>
 
 <script>
     function handleReviewClick() {

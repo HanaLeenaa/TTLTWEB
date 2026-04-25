@@ -80,6 +80,7 @@ public class ProductServlet extends HttpServlet {
             );
             request.setAttribute("keyword", keyword);
         } else {
+            // nếu categoryIds null hoặc rỗng thì lấy toàn bộ
             if (categoryIds == null || categoryIds.isEmpty()) {
                 products = productDao.getAllProductsPage(priceRange, categoryIds, brandIds, useTimes, sort, offset, PAGE_SIZE);
                 totalProduct = productDao.countAllProducts(priceRange, categoryIds, brandIds, useTimes);
@@ -88,6 +89,7 @@ public class ProductServlet extends HttpServlet {
                 totalProduct = productDao.countFilter(categoryIds, priceRange, brandIds, useTimes);
             }
         }
+
 
         int totalPage = (int) Math.ceil((double) totalProduct / PAGE_SIZE);
         if (page > totalPage && totalPage > 0) page = totalPage;

@@ -339,7 +339,7 @@ function addToCart(form) {
 
 <script>
 function toggleWishlist(btn, productId) {
-    fetch(contextPath + '/AddWishlist', {
+    fetch(contextPath + '/wishlist/toggle', { // sửa lại đúng endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'productId=' + encodeURIComponent(productId)
@@ -360,12 +360,11 @@ function toggleWishlist(btn, productId) {
             btn.innerHTML = '<i class="fa fa-heart"></i>';
         } else if (data.removed) {
             btn.classList.remove('active');
-            btn.innerHTML = '<i class="fa fa-heart-o"></i>';
+            btn.innerHTML = '<i class="fa fa-heart"></i>';
         }
 
         alert(data.message);
 
-        // cập nhật số lượng wishlist nếu có hiển thị
         const wishlistNum = document.getElementById("wishlist_num");
         if (wishlistNum) {
             wishlistNum.textContent = data.total;
