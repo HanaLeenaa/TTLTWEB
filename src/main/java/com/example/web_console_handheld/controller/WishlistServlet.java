@@ -10,7 +10,6 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
 
 @WebServlet("/wishlist")
 public class WishlistServlet extends HttpServlet {
@@ -32,7 +31,6 @@ public class WishlistServlet extends HttpServlet {
         List<Product> wishlist = (List<Product>) session.getAttribute("wishlist");
         if (wishlist == null) wishlist = new ArrayList<>();
 
-        // Lấy danh sách ID sản phẩm trong wishlist
         List<Integer> wishlistIds = wishlist.stream()
                 .map(Product::getID)
                 .toList();
@@ -62,8 +60,8 @@ public class WishlistServlet extends HttpServlet {
                         .toList())
                 .orElse(List.of());
 
-        // ====== Gọi DAO để lọc ======
-        List<Product> filtered = productDao.filterWishlist(
+        // ====== Gọi DAO duy nhất để lọc wishlist và gợi ý ======
+        List<Product> suggestions = productDao.filterWishlist(
                 wishlistIds,
                 categoryIds,
                 priceRange,
@@ -73,7 +71,9 @@ public class WishlistServlet extends HttpServlet {
         );
 
         // ====== Set attribute cho JSP ======
-        request.setAttribute("wishlist", filtered);
+        request.setAttribute("wishlist", suggestions);
+        request.setAttribute("suggestions", suggestions);
+        // set attribute cho JSP
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
@@ -85,7 +85,4 @@ public class WishlistServlet extends HttpServlet {
 
         request.getRequestDispatcher("/Assets/component/login_logout/wishlist.jsp").forward(request, response);
     }
-
 }
-
-

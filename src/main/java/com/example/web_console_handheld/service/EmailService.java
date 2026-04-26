@@ -7,8 +7,8 @@ import java.util.Properties;
 
 public class EmailService {
 
-    private static final String FROM_EMAIL = "23130029@st.hcmuaf.edu.vn"; // email thật
-    private static final String PASSWORD = "iadx drdc cixi waoa";      // mật khẩu ứng dụng Gmail
+    private static final String FROM_EMAIL = "23130088@st.hcmuaf.edu.vn"; // email thật
+    private static final String PASSWORD = "ncpu zrne ixcd zbxc";      // mật khẩu ứng dụng Gmail
 
     public static void sendOtp(String toEmail, String otp) throws MessagingException {
         Properties props = new Properties();

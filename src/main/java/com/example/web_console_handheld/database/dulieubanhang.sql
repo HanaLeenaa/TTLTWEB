@@ -2857,6 +2857,9 @@ CREATE TABLE stock_movements (
                                  FOREIGN KEY (product_id) REFERENCES products(ID)
 );
 
+
+SET FOREIGN_KEY_CHECKS = 1
+
 -- 25/04 Huỳnh Như - chức năng lịch sử nhập kho
 ALTER TABLE stock_movements
     ADD user_id INT

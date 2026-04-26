@@ -224,11 +224,11 @@
                 <input type="hidden" name="id" value="${selectedOrder.ID}">
 
                 <select name="status">
-                    <option value="pending" ${selectedOrder.status=='pending'?'selected':''}>Pending</option>
-                    <option value="confirmed" ${selectedOrder.status=='confirmed'?'selected':''}>Confirmed</option>
-                    <option value="shipping" ${selectedOrder.status=='shipping'?'selected':''}>Shipping</option>
-                    <option value="completed" ${selectedOrder.status=='completed'?'selected':''}>Completed</option>
-                    <option value="cancelled" ${selectedOrder.status=='cancelled'?'selected':''}>Cancelled</option>
+                    <option value="Chờ xác nhận" ${selectedOrder.status=='Chờ xác nhận'?'selected':''}>Chờ xác nhận</option>
+                    <option value="Đã xác nhận" ${selectedOrder.status=='Đã xác nhận'?'selected':''}>Đã xác nhận</option>
+                    <option value="Đang giao" ${selectedOrder.status=='Đang giao'?'selected':''}>Đang giao</option>
+                    <option value="Đã giao" ${selectedOrder.status=='Đã giao'?'selected':''}>Đã giao</option>
+                    <option value="Đã huỷ" ${selectedOrder.status=='Đã huỷ'?'selected':''}>Đã huỷ</option>
                 </select>
 
                 <button type="submit">Cập nhật</button>
