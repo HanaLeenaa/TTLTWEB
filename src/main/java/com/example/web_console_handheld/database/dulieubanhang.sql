@@ -2874,3 +2874,19 @@ ALTER TABLE stock_movements
     ADD FOREIGN KEY (user_id) REFERENCES admin(id);
 
 SET FOREIGN_KEY_CHECKS = 1
+
+
+    -- 28/04 Huỳnh Như - chức năng quản lý contact từ user
+CREATE TABLE contact_message (
+                                 ID INT AUTO_INCREMENT PRIMARY KEY,
+                                 user_id INT,
+                                 name VARCHAR(255),
+                                 email VARCHAR(255),
+                                 phone VARCHAR(50),
+                                 message TEXT,
+                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                 status VARCHAR(50) DEFAULT 'NEW'
+);
+
+ALTER TABLE contact_message ADD reply TEXT;
+ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;

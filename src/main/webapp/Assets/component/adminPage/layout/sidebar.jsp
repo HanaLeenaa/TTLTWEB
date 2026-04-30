@@ -82,6 +82,14 @@
         .submenu.open {
             display: block;
         }
+        .contact-badge {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 
@@ -107,6 +115,19 @@
             <i class="fa-solid fa-user"></i> Quản lý user</a></li>
 
         <li>
+
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/contact"
+               class="${activePage == 'contact' ? 'active' : ''}">
+                <i class="fa-solid fa-envelope"></i> Quản lý liên hệ
+
+                <!-- Badge NEW -->
+                <c:if test="${newCount > 0}">
+                    <span class="contact-badge">${newCount}</span>
+                </c:if>
+            </a>
+        </li>
+
             <a href="javascript:void(0)"
                onclick="toggleWarehouse()"
                class="${activePage == 'warehouse' ? 'active' : ''}">
