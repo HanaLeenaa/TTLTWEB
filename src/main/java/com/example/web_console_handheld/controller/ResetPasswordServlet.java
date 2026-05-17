@@ -1,6 +1,8 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.UserDao;
+import com.example.web_console_handheld.utils.ValidationUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -9,64 +11,61 @@ import java.io.IOException;
 
 @WebServlet("/reset-password")
 public class ResetPasswordServlet extends HttpServlet {
+
     private final UserDao userDao = new UserDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String token = req.getParameter("token");
-        boolean valid = token != null && userDao.isResetTokenValid(token);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        req.setAttribute("tokenValid", valid);
-        req.setAttribute("token", token);
-        req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp").forward(req, resp);
-    }
+        HttpSession session = req.getSession();
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String token = req.getParameter("token");
+        Integer userId = (Integer) session.getAttribute("resetUserId");
+
+        if (userId == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
         String newPassword = req.getParameter("newPassword");
         String confirmPassword = req.getParameter("confirmPassword");
 
-        if (token == null || !userDao.isResetTokenValid(token)) {
-            req.setAttribute("tokenValid", false);
+        if (!ValidationUtil.isValidPassword(newPassword)) {
+
+            req.setAttribute("error", "Mật khẩu phải >=8 ký tự gồm hoa, thường, số, ký tự đặc biệt");
+
             req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp").forward(req, resp);
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            req.setAttribute("tokenValid", true);
-            req.setAttribute("token", token);
-            req.setAttribute("error", "Mật khẩu nhập lại không khớp");
+
+            req.setAttribute("error", "Mật khẩu xác nhận không khớp");
+
             req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp").forward(req, resp);
+
             return;
         }
 
-        // Kiểm tra mật khẩu mạnh
-        if (!isStrongPassword(newPassword)) {
-            req.setAttribute("tokenValid", true);
-            req.setAttribute("token", token);
-            req.setAttribute("error", "Mật khẩu yếu. Yêu cầu: >=8 ký tự, chữ hoa, chữ thường, số, ký tự đặc biệt");
-            req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp").forward(req, resp);
-            return;
-        }
-
-        boolean updated = userDao.updatePasswordByToken(token, newPassword);
+        boolean updated = userDao.updatePassword(userId, newPassword);
 
         if (updated) {
-            req.setAttribute("tokenValid", false); // ẩn form
-            req.setAttribute("message", "Đổi mật khẩu thành công, vui lòng đăng nhập lại");
+
+            session.removeAttribute("resetUserId");
+            session.removeAttribute("forgotUser");
+
+            session.setAttribute("loginMessage", "Đổi mật khẩu thành công. Vui lòng đăng nhập lại.");
+
+            resp.sendRedirect(req.getContextPath() + "/login");
+
         } else {
-            req.setAttribute("tokenValid", true);
-            req.setAttribute("token", token);
-            req.setAttribute("error", "Đổi mật khẩu thất bại, vui lòng thử lại");
+
+            req.setAttribute("error",
+                    "Đổi mật khẩu thất bại");
+
+            req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp")
+                    .forward(req, resp);
         }
-
-        req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp").forward(req, resp);
     }
 
-    // Kiểm tra mật khẩu mạnh
-    private boolean isStrongPassword(String password) {
-        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&^#(){}\\[\\]\\-_+=<>|]).{8,}$";
-        return password.matches(pattern);
-    }
 }
