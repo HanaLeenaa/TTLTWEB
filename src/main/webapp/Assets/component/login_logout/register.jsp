@@ -133,7 +133,9 @@
 
             <h2 class="title">ĐĂNG KÝ</h2>
             <p>Đã có tài khoản?
-                <a href="${pageContext.request.contextPath}/Assets/component/login_logout/login.jsp">Đăng nhập</a>
+                <a href="${pageContext.request.contextPath}/login">
+                    Đăng nhập
+                </a>
             </p>
 
             <% if (session.getAttribute("msg") != null) { %>
