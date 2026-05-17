@@ -195,7 +195,10 @@ body {
         width: 100%;
     }
 
-    .edit-profile {
+    .edit-profile{
         width: 100%;
+        height: auto;
+        overflow: visible;
+        margin-bottom: 30px;
     }
 }
