@@ -1,0 +1,89 @@
+.carousel-wrapper {
+    width: 100%;
+    overflow-x: auto;   /* bật scrollbar ngang */
+    overflow-y: hidden; /* ẩn cuộn dọc */
+    scroll-behavior: smooth;
+}
+
+#recent-list {
+    display: flex;
+    flex-wrap: nowrap;  /* ép tất cả card trên 1 hàng */
+    gap: 20px;
+}
+
+.product-item {
+    flex: 0 0 200px;    /* cố định chiều rộng mỗi card */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+}
+
+.recent-header {
+    display: flex;              /* xếp ngang */
+    justify-content: space-between; /* đẩy tiêu đề sang trái, nút sang phải */
+    align-items: center;        /* căn giữa theo chiều dọc */
+    margin-bottom: 15px;        /* khoảng cách dưới */
+}
+
+.recent-header h2 {
+    margin: 0;                  /* bỏ margin mặc định */
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+.recent-header form button {
+    background: #e95221;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.recent-header form button:hover {
+    background: #c4411a;
+}
+
+.product-item {
+    position: relative;
+}
+
+/* Nút X */
+.btn-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;          /* màu xám nhạt mặc định */
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.3s ease;
+    z-index: 10;            /* nằm trên thẻ a */
+    pointer-events: auto;   /* cho phép click */
+}
+
+.btn-remove:hover {
+    color: #e95221;         /* đổi sang cam khi hover */
+}
+
+/* Thẻ a nằm dưới nút X */
+.product-item a {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ngăn thẻ a bắt sự kiện ở vùng nút X */
+.remove-form {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 20;            /* cao hơn thẻ a */
+    pointer-events: auto;   /* form nhận sự kiện */
+}
