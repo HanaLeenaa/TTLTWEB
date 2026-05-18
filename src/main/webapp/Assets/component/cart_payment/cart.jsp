@@ -168,6 +168,32 @@
             text-decoration: underline;
         }
 
+        .product-info{
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+        }
+
+        .stock-error{
+            color:#e53935;
+            font-size:14px;
+            font-weight:500;
+        }
+
+        .btn-order:disabled{
+            background:#ccc;
+            cursor:not-allowed;
+        }
+
+        .cart-error{
+            background:#ffebee;
+            color:#d32f2f;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:16px;
+            font-weight:500;
+        }
+
     </style>
 </head>
 <body>
@@ -196,6 +222,14 @@
     </div>
 
     <c:set var="cart" value="${sessionScope.cart}" />
+
+    <c:if test="${not empty sessionScope.cartError}">
+        <div class="cart-error">
+                ${sessionScope.cartError}
+        </div>
+
+        <c:remove var="cartError" scope="session"/>
+    </c:if>
 
     <table class="cart-table">
         <tbody id="cart-items">
@@ -249,8 +283,21 @@
 
                                 <td class="product-cell">
                                     <div class="product-row">
+
+                                        <div class="product-info">
+
                                         <span class="product-name">${item.product.name}</span>
-                                        <span class="product-price">${item.product.price}đ</span>
+
+                                            <c:if test="${not empty item.error}">
+                                                <p class="stock-error">
+                                                        ${item.error}
+                                                </p>
+                                            </c:if>
+                                        </div>
+                                        <span class="product-price">
+                                                <fmt:formatNumber value="${item.product.priceValue}"
+                                                            type="number"
+                                                            groupingUsed="true"/>đ</span>
 
                                     <%--Tang/giam so luong san pham trng gio--%>
                         <div class="quantity">
@@ -306,7 +353,10 @@
     <form id="mainForm"
           action="${pageContext.request.contextPath}/payment"
           method="get">
-        <button type="submit" class="btn-order">Đặt hàng</button>
+        <button type="submit"
+                class="btn-order"
+                ${hasStockError ? 'disabled' : ''}>
+            Đặt hàng</button>
     </form>
 
 </div>

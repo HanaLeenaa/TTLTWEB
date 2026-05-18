@@ -14,11 +14,11 @@ private long price;
     private String receiver_phone;
     private String receiver_address;
     private String receiver_email;
-    private boolean payment_method;
+    private String payment_method;
     private String receiver_note;
     public Order() {}
 
-    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, boolean payment_method,  String receiver_note) {
+    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note) {
         this.ID = ID;
         this.user_Id = user_Id;
         this.createAt = createAt;
@@ -103,11 +103,11 @@ private long price;
         this.receiver_email = receiver_email;
     }
 
-    public boolean isPayment_method() {
+    public String getPayment_method() {
         return payment_method;
     }
 
-    public void setPayment_method(boolean payment_method) {
+    public void setPayment_method(String payment_method) {
         this.payment_method = payment_method;
     }
 

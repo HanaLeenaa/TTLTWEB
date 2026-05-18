@@ -2890,3 +2890,8 @@ CREATE TABLE contact_message (
 
 ALTER TABLE contact_message ADD reply TEXT;
 ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
+
+-- 18/05/2026 Huỳnh Như
+-- thêm để xử lý orders đúng logic
+ALTER TABLE orders
+    ADD COLUMN payment_method VARCHAR(50);

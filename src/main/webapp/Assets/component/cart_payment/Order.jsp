@@ -24,7 +24,6 @@
 
 <div class="order-detail-container">
     <h2>CHI TIẾT ĐƠN HÀNG</h2>
-
     <!-- thông báo đặt hàng thành công -->
     <c:if test="${confirmed}">
         <div class="order-success">
