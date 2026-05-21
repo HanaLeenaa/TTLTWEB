@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 12/6/2025
-  Time: 6:49 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -34,7 +27,9 @@
             <h3>Liên Hệ Với Chúng Tôi</h3>
             <form action="${pageContext.request.contextPath}/contact" method="post">
                 <div class="subscribe">
-                    <input type="email" name="email" placeholder="Nhập email của bạn" required />
+
+                    <textarea name="message" placeholder="Nhập nội dung liên hệ của bạn" required></textarea>
+
                     <button type="submit">
                         <i class="fa-solid fa-paper-plane"></i> Gửi
                     </button>

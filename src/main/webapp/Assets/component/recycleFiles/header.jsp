@@ -169,6 +169,17 @@
             font-weight: bold;
         }
 
+        .new-badge{
+            background: red;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
     </style>
 </head>
 <body>
@@ -260,7 +271,7 @@
             </c:if>
 
             <c:forEach var="c" items="${notifications}">
-                <div class="notify-item ${c.read ==false ? 'unread' : ''}"
+                <div class="notify-item ${!c.read ? 'unread' : ''}"
                      onclick="goNotify(${c.ID})">
 
                     <div class="notify-icon">
@@ -268,7 +279,12 @@
                     </div>
 
                     <div class="notify-content">
-                        <div class="title">Admin đã phản hồi</div>
+                        <div class="title">Admin đã phản hồi
+
+                        <c:if test="${!c.read}">
+                            <span class="new-badge">Mới</span>
+                        </c:if>
+                        </div>
 
                         <div class="msg">
                                 ${c.reply}
