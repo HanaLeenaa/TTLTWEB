@@ -98,7 +98,7 @@ public class ContactMessageDao {
 
     public List<ContactMessage> getRepliedByUser(int userId) throws SQLException {
         List<ContactMessage> list = new ArrayList<>();
-        String sql = "SELECT * FROM contact_message WHERE user_id=? AND status='REPLIED' ORDER BY created_at DESC";
+        String sql = "SELECT * FROM contact_message WHERE user_id=? AND status='REPLIED' ORDER BY created_at DESC LIMIT 5";
 
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, userId);
@@ -111,6 +111,7 @@ public class ContactMessageDao {
             c.setMessage(rs.getString("message"));
             c.setReply(rs.getString("reply"));
             c.setCreatedAt(rs.getTimestamp("created_at"));
+            c.setRead(rs.getBoolean("is_read"));
             list.add(c);
         }
         return list;
