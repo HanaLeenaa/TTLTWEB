@@ -151,8 +151,7 @@ public class OrderDao {
                 order.setReceiver_phone(rs.getString("phone_order"));
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
-//                order.setPayment_method(rs.getBoolean("payment_method"));
-
+                order.setPayment_method(rs.getString("payment_method"));
                 list.add(order);
             }
 
@@ -191,7 +190,7 @@ public class OrderDao {
                 order.setReceiver_phone(rs.getString("receiver_phone"));
                 order.setReceiver_address(rs.getString("receiver_address"));
                 order.setReceiver_email(rs.getString("receiver_email"));
-                order.setPayment_method(rs.getBoolean("payment_method"));
+                order.setPayment_method(rs.getString("payment_method"));
             }
 
         } catch (Exception e) {
@@ -503,5 +502,148 @@ public class OrderDao {
             e.printStackTrace();
         }
         return list;
+    }
+
+    //transaction check stock khi đặt hàng
+    public boolean createOrderTransaction(Order order, List<OrderItem> items) {
+
+        String insertOrderSql = """
+        INSERT INTO orders(
+            user_id,
+            order_date,
+            status,
+            total_amount,
+            fullname_order,
+            phone_order,
+            address_order,
+            email_order,
+            note,
+            payment_method
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+        String insertItemSql = """
+        INSERT INTO order_items(
+            order_id,
+            product_id,
+            quantity,
+            price_at_purchase,
+            product_image
+        )
+        VALUES (?, ?, ?, ?, ?)
+        """;
+
+        String updateStockSql = """
+        UPDATE products
+        SET stock = stock - ?
+        WHERE ID = ?
+        AND stock >= ?
+        """;
+
+        Connection conn = null;
+
+        try {
+
+            conn = DBConnection.getConnection();
+
+            // START TRANSACTION
+            conn.setAutoCommit(false);
+
+            int orderId;
+
+            // INSERT ORDER
+            try (
+                    PreparedStatement ps =
+                            conn.prepareStatement(
+                                    insertOrderSql,
+                                    Statement.RETURN_GENERATED_KEYS
+                            )
+            ) {
+
+                ps.setInt(1, order.getUser_Id());
+                ps.setTimestamp(2, order.getCreateAt());
+                ps.setString(3, order.getStatus());
+                ps.setLong(4, order.getPrice());
+
+                ps.setString(5, order.getReceiver_name());
+                ps.setString(6, order.getReceiver_phone());
+                ps.setString(7, order.getReceiver_address());
+                ps.setString(8, order.getReceiver_email());
+                ps.setString(9, order.getReceiver_note());
+                ps.setString(10, order.getPayment_method());
+
+                int affectedRows = ps.executeUpdate();
+
+                if (affectedRows <= 0) {
+                    conn.rollback();
+                    return false;
+                }
+
+                ResultSet rs = ps.getGeneratedKeys();
+
+                if (rs.next()) {
+                    orderId = rs.getInt(1);
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // UPDATE STOCK + INSERT ORDER ITEM
+            for (OrderItem item : items) {
+
+                // update stock
+                try (
+                        PreparedStatement stockPs =
+                                conn.prepareStatement(updateStockSql)
+                ) {
+
+                    stockPs.setInt(1, item.getQuantity());
+                    stockPs.setInt(2, item.getProduct_id());
+                    stockPs.setInt(3, item.getQuantity());
+
+                    int updated = stockPs.executeUpdate();
+
+                    if (updated <= 0) {
+                        conn.rollback();
+                        return false;
+                    }
+                }
+
+                // insert order item
+                try (
+                        PreparedStatement itemPs =
+                                conn.prepareStatement(insertItemSql)
+                ) {
+
+                    itemPs.setInt(1, orderId);
+                    itemPs.setInt(2, item.getProduct_id());
+                    itemPs.setInt(3, item.getQuantity());
+                    itemPs.setLong(4, item.getProduct_price());
+                    itemPs.setString(5, item.getProduct_image());
+
+                    itemPs.executeUpdate();
+                }
+            }
+
+            // COMMIT
+            conn.commit();
+            return true;
+
+        } catch (Exception e) {
+
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
