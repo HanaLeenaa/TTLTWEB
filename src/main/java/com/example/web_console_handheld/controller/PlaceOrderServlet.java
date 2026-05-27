@@ -76,7 +76,7 @@ public class PlaceOrderServlet extends HttpServlet {
         Order order = new Order();
         order.setUser_Id(auth.getId());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
-        order.setStatus("PENDING");
+        order.setStatus("Chờ xác nhận");
 
         // thông tin người nhận
         order.setReceiver_name(auth.getUsername());
