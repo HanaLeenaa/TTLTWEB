@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.ImportDao;
+import com.example.web_console_handheld.model.Admin;
 import com.example.web_console_handheld.model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -70,7 +71,12 @@ public class AdminImportServlet extends HttpServlet {
             //xác nhận nhập kho
             if ("confirm".equals(action)) {
                 int receiptId = Integer.parseInt(request.getParameter("receiptId"));
-                dao.confirmReceipt(receiptId);
+                // LẤY ADMIN TỪ SESSION
+                Admin admin = (Admin) request.getSession().getAttribute("admin");
+                int userId = admin.getID();
+
+
+                dao.confirmReceipt(receiptId, userId);
                 request.getSession().setAttribute("message", "Nhập kho thành công phiếu số: "+ receiptId);
 
                 response.sendRedirect(request.getContextPath() + "/admin/import");

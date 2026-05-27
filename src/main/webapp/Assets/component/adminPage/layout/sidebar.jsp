@@ -78,6 +78,18 @@
         .menu li:has(.active-sub) > a.active {
             background: transparent;
         }
+
+        .submenu.open {
+            display: block;
+        }
+        .contact-badge {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 
@@ -88,22 +100,35 @@
     <ul class="menu">
         <li><a href="${pageContext.request.contextPath}/admin/dashboard"
             class="${activePage == 'dashboard' ? 'active' : ''}">
-            🏠 Dashboard</a></li>
+            <i class="fa-solid fa-house"></i> Dashboard</a></li>
 
         <li><a href="${pageContext.request.contextPath}/admin/products"
                class="${activePage == 'products' ? 'active' : ''}">
-            📦 Quản lý sản phẩm</a></li>
+            <i class="fa-solid fa-box"></i> Quản lý sản phẩm</a></li>
 
         <li><a href="${pageContext.request.contextPath}/admin/orders"
                class="${activePage == 'orders' ? 'active' : ''}" >
-            🧾 Quản lý đơn hàng</a></li>
+            <i class="fa-solid fa-receipt"></i> Quản lý đơn hàng</a></li>
 
         <li><a href="${pageContext.request.contextPath}/admin/users"
             class="${activePage == 'users' ? 'active' : ''}">
-            👤 Quản lý user</a></li>
+            <i class="fa-solid fa-user"></i> Quản lý user</a></li>
 
         <li>
-            <a href="${pageContext.request.contextPath}/admin/import"
+
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/contact"
+               class="${activePage == 'contact' ? 'active' : ''}">
+                <i class="fa-solid fa-envelope"></i> Quản lý liên hệ
+
+                <!-- Badge NEW -->
+                <c:if test="${newCount > 0}">
+                    <span class="contact-badge">${newCount}</span>
+                </c:if>
+            </a>
+        </li>
+
+            <a href="javascript:void(0)"
                onclick="toggleWarehouse()"
                class="${activePage == 'warehouse' ? 'active' : ''}">
                 <i class="fa-solid fa-cart-flatbed"></i>
@@ -112,8 +137,7 @@
             </a>
 
 
-            <ul id="warehouseMenu" class="submenu"
-            style="${activePage == 'warehouse' ? 'display:block;' : 'display:none;'}">
+            <ul id="warehouseMenu" class="submenu ${activePage == 'warehouse' ? 'open' : ''}">
                 <li>
                     <a href="${pageContext.request.contextPath}/admin/import"
                        class="${subPage == 'import-create' ? 'active-sub' : ''}">
@@ -130,27 +154,13 @@
         </li>
 
 
-        <li><a href="${pageContext.request.contextPath}/admin-logout">🚪 Đăng xuất</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-thin fa-door-closed"></i> Đăng xuất</a></li>
     </ul>
 </div>
 <script>
     function toggleWarehouse() {
         var menu = document.getElementById("warehouseMenu");
-
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-        } else {
-            menu.style.display = "block";
-        }
-    }
-</script>
-
-<script>
-    window.onload = function() {
-        var activePage = "${activePage}";
-        if (activePage === "warehouse") {
-            document.getElementById("warehouseMenu").style.display = "block";
-        }
+        menu.classList.toggle("open");
     }
 </script>
 </body>
