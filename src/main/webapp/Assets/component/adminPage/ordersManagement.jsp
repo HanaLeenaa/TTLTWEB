@@ -11,7 +11,7 @@
     <!-- CSS -->
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/admin-orders.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <style>
         body {
             margin: 0;
@@ -19,13 +19,11 @@
             background: #f4f6fb;
         }
 
-        /* wrapper chính */
         .admin-orders-wrapper {
             display: flex;
             min-height: 100vh;
         }
 
-        /* phần content bên phải sidebar */
         .order-list,
         .order-detail {
             background: #ffffff;
@@ -34,7 +32,6 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
-        /* grid cho content */
         .admin-orders-wrapper > .order-list {
             flex: 1.2;
             margin: 20px;
@@ -45,14 +42,12 @@
             margin: 20px 20px 20px 0;
         }
 
-        /* tiêu đề */
         h2, h3 {
             margin-top: 0;
             margin-bottom: 15px;
             font-weight: 600;
         }
 
-        /* table */
         .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -79,7 +74,6 @@
             background: #eaf0ff;
         }
 
-        /* badge trạng thái */
         .status {
             padding: 4px 10px;
             border-radius: 20px;
@@ -112,14 +106,12 @@
             color: #721c24;
         }
 
-        /* link */
         a {
             color: #4b7bec;
             text-decoration: none;
             font-weight: 500;
         }
 
-        /* form */
         form {
             margin-top: 10px;
         }
@@ -144,18 +136,172 @@
             background: #3867d6;
         }
 
-        /* detail info */
         .order-detail p {
             margin: 6px 0;
             font-size: 14px;
         }
 
-        /* table nhỏ */
         .admin-table.small th,
         .admin-table.small td {
             font-size: 13px;
         }
 
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .search-box,
+        .status-filter {
+            flex: 1;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 100%;
+            padding: 0 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #f9fafc;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #4b7bec;
+            background: #fff;
+            outline: none;
+        }
+
+        .status-filter {
+            padding: 0 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #fff;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .filter-wrapper {
+            flex: 0 0 auto;
+            position: relative;
+        }
+
+        .btn-filter {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .btn-filter:hover {
+            border-color: #4b7bec;
+            color: #4b7bec;
+        }
+
+        .filter-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 280px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            padding: 20px;
+            display: none;
+            z-index: 1000;
+            border: 1px solid #eee;
+        }
+
+        .filter-dropdown.active {
+            display: block;
+        }
+
+        .filter-dropdown h4 {
+            margin: 0 0 15px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .filter-dropdown label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .range {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .filter-dropdown input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-primary {
+            background: #4b7bec;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-reset {
+            font-size: 13px;
+            color: #888;
+            text-decoration: none;
+        }
+
+        .btn-reset:hover {
+            color: #ff4757;
+        }
+        .order-detail .fa-hand-point-left {
+            color:#e95211;
+        }
+
+        .order-list .fa-box {
+            color: #e95211;
+        }
     </style>
 </head>
 
@@ -165,7 +311,131 @@
     <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
     <!-- ================= DANH SÁCH ĐƠN ================= -->
     <div class="order-list">
-        <h2>📦 Quản lý đơn hàng</h2>
+        <h2><i class="fa-solid fa-box"></i> Quản lý đơn hàng</h2>
+
+<%--Thông báo khi cập nhật status đơn hàng --%>
+        <c:if test="${param.success == 'updated'}">
+        <div id="success-alert"
+             style="
+            background: #d4edda;
+            color: #155724;
+            border-left: 6px solid #28a745;
+            padding: 14px 18px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.4s ease;
+         ">
+            <i class="fa-solid fa-check"></i> Cập nhật trạng thái thành công
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const alertBox = document.getElementById("success-alert");
+
+                if (alertBox) {
+                    alertBox.style.transition = "0.5s";
+                    alertBox.style.opacity = "0";
+
+                    setTimeout(() => {
+                        alertBox.remove();
+                    }, 500);
+                }
+            }, 3000);
+        </script>
+        </c:if>
+
+        <c:if test="${param.error == 'invalid-status'}">
+        <div id="error-alert"
+             style="
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 6px solid #dc3545;
+            padding: 14px 18px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.4s ease;
+         ">
+            <i class="fa-solid fa-x"></i> Chuyển trạng thái không hợp lệ
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const alertBox = document.getElementById("error-alert");
+
+                if (alertBox) {
+                    alertBox.style.transition = "0.5s";
+                    alertBox.style.opacity = "0";
+
+                    setTimeout(() => {
+                        alertBox.remove();
+                    }, 500);
+                }
+            }, 3000);
+        </script>
+        </c:if>
+
+
+        <form method="get" action="${pageContext.request.contextPath}/admin/orders">
+            <div class="toolbar">
+
+                <!-- SEARCH -->
+                <div class="search-box">
+                    <input type="text" name="keyword"
+                           placeholder="Tìm ID, tên, SĐT..."
+                           value="${param.keyword}">
+                </div>
+
+                <!-- STATUS -->
+                <select name="status" class="status-filter" onchange="this.form.submit()">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="Chờ xác nhận" ${param.status=='Chờ xác nhận'?'selected':''}>Chờ xác nhận</option>
+                    <option value="Đã xác nhận" ${param.status=='Đã xác nhận'?'selected':''}>Đã xác nhận</option>
+                    <option value="Đang giao" ${param.status=='Đang giao'?'selected':''}>Đang giao</option>
+                    <option value="Đã giao" ${param.status=='Đã giao'?'selected':''}>Đã giao</option>
+                    <option value="Đã huỷ" ${param.status=='Đã huỷ'?'selected':''}>Đã huỷ</option>
+                </select>
+
+                <!-- FILTER BUTTON -->
+                <div class="filter-wrapper">
+                    <button type="button" class="btn-filter" onclick="toggleFilter()">
+                        <i class="fa-solid fa-filter"></i> Bộ lọc
+                    </button>
+
+                    <div id="filterDropdown" class="filter-dropdown">
+
+                        <h4>Bộ lọc nâng cao</h4>
+
+                        <!-- DATE -->
+                        <label>Ngày tạo</label>
+                        <div class="range">
+                            <input type="date" name="fromDate" value="${param.fromDate}">
+                            <span>→</span>
+                            <input type="date" name="toDate" value="${param.toDate}">
+                        </div>
+
+                        <!-- PRICE -->
+                        <label>Khoảng giá</label>
+                        <div class="range">
+                            <input type="number" name="minPrice" placeholder="Từ" value="${param.minPrice}">
+                            <input type="number" name="maxPrice" placeholder="Đến" value="${param.maxPrice}">
+                        </div>
+
+                        <div class="filter-actions">
+                            <button type="submit" class="btn-primary">Áp dụng</button>
+                            <a href="${pageContext.request.contextPath}/admin/orders" class="btn-reset">Reset</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </form>
 
         <table class="admin-table">
             <tr>
@@ -205,7 +475,7 @@
     <div class="order-detail">
 
         <c:if test="${not empty selectedOrder}">
-            <h3>🧾 Đơn hàng #${selectedOrder.ID}</h3>
+            <h3><i class="fa-solid fa-receipt"></i> Đơn hàng #${selectedOrder.ID}</h3>
 
             <p><b>Người nhận:</b> ${selectedOrder.receiver_name}</p>
             <p><b>SĐT:</b> ${selectedOrder.receiver_phone}</p>
@@ -254,12 +524,27 @@
         </c:if>
 
         <c:if test="${empty selectedOrder}">
-            <p>👈 Chọn đơn hàng để xem chi tiết</p>
+            <p><i class="fa-regular fa-hand-point-left"></i>
+                Chọn đơn hàng để xem chi tiết</p>
         </c:if>
 
     </div>
 
 </div>
 
+<script>
+    function toggleFilter() {
+        document.getElementById("filterDropdown").classList.toggle("active");
+    }
+
+    document.addEventListener("click", function(e) {
+        const dropdown = document.getElementById("filterDropdown");
+        const button = document.querySelector(".btn-filter");
+
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+            dropdown.classList.remove("active");
+        }
+    });
+</script>
 </body>
 </html>

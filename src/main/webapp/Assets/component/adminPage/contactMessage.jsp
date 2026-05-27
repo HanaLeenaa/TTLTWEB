@@ -98,23 +98,6 @@
             white-space: nowrap;
         }
 
-        /*input[name="reply"] {*/
-        /*    padding: 5px;*/
-        /*    width: 150px;*/
-        /*    border-radius: 4px;*/
-        /*    border: 1px solid #ccc;*/
-        /*}*/
-
-        /*.reply-box {*/
-        /*    margin-top: 8px;*/
-        /*    display: flex;*/
-        /*    gap: 6px;*/
-        /*}*/
-
-        /*.reply-box input {*/
-        /*    flex: 1;*/
-        /*}*/
-
         .reply-box {
             margin-top: 8px;
             display: flex;
@@ -243,7 +226,7 @@
         };
 
 
-        toggle(); // 🔥 chạy ngay khi load
+        toggle();
 
         input.addEventListener('input', toggle);
     });
