@@ -16,10 +16,14 @@ public class AdminOrderUpdateServlet extends HttpServlet {
             throws IOException {
 
         int id = Integer.parseInt(request.getParameter("id"));
-        String status = request.getParameter("status");
+        String status = request.getParameter("status").trim();
+        OrderDao orderDao = new OrderDao();
 
-        new OrderDao().updateStatus(id, status);
-
-        response.sendRedirect(request.getContextPath() + "/admin/orders");
+        boolean success = orderDao.updateStatus(id, status);
+        if (success) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders?success=updated");
+        }else {
+            response.sendRedirect(request.getContextPath() + "/admin/orders?error=invalid-status");
+        }
     }
 }
