@@ -38,13 +38,15 @@ public class ConfirmOrderServlet extends HttpServlet {
         try {
             OrderDao dao = new OrderDao();
 
-            int orderId = dao.saveOrder(order);
-            if (orderId <= 0) {
+//            Dùng TRANSACTION để trừ stock sau khi lưu orderitem
+            boolean success = dao.createOrderTransaction(order, items);
+
+            if (!success) {
+                session.setAttribute("cartError",
+                        "Đặt hàng thất bại hoặc sản phẩm không đủ tồn kho!");
                 response.sendRedirect(request.getContextPath() + "/cart");
                 return;
             }
-
-            dao.saveOrderItems(orderId, items);
 
             if (cart != null) {
                 for (OrderItem item : items) {

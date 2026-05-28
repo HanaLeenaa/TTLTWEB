@@ -14,29 +14,180 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
-        .container { width: 1200px; margin: auto; }
-        .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .cart-table td { padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .title { display: flex; justify-content: space-between; align-items: center; background: #f7f8f9; padding: 10px 15px; border-radius: 10px; box-shadow: 0 0 10px #cbcbcb; margin: 10px 0; }
-        .title p { font-size: 20px; font-weight: 700; margin: 0; }
-        .product-row { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
-        .product-name { flex: 1; font-weight: 500; }
-        .product-price { min-width: 120px; text-align: right; font-weight: bold; color: #e95221; white-space: nowrap; }
-        .select-item { margin: 0 20px; transform: scale(1.2); }
-        .quantity { display: flex; align-items: center; }
-        .qty-btn { width: 28px; height: 28px; border: 1px solid #e95221; background: white; cursor: pointer; font-size: 18px; line-height: 1; border-radius: 5px; color: #e95221; }
-        .qty-number { min-width: 35px; text-align: center; font-weight: bold; }
-        .fa-trash { font-size: 18px; color: #666; cursor: pointer; }
-        .summary-row td { text-align: right; font-size: 18px; border-bottom: none; padding: 20px 0; }
-        .total-amount { color: #e95221; font-size: 24px; font-weight: bold; }
-        .cart-action { display: flex; justify-content: center; margin: 40px 0; }
-        .btn-order { width: 300px; height: 50px; border-radius: 30px; font-size: 18px; font-weight: bold; background-color: #e95221; color: #fff; border: none; cursor: pointer; display: block; margin: 20px auto; }
-        .btn-order:hover { opacity: 0.9; }
-        #editBtn { background: none; border: none; font-size: 16px; font-weight: bold; color: #e95221; cursor: pointer; }
-        #deleteAllBtn { display: none; margin-top: 6px; background: none; border: none; font-size: 14px; color: red; cursor: pointer; }
-        #deleteAllBtn:hover { text-decoration: underline; }
-        .back-btn { display: inline-block; margin-bottom: 20px; color: #e95221; font-weight: 600; text-decoration: none; }
-        .back-btn:hover { text-decoration: underline; }
+
+        .container {
+            width: 1200px;
+            margin: auto;
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cart-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f7f8f9;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #cbcbcb;
+            margin: 10px 0;
+        }
+
+        .title p {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .product-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .product-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .product-price {
+            min-width: 120px;
+            text-align: right;
+            font-weight: bold;
+            color: #e95221;
+            white-space: nowrap;
+        }
+        .select-item {
+            margin: 0 20px;
+            transform: scale(1.2);
+        }
+        .quantity {
+            display: flex;
+            align-items: center;
+        }
+        .qty-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #e95221;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            border-radius: 5px;
+            color: #e95221;
+        }
+        .qty-number {
+            min-width: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .fa-trash {
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+        }
+        .summary-row td {
+            text-align: right;
+            font-size: 18px;
+            border-bottom: none;
+        }
+        .total-amount {
+            color: #e95221;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .cart-action {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        .btn-order {
+            width: 300px;
+            height: 50px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #e95221;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+
+        }
+        .btn-order:hover {
+            opacity: 0.9;
+        }
+        #editBtn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #e95221;
+            cursor: pointer;
+        }
+
+        #deleteAllBtn {
+            display: none;
+            margin-top: 6px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: red;
+            cursor: pointer;
+        }
+
+        #deleteAllBtn:hover {
+            text-decoration: underline;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #e95221;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        .product-info{
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+        }
+
+        .stock-error{
+            color:#e53935;
+            font-size:14px;
+            font-weight:500;
+        }
+
+        .btn-order:disabled{
+            background:#ccc;
+            cursor:not-allowed;
+        }
+
+        .cart-error{
+            background:#ffebee;
+            color:#d32f2f;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:16px;
+            font-weight:500;
+        }
+
     </style>
 </head>
 <body>
@@ -58,6 +209,16 @@
             </form>
         </div>
     </div>
+
+    <c:set var="cart" value="${sessionScope.cart}" />
+
+    <c:if test="${not empty sessionScope.cartError}">
+        <div class="cart-error">
+                ${sessionScope.cartError}
+        </div>
+
+        <c:remove var="cartError" scope="session"/>
+    </c:if>
 
     <table class="cart-table">
         <tbody id="cart-items">
@@ -91,35 +252,46 @@
                         </td>
 
                         <td class="product-cell" style="width: 80%;">
-                            <div class="product-row">
-                                <span class="product-name">${item.product.name}</span>
+                                    <div class="product-row">
+                                        <div class="product-info">
+                                            <span class="product-name">${item.product.name}</span>
+                                            
+                                            <%-- ĐOẠN HIỂN THỊ LỖI KHO REALTIME (Gộp từ develop qua) --%>
+                                            <c:if test="${not empty item.error}">
+                                                <p class="stock-error" style="color: red; font-size: 0.85rem; margin: 4px 0 0 0;">
+                                                    ${item.error}
+                                                </p>
+                                            </c:if>
+                                        </div>
 
-                                <%-- CHUẨN HÓA: Đọc chính xác thuộc tính định dạng chuỗi từ Product model --%>
-                                <span class="product-price">${item.product.priceFormatted}đ</span>
+                                        <%-- CHUẨN HÓA: Đọc chính xác thuộc tính định dạng chuỗi từ Product model của bạn --%>
+                                        <span class="product-price">${item.product.priceFormatted}đ</span>
 
-                                <div class="quantity">
-                                    <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="productId" value="${item.product.ID}">
-                                        <input type="hidden" name="productName" value="${item.product.name}">
-                                        <input type="hidden" name="quantity" value="${item.quantity - 1}">
-                                        <button type="submit" class="qty-btn">−</button>
-                                    </form>
+                                        <div class="quantity">
+                                            <%-- Nút giảm số lượng của bạn --%>
+                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                                <input type="hidden" name="action" value="update">
+                                                <input type="hidden" name="productId" value="${item.product.ID}">
+                                                <input type="hidden" name="productName" value="${item.product.name}">
+                                                <input type="hidden" name="quantity" value="${item.quantity - 1}">
+                                                <button type="submit" class="qty-btn">−</button>
+                                            </form>
 
-                                    <span class="qty-number" data-id="${item.product.ID}">
-                                        ${item.quantity}
-                                    </span>
+                                            <span class="qty-number" data-id="${item.product.ID}">
+                                                ${item.quantity}
+                                            </span>
 
-                                    <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="productId" value="${item.product.ID}">
-                                        <input type="hidden" name="productName" value="${item.product.name}">
-                                        <input type="hidden" name="quantity" value="${item.quantity + 1}">
-                                        <button type="submit" class="qty-btn">+</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </td>
+                                            <%-- Nút tăng số lượng của bạn --%>
+                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                                <input type="hidden" name="action" value="update">
+                                                <input type="hidden" name="productId" value="${item.product.ID}">
+                                                <input type="hidden" name="productName" value="${item.product.name}">
+                                                <input type="hidden" name="quantity" value="${item.quantity + 1}">
+                                                <button type="submit" class="qty-btn">+</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
 
                         <td style="width: 5%; text-align: center;">
                             <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
@@ -145,9 +317,9 @@
         </tbody>
     </table>
 
-    <form id="mainForm" action="${pageContext.request.contextPath}/payment" method="get">
-        <button type="submit" class="btn-order">Đặt hàng</button>
-    </form>
+<form id="mainForm" action="${pageContext.request.contextPath}/payment" method="get">
+        <button type="submit" class="btn-order" ${hasStockError ? 'disabled' : ''}>Đặt hàng</button>
+</form>
 </div>
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />

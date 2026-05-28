@@ -136,3 +136,11 @@
     gap: 8px;
 }
 
+.error-box{
+    background:#ffe5e5;
+    color:#d63031;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-weight:600;
+}

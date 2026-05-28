@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 12/6/2025
-  Time: 6:49 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!doctype html>
@@ -57,6 +50,134 @@
         .search-btn:hover i {
             color: #ae2c00;
         }
+
+        .notification-icon {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            vertical-align: top;
+            cursor: pointer;
+            margin-right: 20px;
+            position: relative;
+        }
+
+        .notification-icon i {
+            font-size: 22px;
+            line-height: 1.2;
+            display: block;
+        }
+
+        .notification-icon p {
+            margin: 0;
+            font-size: 10px;
+            white-space: nowrap;
+            line-height: 1.5;
+        }
+
+        .bell-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 26px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+        }
+
+        .notify-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 340px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .notify-header {
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .notify-item {
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notify-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notify-item.unread {
+            background: #eef6ff;
+        }
+
+        .notify-icon {
+            font-size: 18px;
+            color: #e85221;
+            margin-top: 4px;
+        }
+
+        .notify-content {
+            flex: 1;
+        }
+
+        .notify-content .title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .notify-content .msg {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .notify-time {
+            font-size: 11px;
+            color: gray;
+            margin-top: 3px;
+        }
+
+        .view-all {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #fafafa;
+            text-decoration: none;
+            color: #e85221;
+            font-weight: bold;
+        }
+
+        .new-badge{
+            background: red;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
     </style>
 </head>
 <body>
@@ -120,6 +241,63 @@
                 </div>
 
                 <div class="right1">
+
+    <div class="icon notification-icon" id="notifyBtn">
+
+        <div class="bell-wrapper">
+            <i class="fa-solid fa-bell"></i>
+
+            <c:if test="${notifyCount > 0}">
+                <span class="badge">${notifyCount}</span>
+            </c:if>
+        </div>
+
+        <p>THÔNG BÁO</p>
+
+        <div class="notify-dropdown" id="notifyBox">
+
+            <div class="notify-header">Thông báo</div>
+
+            <c:if test="${empty notifications}">
+                <div class="notify-empty">Không có thông báo</div>
+            </c:if>
+
+            <c:forEach var="c" items="${notifications}">
+                <div class="notify-item ${!c.read ? 'unread' : ''}"
+                     onclick="goNotify(${c.ID})">
+
+                    <div class="notify-icon">
+                        <i class="fa-solid fa-reply"></i>
+                    </div>
+
+                    <div class="notify-content">
+                        <div class="title">Admin đã phản hồi
+
+                        <c:if test="${!c.read}">
+                            <span class="new-badge">Mới</span>
+                        </c:if>
+                        </div>
+
+                        <div class="msg">
+                                ${c.reply}
+                        </div>
+
+                        <div class="notify-time">
+                                ${c.createdAt}
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+
+            <a href="${pageContext.request.contextPath}/user/notifications"
+               class="view-all">
+                Xem tất cả →
+            </a>
+
+        </div>
+    </div>
+
+                    <%--Sửa để xử lý đăng nhập--%>
                     <div class="account-wrapper">
                         <div class="icon icon2">
                             <i class="bi bi-person-circle"></i>
@@ -333,6 +511,28 @@
                 toast.style.display = "none";
             }, 3000);
         }, 300);
+    }
+</script>
+
+<%--thông báo reply từ admin--%>
+<script>
+    const notifyBtn = document.getElementById("notifyBtn");
+    const notifyBox = document.getElementById("notifyBox");
+
+    notifyBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        notifyBox.style.display =
+            notifyBox.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", () => {
+        notifyBox.style.display = "none";
+
+    });
+
+    function goNotify(id){
+        window.location.href =
+            "${pageContext.request.contextPath}/user/notification/read?id=" + id;
     }
 </script>
 </body>

@@ -40,6 +40,7 @@ public class ProductDao extends BaseDao {
                                         p.image,
                                         p.price,
                                         p.priceOld,
+                                        p.stock,
                                         p.short_description,
                                         p.full_description,
                                         p.information,

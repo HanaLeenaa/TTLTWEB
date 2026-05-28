@@ -1,6 +1,8 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.CartDao;
+import com.example.web_console_handheld.dao.ProductDao;
+import com.example.web_console_handheld.model.Cart;
 import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Product;
 import com.example.web_console_handheld.model.User;
@@ -50,7 +52,76 @@ public class AddToCartServlet extends HttpServlet {
         // --- TÍNH TỔNG SỐ LƯỢNG ĐỂ HIỂN THỊ TRÊN ICON GIỎ HÀNG Ở HEADER ---
         // Lấy lại giỏ hàng thực tế từ DB sau khi đã thêm thành công
         List<CartItem> currentCart = cartDao.getCartByUser(user.getId());
+        ProductDao productDao = new ProductDao();
 
+        //lấy product từ DB
+        Product product = productDao.getProductDetailByID(productId);
+
+        //check product tồn tại
+        if (product == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            response.getWriter().write("""
+                    {
+                    "message":"Sản phẩm không tồn tại!"
+                    }
+                    """);
+            return;
+        }
+        //check hết hàng
+        if (product.getStock() <= 0) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            response.getWriter().write("""
+                    {
+                    "message":"Sản phẩm đã hết hàng!"
+                    }
+                    """);
+            return;
+        }
+
+        //lấy cart
+        Cart cart = (Cart) session.getAttribute("cart");
+
+        if (cart == null) {
+            cart = new Cart();
+        }
+
+        //check số lượng trong giỏ
+        CartItem existingItem = cart.getCartItems().get(productId);
+        int currentQuantity = 0;
+
+        if (existingItem != null) {
+            currentQuantity = existingItem.getQuantity();
+        }
+
+        //check vượt tồn kho
+        if (currentQuantity + quantity > product.getStock()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String json = """
+                    {
+                    "message":"Số lượng vượt quá tồn kho!"
+                    }
+                    """;
+            response.getWriter().write(json);
+            return;
+
+        }
+
+        //add to cart
+        cart.addProduct(product, quantity);
+        session.setAttribute("cart", cart);
+
+        //tính total item
         int total = 0;
         if (currentCart != null) {
             for (CartItem item : currentCart) {

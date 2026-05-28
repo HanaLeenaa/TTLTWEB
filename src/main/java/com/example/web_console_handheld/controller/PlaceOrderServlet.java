@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.OrderDao;
+import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.model.*;
 
 import jakarta.servlet.ServletException;
@@ -71,12 +72,51 @@ public class PlaceOrderServlet extends HttpServlet {
             session.removeAttribute("pendingOrderItems");
         }
 
+        // CHECK STOCK
+        ProductDao productDao = new ProductDao();
+
+        for (OrderItem oi : orderItems) {
+            Product product = productDao.getProductDetailByID(oi.getProduct_id());
+
+            //sản phẩm không tồn tại
+            if (product == null) {
+                request.setAttribute("cartError", "Sản phẩm không tồn tại!");
+
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            }
+
+            //hết hàng
+            if (product.getStock() <= 0) {
+                request.setAttribute("cartError", product.getName() + "đã hết hàng!");
+
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+
+            }
+
+            //vượt tồn kho
+            if (oi.getQuantity() > product.getStock()) {
+                session.setAttribute(
+                        "cartError",
+                        "Sản phẩm " + product.getName()
+                                + " chỉ còn "
+                                + product.getStock()
+                                + " sản phẩm!"
+                );
+                response.sendRedirect(
+                        request.getContextPath() + "/cart"
+                );
+                return;
+            }
+        }
+
 
         // ===== TẠO ORDER =====
         Order order = new Order();
         order.setUser_Id(auth.getId());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
-        order.setStatus("PENDING");
+        order.setStatus("Chờ xác nhận");
 
         // thông tin người nhận
         order.setReceiver_name(auth.getUsername());
@@ -92,11 +132,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
         String note = request.getParameter("note");
         order.setReceiver_note(note);
-
-        // payment_method: false = COD, true = BANK
-        order.setPayment_method(
-                "BANK".equals(request.getParameter("paymentMethod"))
-        );
+        order.setPayment_method(request.getParameter("paymentMethod"));
 
         order.setPrice(totalPrice);
 
