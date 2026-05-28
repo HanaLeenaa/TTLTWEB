@@ -31,6 +31,7 @@ public class CartDao extends BaseDao {
     }
 
     // Lấy giỏ hàng theo user (Cập nhật: Đọc trực tiếp product_name từ cart_items)
+    // Lấy giỏ hàng theo user (Đã sửa lỗi JOIN tên cột id trong DB)
     public List<CartItem> getCartByUser(int userId) {
         return get().withHandle(handle ->
                 handle.createQuery("""
@@ -41,7 +42,7 @@ public class CartDao extends BaseDao {
             p.price AS p_price, 
             p.image AS p_image
         FROM cart_items ci
-        JOIN products p ON ci.product_id = p.ID
+        JOIN products p ON ci.product_id = p.id
         WHERE ci.user_id = :userId
     """)
                         .bind("userId", userId)
