@@ -1,7 +1,9 @@
 package com.example.web_console_handheld.controller;
 
+import com.example.web_console_handheld.dao.CartDao;
 import com.example.web_console_handheld.dao.ProductDao;
 import com.example.web_console_handheld.dao.WishlistDao;
+import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Product;
 import com.example.web_console_handheld.dao.AuthDao;
 import com.example.web_console_handheld.model.User;
@@ -52,6 +54,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("auth", user);
 
+            // Đoạn xử lý Wishlist giữ nguyên của bạn...
             List<Integer> productIds = wishlistDao.getWishlistByUser(user.getId());
             List<Product> wishlistProducts = new ArrayList<>();
             for (int pid : productIds) {
@@ -59,6 +62,19 @@ public class LoginServlet extends HttpServlet {
                 if (p != null) wishlistProducts.add(p);
             }
             session.setAttribute("wishlist", wishlistProducts);
+
+            // === SỬA LẠI ĐOẠN NÀY ĐỂ TÍNH ĐÚNG TỔNG SỐ LƯỢNG ===
+            CartDao cartDao = new CartDao();
+            List<CartItem> dbCart = cartDao.getCartByUser(user.getId());
+
+            int totalQuantities = 0;
+            if (dbCart != null) {
+                for (CartItem item : dbCart) {
+                    totalQuantities += item.getQuantity(); // Cộng dồn số lượng thực tế của từng món
+                }
+            }
+            // Đổi tên thành cartSize đồng bộ với Header mới
+            session.setAttribute("cartSize", totalQuantities);
 
             response.sendRedirect(request.getContextPath() + "/home");
             return;

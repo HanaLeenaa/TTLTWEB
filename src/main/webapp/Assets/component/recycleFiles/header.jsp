@@ -6,8 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,13 +25,11 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
-    <!-- Font Awesome -->
     <script
             src="https://kit.fontawesome.com/a076d05399.js"
             crossorigin="anonymous"
     ></script>
     <style>
-
         .input1 form {
             position: relative;
         }
@@ -73,15 +70,10 @@
                 </div>
                 <div class="menu-small-frame" style="display: none" id="menu-small">
                     <div title="menu" class="menu3">TRANG CHỦ</div>
-
                     <div title="menu" class="menu3">SẢN PHẨM</div>
-
-
                     <div title="menu" class="menu3">GIỚI THIỆU</div>
-
                     <div title="menu" class="menu3">LIÊN HỆ</div>
                 </div>
-                <!-- them vao day -->
                 <div
                         class="search-box-mobile"
                         style="display: none"
@@ -89,12 +81,11 @@
                 >
                     <input type="text" placeholder="Tìm kiếm sản phẩm..." />
                 </div>
-                <!-- ------ -->
                 <div class="logo" style="cursor:pointer">
                     <a href="${pageContext.request.contextPath}/home">
                         <img
-                                title="${logo.titleLogo}"
-                                src="${logo.linkLogo}"
+                                title="${not empty logo ? logo.titleLogo : 'Console Shop'}"
+                                src="${not empty logo ? logo.linkLogo : 'https://placehold.co/150x50?text=Logo'}"
                         />
                     </a>
                 </div>
@@ -104,7 +95,7 @@
                         <i class="fa-solid fa-headset"></i>
                         <b style="font-size: 13px">HOTLINE:</b>
                         <span title="hotline">
-                            ${contactNumber.phone}
+                            ${not empty contactNumber ? contactNumber.phone : '1900 xxxx'}
                         </span>
                     </div>
                     <div class="center-1 center2 same-icon">
@@ -129,19 +120,13 @@
                 </div>
 
                 <div class="right1">
-
-                    <%--Sửa để xử lý đăng nhập--%>
                     <div class="account-wrapper">
-
-                        <!-- ICON -->
                         <div class="icon icon2">
                             <i class="bi bi-person-circle"></i>
                             <p style="margin:0">TÀI KHOẢN</p>
                         </div>
 
-
                         <div class="account-dropdown">
-
                             <c:choose>
                                 <c:when test="${empty sessionScope.auth}">
                                     <a href="${pageContext.request.contextPath}/login" class="a-same-nodecoration"><div class="dropdown-item" onclick="goLogin()">Đăng nhập</div></a>
@@ -152,42 +137,25 @@
                                     <div class="dropdown-item">
                                         Xin chào, <b>${sessionScope.auth.username}</b>
                                     </div>
-
                                     <div class="dropdown-item"
                                          onclick="window.location.href='${pageContext.request.contextPath}/profile'">
                                         Trang cá nhân
                                     </div>
-
                                     <div class="dropdown-item"
                                          onclick="window.location.href='${pageContext.request.contextPath}/wishlist'">
                                          Sản phẩm yêu thích
                                     </div>
-
-
                                     <div class="dropdown-item logout"
                                          onclick="window.location.href='${pageContext.request.contextPath}/logout'">
                                         Đăng xuất
                                     </div>
                                 </c:otherwise>
                             </c:choose>
-
                         </div>
                     </div>
-
-                    <a href="${pageContext.request.contextPath}/cart">
-                        <div class="icon" style="cursor: pointer" onclick="goCart()">
+                    <a href="${pageContext.request.contextPath}/cart" style="text-decoration: none; color: inherit;">
+                        <div class="icon" style="cursor: pointer">
                             <div class="cart">
-
-                                <%--CẬP NHẬT GIỎ HÀNG SAU KHI THÊM SP --%>
-                                <c:set var="cart" value="${sessionScope.cart}" />
-                                <c:set var="cartCount" value="0" />
-
-                                <c:if test="${cart != null}">
-                                    <c:forEach items="${cart.cartItems.values()}" var="item">
-                                        <c:set var="cartCount" value="${cartCount + item.quantity}" />
-                                    </c:forEach>
-                                </c:if>
-
                                 <i class="bi bi-cart2" title="cart"></i>
                                 <div class="num">
                                     <p id="cart_num"
@@ -196,7 +164,7 @@
                                         padding: 2px;
                                         background-color: #e85221;
                                         color: white;">
-                                        <c:out value="${cartCount}" default="0"/>
+                                        ${not empty sessionScope.cartSize ? sessionScope.cartSize : 0}
                                     </p>
                                 </div>
                             </div>
@@ -210,16 +178,10 @@
         <div class="menu">
             <div class="container">
                 <div class="menu2">
-
                     <a href="${pageContext.request.contextPath}/home"><div title="menu" class="menu3" >TRANG CHỦ</div></a>
-
                     <a href="${pageContext.request.contextPath}/product"><div title="menu" class="menu3" >SẢN PHẨM</div></a>
-
-
                     <a href="${pageContext.request.contextPath}/about"><div title="menu" class="menu3" >GIỚI THIỆU</div></a>
-
                     <a href="${pageContext.request.contextPath}/contact"><div title="menu" class="menu3" >LIÊN HỆ</div></a>
-
                 </div>
             </div>
         </div>
@@ -239,56 +201,114 @@
          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
      ">
     </div>
-
 </header>
 
 <script>
     const input = document.getElementById("searchInput");
     const box = document.getElementById("suggestBox");
     const contextPath = "${pageContext.request.contextPath}";
-    let debounceTimeout = null; // chống gọi api liên tục khi người dùng gõ nhanh
+    let debounceTimeout = null;
+
+    function formatVND(value) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+    }
+
+    function highlightText(text, keyword) {
+        if (!text) return "";
+        if (!keyword) return text;
+        const regex = new RegExp("(" + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ")", 'gi');
+        return text.replace(regex, '<mark style="background-color: #ffeb3b; padding: 0 2px; color: #000; font-weight: bold;">$1</mark>');
+    }
+
+    // Định nghĩa biến cấu trúc ID phân giải thông minh (chấp nhận cả id thường và ID hoa từ Backend)
+    function getProp(obj, keys) {
+        for (let key of keys) {
+            if (obj[key] !== undefined && obj[key] !== null) return obj[key];
+        }
+        return null;
+    }
+
+    function loadSuggestions(keyword) {
+        fetch(contextPath + "/search-suggest?q=" + encodeURIComponent(keyword))
+            .then(res => res.json())
+            .then(data => {
+                box.innerHTML = "";
+
+                if (data && data.length > 0) {
+                    if (data[0].type === "history") {
+                        const headerDiv = document.createElement("div");
+                        headerDiv.style = "display: flex; justify-content: space-between; padding: 8px 12px; background: #f5f5f5; font-size: 12px; color: #666; font-weight: bold; border-bottom: 1px solid #eee;";
+                        headerDiv.innerHTML = '<span>TÌM KIẾM GẦN ĐÂY</span><span id="clearHistoryBtn" style="color: #e85221; cursor: pointer;"><i class="bi bi-trash3"></i> Xóa tất cả</span>';
+                        box.appendChild(headerDiv);
+
+                        headerDiv.querySelector("#clearHistoryBtn").addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            fetch(contextPath + "/search-suggest", { method: "DELETE" })
+                                .then(() => { box.innerHTML = ""; box.style.display = "none"; });
+                        });
+                    }
+
+                    data.forEach(p => {
+                        const item = document.createElement("div");
+                        item.className = "suggest-item";
+
+                        if (p.type === "history") {
+                            item.innerHTML = '<a href="' + contextPath + '/search?q=' + encodeURIComponent(p.keyword) + '" style="display:flex; align-items:center; text-decoration:none; padding: 10px 12px; width: 100%;">' +
+                                '<i class="bi bi-clock-history" style="margin-right: 12px; color: #999;"></i>' +
+                                '<span style="color:#333; font-size:14px;">' + p.keyword + '</span>' +
+                                '</a>';
+                        } else {
+                            // 🛠️ ĐỒNG BỘ TOÀN DIỆN BIẾN AN TOÀN TRÁNH CRASH JS
+                            const pId = getProp(p, ['id', 'ID']) || '';
+                            const pName = p.name || 'Sản phẩm không tên';
+                            const pImage = p.image || (contextPath + '/Assets/img/no-image.png');
+
+                            // Kiểm tra stock để cập nhật trạng thái
+                            const stockCount = getProp(p, ['stock', 'stock_quantity']) || 0;
+                            const pStatus = stockCount > 0 ? 'Còn hàng' : 'Hết hàng';
+                            const statusColor = stockCount > 0 ? 'green' : 'red';
+
+                            const rawPrice = p.price || 0;
+                            const productPrice = Number(rawPrice);
+                            const displayPrice = (isNaN(productPrice) || productPrice === 0) ? "Liên hệ" : formatVND(productPrice);
+
+                            const displayName = highlightText(pName, keyword);
+
+                            // Tiến hành render chuỗi HTML sạch bằng các biến an toàn đã khai báo
+                            item.innerHTML = '<a href="' + contextPath + '/product-detail?id=' + pId + '" style="display:flex; align-items:center; text-decoration:none; padding: 8px 12px; width: 100%; border-bottom: 1px solid #fafafa;">' +
+                                             '<img src="' + pImage + '" onerror="this.onerror=null; this.src=\'' + contextPath + '/Assets/img/no-image.png\';" style="width:45px; height:45px; object-fit:cover; margin-right:12px; border-radius:4px;">' +
+                                             '<div style="display:flex; flex-direction:column; flex: 1;">' +
+                                             '<span style="color:#222; font-size:14px; font-weight:500; line-height:1.3;">' + displayName + '</span>' +
+                                             '<div style="display:flex; justify-content: space-between; margin-top: 4px; font-size:12px;">' +
+                                             '<span style="color:#e85221; font-weight: bold;">' + displayPrice + '</span>' +
+                                             '<span style="color: ' + statusColor + '; font-size:11px;">' + pStatus + '</span>' +
+                                             '</div>' +
+                                             '</div>' +
+                                             '</a>';
+                        }
+                        box.appendChild(item);
+                    });
+                    box.style.display = "block";
+                } else {
+                    box.style.display = "none";
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi hệ thống gợi ý:", err);
+                box.style.display = "none";
+            });
+    }
+
+    input.addEventListener("focus", function () {
+        loadSuggestions(this.value.trim());
+    });
 
     input.addEventListener("input", function () {
         const keyword = this.value.trim();
-
-        if (keyword.length < 1) {
-            box.innerHTML = "";
-            box.style.display = "none";
-            return;
-        }
-
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => { // chỉ gọi api sau khi user gõ được 300ms.
-            fetch(contextPath + "/search-suggest?q=" + encodeURIComponent(keyword))
-                .then(res => res.json())
-                .then(data => {
-                    box.innerHTML = "";
-
-                    if (data && data.length > 0) {
-                        data.forEach(p => {
-                            const item = document.createElement("div");
-                            item.className = "suggest-item";
-
-                            item.innerHTML = `
-                                <a href="${pageContext.request.contextPath}/product-detail?id=\${p.id}"
-                                   style="display:flex;align-items:center;text-decoration:none">
-                                    <img src="\${p.image}" style="width:80px;height:auto;border:2px solid blue;margin-right:10px">
-                                    <span style="color:green;font-size:16px">\${p.name}</span>
-                                </a>
-                            `;
-
-                            box.appendChild(item);
-                        });
-                        box.style.display = "block";
-                    } else {
-                        box.style.display = "none";
-                    }
-                })
-                .catch(err => {
-                    console.error("Lỗi fetch:", err);
-                    box.style.display = "none";
-                });
-        }, 300);
+        debounceTimeout = setTimeout(() => {
+            loadSuggestions(keyword);
+        }, 250);
     });
 
     document.addEventListener("click", (e) => {
@@ -311,12 +331,9 @@
 
             setTimeout(() => {
                 toast.style.display = "none";
-
             }, 3000);
         }, 300);
     }
 </script>
-
 </body>
 </html>
-
