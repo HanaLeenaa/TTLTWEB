@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css" />
     <link rel="stylesheet" href="Assets/css/homeStyle/home.css">
     <link rel="stylesheet" href="Assets/css/homeStyle/product.css">
+    <link rel="stylesheet" href="Assets/css/homeStyle/historyView.css">
     <link rel="stylesheet" href="Assets/css/recycleFilecss/header.css" />
     <link rel="stylesheet" href="Assets/css/recycleFilecss/footer.css" />
     <link
@@ -33,7 +34,8 @@
 <!--
   Header
 -->
-<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
+<c:import url="/Assets/component/recycleFiles/header.jsp"/>
+
 
 <div class="slider">
     <div class="slides">
@@ -154,6 +156,46 @@
     </div>
 </div>
 
+<!--hien thi san pham da xem gan day-->
+<c:if test="${not empty recentProducts}">
+    <div class="recent-header">
+        <h2>Sản phẩm đã xem</h2>
+        <form action="recent-views" method="post">
+            <input type="hidden" name="action" value="clearAll"/>
+            <button type="submit">Xóa lịch sử</button>
+        </form>
+    </div>
+
+    <div class="carousel-wrapper">
+        <div id="recent-list">
+            <c:forEach var="p" items="${recentProducts}">
+                <div class="product-item">
+                    <!-- Nút X xoá sản phẩm -->
+                    <form action="recent-views" method="post" class="remove-form">
+                        <input type="hidden" name="action" value="deleteOne"/>
+                        <input type="hidden" name="productId" value="${p.ID}"/>
+                        <button type="submit" class="btn-remove">X</button>
+                    </form>
+
+                    <!-- Bao toàn bộ card bằng thẻ a -->
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${p.ID}">
+                        <img src="${p.image}" alt="${p.name}">
+                        <h4>${p.name}</h4>
+                        <div class="price-actions">
+                            <p class="price">${p.priceFormatted}đ</p>
+                            <c:if test="${p.priceOld > p.price}">
+                                <p class="old-price"><s>${p.priceOldFormatted}đ</s></p>
+                            </c:if>
+                        </div>
+                    </a>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+</c:if>
+
+
+
 <!-- Product Category Section -->
 <section class="product-category">
     <div class="container">
@@ -175,19 +217,20 @@
 </section>
 
 <!--goi y san pham theo yeu thich-->
-<c:if test="${not empty auth}">
-     <c:if test="${not empty suggestions}">
-        <div>
-            <div class="suggestion-header">
-                <h2>Sản phẩm gợi ý cho bạn</h2>
-                <div class="view-all">
-                    <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
-                        Xem tất cả >
-                    </a>
-                </div>
-            </div>
-            <div id="suggestions-list">
-                <c:forEach var="c" items="${suggestions}" begin="0" end="4">
+<div>
+    <div class="suggestion-header">
+        <h2>Sản phẩm gợi ý cho bạn</h2>
+        <div class="view-all">
+            <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
+                Xem tất cả >
+            </a>
+        </div>
+    </div>
+
+    <div id="suggestions-list">
+        <c:choose>
+            <c:when test="${not empty suggestions}">
+                <c:forEach var="c" items="${suggestions}" begin="0" end="6">
                     <div class="product-item sony handheldpc">
                         <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
                             <img src="${c.image}" alt="">
@@ -199,13 +242,12 @@
                         </c:if>
 
                         <div class="price-actions">
-                            <p class="price">${c.priceFormatted}đ</p>
-                            <c:if test="${c.priceOld > c.price}">
-                                <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
-                            </c:if>
+                             <p class="price">${c.priceFormatted}đ</p>
+                             <c:if test="${c.priceOld > c.price}">
+                                 <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
+                             </c:if>
 
                             <div class="actions">
-                                <!-- Giỏ hàng -->
                                 <button class="add-cart"
                                         data-id="${c.ID}"
                                         data-name="${c.name}"
@@ -214,7 +256,6 @@
                                     <i class="fa fa-cart-plus"></i>
                                 </button>
 
-                                <!-- Yêu thích -->
                                 <c:choose>
                                     <c:when test="${fn:contains(wishlistIdString, c.ID)}">
                                         <button type="button" class="btn-fav active"
@@ -235,10 +276,36 @@
                         </div>
                     </div>
                 </c:forEach>
-            </div>
-        </div>
-     </c:if>
-</c:if>
+                <c:forEach var="c" items="${suggestions}">
+                    <script>
+                        console.log("Suggestion product:", "${c.name}", "Price:", "${c.price}");
+                    </script>
+                </c:forEach>
+                <script>
+                    console.log("Wishlist IDs:", "${wishlistIdString}");
+                    console.log("MinRange:", "${minRange}");
+                    console.log("MaxRange:", "${maxRange}");
+                    console.log("Suggestions count:", "${fn:length(suggestions)}");
+                </script>
+
+                <c:forEach var="c" items="${suggestions}">
+                    <script>
+                        console.log("Suggestion product:", "${c.name}", "Price:", "${c.price}");
+                    </script>
+                </c:forEach>
+
+
+            </c:when>
+
+            <c:otherwise>
+                <p>Chưa có sản phẩm gợi ý.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
+
+
+
 
 
 <!--products section-->
@@ -475,6 +542,9 @@ function toggleWishlist(btn, productId) {
     })
     .catch(err => console.error("Fetch error:", err));
 }
+</script>
+<script>
+    console.log("Recent products size = ${recentProducts.size()}");
 </script>
 
 </body>

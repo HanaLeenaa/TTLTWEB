@@ -446,6 +446,22 @@ main{
     color: #fff;
 }
 
+/* Giữ card ổn định */
+.product-item {
+    width: 250px;          /* cố định chiều rộng card */
+    flex: 0 0 auto;
+    box-sizing: border-box;
+}
 
+/* Giá hiển thị gọn gàng */
+.price-actions .price {
+    flex-shrink: 0;        /* không cho co giãn */
+    max-width: 120px;      /* giới hạn chiều rộng */
+    text-align: right;     /* căn phải */
+    white-space: nowrap;   /* không xuống dòng */
+}
 
+.price, .old-price {
+    display: block;
+}
 

@@ -41,8 +41,8 @@
                                <c:if test="${selectedPriceRange == p}">checked</c:if> />
                         <label>
                             <c:choose>
-                                <c:when test="${p=='under500'}">Dưới 500,000đ</c:when>
-                                <c:when test="${p=='500-1m'}">500,000đ - 1 triệu</c:when>
+                                <c:when test="${p=='under500'}">Dưới 500.000đ</c:when>
+                                <c:when test="${p=='500-1m'}">500.000đ - 1 triệu</c:when>
                                 <c:when test="${p=='1-2m'}">1 - 2 triệu</c:when>
                                 <c:when test="${p=='2-3m'}">2 - 3 triệu</c:when>
                                 <c:otherwise>Trên 3 triệu</c:otherwise>
@@ -132,7 +132,14 @@
                                     <div class="tag">Premium</div>
                                 </c:if>
                                 <div class="price-actions">
-                                    <p class="price">${c.price}đ</p>
+                                    <div class="price-block">
+                                         <p class="price">${c.priceFormatted}₫</p>
+
+                                         <!-- Giá cũ chỉ hiển thị khi có giảm giá -->
+                                         <c:if test="${c.priceOld > c.price}">
+                                              <p class="old-price"><s>${c.priceOldFormatted}₫</s></p>
+                                         </c:if>
+                                    </div>
                                     <form method="post" action="${pageContext.request.contextPath}/buy-now">
                                         <input type="hidden" name="productId" value="${c.ID}">
                                         <input type="hidden" name="quantity" value="1">
