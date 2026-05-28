@@ -210,7 +210,6 @@
         </div>
     </div>
 
-    <c:set var="cart" value="${sessionScope.cart}" />
 
     <c:if test="${not empty sessionScope.cartError}">
         <div class="cart-error">
@@ -265,7 +264,9 @@
                                         </div>
 
                                         <%-- CHUẨN HÓA: Đọc chính xác thuộc tính định dạng chuỗi từ Product model của bạn --%>
-                                        <span class="product-price">${item.product.priceFormatted}đ</span>
+                                        <span class="product-price">
+                                            <fmt:formatNumber value="${item.product.price}" type="number" groupingUsed="true"/>đ
+                                        </span>
 
                                         <div class="quantity">
                                             <%-- Nút giảm số lượng của bạn --%>
