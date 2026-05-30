@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -151,6 +152,100 @@
             background: #4b7bec;
             color: white;
         }
+
+        .statistics-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin:30px 0;
+        }
+
+        .statistics-header form{
+            display:flex;
+            gap:10px;
+        }
+
+        .statistics-header select,
+        .statistics-header button{
+            padding:10px 14px;
+            border-radius:8px;
+            border:1px solid #ddd;
+        }
+
+        .statistics-header button{
+            background:#ff5b1d;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        .statistics-table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+        }
+
+        .statistics-table th{
+            background:#f3f4f6;
+        }
+
+        .statistics-table th,
+        .statistics-table td{
+            padding:14px;
+            border-bottom:1px solid #eee;
+            text-align:center;
+        }
+
+        .chart-box{
+            background:white;
+            padding:20px;
+            border-radius:14px;
+            margin-top:30px;
+        }
+
+        #revenueChart{
+            height:400px !important;
+        }
+
+        .statistics-title i{
+            color:#4b7bec;
+            background:#eaf1ff;
+            padding:12px;
+            border-radius:12px;
+            margin-right:10px;
+            font-size:20px;
+        }
+
+        .statistics-table td:last-child,
+        .statistics-table th:last-child{
+            text-align:center;
+            font-weight:600;
+        }
+        .statistics-table{
+            table-layout: fixed;
+        }
+
+        .box h3 i.fa-fire{
+            color:#ff6b35;
+            background:#fff1eb;
+            padding:10px;
+            border-radius:10px;
+            margin-right:10px;
+            font-size:18px;
+        }
+        .top-product-box{
+            margin-top:30px;
+            margin-bottom:30px;
+        }
+
+        .extra-dashboard{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+            margin-top:30px;
+        }
     </style>
 </head>
 
@@ -203,6 +298,124 @@
                 </div>
                 <div class="icon bg-red">💰</div>
             </div>
+        </div>
+
+            <%--THỐNG KÊ DOANH THU THEO THÁNG/QUÝ/NĂM--%>
+        <div class="statistics-header">
+
+            <h2 class="statistics-title"><i class="fa-solid fa-chart-line"></i>
+                Thống kê doanh thu</h2>
+
+            <form method="get"
+                  action="${pageContext.request.contextPath}/admin/dashboard">
+
+                <select name="type">
+
+                    <option value="month"
+                    ${type=='month'?'selected':''}>
+                        Theo tháng
+                    </option>
+
+                    <option value="quarter"
+                    ${type=='quarter'?'selected':''}>
+                        Theo quý
+                    </option>
+
+                    <option value="year"
+                    ${type=='year'?'selected':''}>
+                        Theo năm
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    Xem thống kê
+                </button>
+
+            </form>
+
+        </div>
+
+                <%--BẢNG THỐNG KÊ--%>
+        <table class="statistics-table">
+            <thead>
+            <tr>
+                <th>Thời gian</th>
+                <th>Đơn hàng</th>
+                <th>Sản phẩm bán</th>
+                <th>Doanh thu</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <c:forEach items="${statistics}" var="s">
+
+                <tr>
+                    <td>${s.label}</td>
+                    <td>${s.totalOrders}</td>
+                    <td>${s.totalProducts}</td>
+                    <td>
+                        <fmt:formatNumber
+                                value="${s.revenue}"
+                                type="number"
+                                groupingUsed="true"
+                                maxFractionDigits="0"
+                        />đ
+                    </td>
+                </tr>
+
+            </c:forEach>
+
+            </tbody>
+
+        </table>
+
+        <div class="chart-box">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <%--Thống kê top sản phẩm bán chạy theo tháng, quý, năm --%>
+        <div class="box top-product-box">
+
+            <h3>
+                <i class="fa-solid fa-fire"></i>
+                Top sản phẩm bán chạy
+            </h3>
+
+            <table class="statistics-table">
+
+                <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Đã bán</th>
+                    <th>Doanh thu</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <c:forEach items="${topProducts}" var="p">
+
+                    <tr>
+                        <td>
+                                ${p.productName}
+                        </td>
+                        <td>
+                                ${p.totalSold}
+                        </td>
+                        <td>
+                            <fmt:formatNumber
+                                    value="${p.revenue}"
+                                    type="number"
+                                    groupingUsed="true"
+                                    maxFractionDigits="0"
+                            />đ
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
         </div>
 
         <!-- GRID -->
@@ -262,8 +475,93 @@
 
         </div>
 
-    </div>
+        <%--THỐNG KÊ ĐƠN HÀNG THEO STATUS--%>
+        <div class="extra-dashboard">
+
+            <!-- ORDER STATUS -->
+            <div class="box">
+
+                <h3>📦 Trạng thái đơn hàng</h3>
+
+                <table class="statistics-table">
+
+                    <thead>
+                    <tr>
+                        <th>Trạng thái</th>
+                        <th>Số lượng</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <c:forEach items="${orderStatusStats}" var="entry">
+
+                        <tr>
+                            <td>${entry.key}</td>
+                            <td>${entry.value}</td>
+                        </tr>
+
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
 </div>
+
+<script>
+
+    const labels = [
+
+        <c:forEach items="${statistics}"
+                   var="s">
+
+        '${s.label}',
+
+        </c:forEach>
+
+    ];
+
+    const revenues = [
+
+        <c:forEach items="${statistics}"
+                   var="s">
+
+        ${s.revenue},
+
+        </c:forEach>
+
+    ];
+
+    new Chart(
+        document.getElementById(
+            'revenueChart'
+        ),
+
+        {
+
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: revenues,
+                    borderWidth: 2
+
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        }
+    );
+
+</script>
 
 </body>
 </html>

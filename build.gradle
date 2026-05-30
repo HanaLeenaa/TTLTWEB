@@ -16,7 +16,7 @@ dependencies {
 
     // 2. JDBI & MySQL
     implementation 'org.jdbi:jdbi3-core:3.45.1'
-    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation  'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.jdbi:jdbi3-sqlobject:3.45.1'
 
     // 3. SỬA LỖI EMAIL: Thêm thư viện Jakarta Mail

@@ -50,12 +50,14 @@
 
                     <div class="price-actions">
                         <!-- Giá hiện tại -->
-                        <p class="price">${c.priceFormatted}đ</p>
+                        <div class="price-block">
+                             <p class="price">${c.priceFormatted}₫</p>
 
-                        <!-- Giá cũ chỉ hiển thị khi có giảm giá -->
-                        <c:if test="${c.priceOld > c.price}">
-                            <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
-                        </c:if>
+                             <!-- Giá cũ chỉ hiển thị khi có giảm giá -->
+                             <c:if test="${c.priceOld > c.price}">
+                                  <p class="old-price"><s>${c.priceOldFormatted}₫</s></p>
+                             </c:if>
+                        </div>
 
                         <div class="actions">
                             <!-- Giỏ hàng -->

@@ -5,10 +5,15 @@ import java.io.Serializable;
 public class CartItem implements Serializable {
     private Product product;
     private int quantity;
+    private String error;
+
+    public CartItem() {
+    }
 
     public CartItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
+        this.error = error;
     }
     public Product getProduct() {
         return product;
@@ -26,5 +31,11 @@ public class CartItem implements Serializable {
         if (quantity <= 0) quantity = 1;
         this.quantity += quantity;
 
+    }
+    public String getError() {
+        return error;
+    }
+    public void setError(String error) {
+        this.error = error;
     }
 }

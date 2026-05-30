@@ -154,3 +154,27 @@
     color: #fff;
 }
 
+.price-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* căn theo đầu dòng */
+}
+
+.price-block {
+    display: flex;
+    flex-direction: column;   /* ép giá mới trên, giá cũ dưới */
+    align-items: flex-start;  /* căn trái */
+}
+
+.price-block .price {
+    color: #E95221;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.price-block .old-price {
+    color: #999;
+    font-size: 14px;
+    margin-top: 2px;
+}
