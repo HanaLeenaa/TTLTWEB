@@ -55,11 +55,16 @@
             </a>
         </div>
 
-        <a href="#" class="forgot">Quên mật khẩu?</a>
+        <a href="${pageContext.request.contextPath}/forgot-password"
+           class="forgot">
+            Quên mật khẩu?
+        </a>
 
         <div class="register">
             <span>Bạn chưa có tài khoản?</span>
-            <a href="${pageContext.request.contextPath}/Assets/component/login_logout/register.jsp" class="link1">Đăng ký tại đây</a>
+            <a href="${pageContext.request.contextPath}/register" class="link1">
+                Đăng ký tại đây
+            </a>
         </div>
     </div>
 </div>
