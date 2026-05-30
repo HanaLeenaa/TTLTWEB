@@ -55,7 +55,10 @@
             </a>
         </div>
 
-        <a href="#" class="forgot">Quên mật khẩu?</a>
+        <a href="${pageContext.request.contextPath}/forgot-password"
+           class="forgot">
+            Quên mật khẩu?
+        </a>
 
         <div class="register">
             <span>Bạn chưa có tài khoản?</span>
