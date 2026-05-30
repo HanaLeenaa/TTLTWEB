@@ -6,7 +6,7 @@ import com.example.web_console_handheld.utils.PasswordUtil;
 import com.example.web_console_handheld.utils.OtpUtil;
 import com.example.web_console_handheld.service.EmailService;
 import com.example.web_console_handheld.dao.UserDao;
-
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
@@ -17,8 +17,10 @@ import java.time.LocalDateTime;
 public class RegisterServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/register.jsp");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.getRequestDispatcher("/Assets/component/login_logout/register.jsp").forward(req, resp);
     }
 
     @Override
@@ -128,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
             OtpUtil.expireOtp(rawOtp);
 
             setMsg(session, "Đăng ký thành công! Vui lòng kiểm tra email để nhập mã OTP.");
-            resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");
+            resp.sendRedirect(req.getContextPath() + "/verify");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,6 +151,6 @@ public class RegisterServlet extends HttpServlet {
 
     // redirect register
     private void redirectRegister(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/register.jsp");
+        resp.sendRedirect(req.getContextPath() + "/register");
     }
 }
