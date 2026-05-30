@@ -598,3 +598,5 @@ public class UserDao extends BaseDao{
     }
     }
 
+}
+
