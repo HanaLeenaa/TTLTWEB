@@ -158,8 +158,8 @@
                             <label>
                                 <input type="radio"
                                        name="paymentMethod"
-                                       value="BANK" />
-                                Thanh toán qua ngân hàng
+                                       value="VNPAY" />
+                                Thanh toán qua VNPay
                             </label>
                         </div>
                     </div>

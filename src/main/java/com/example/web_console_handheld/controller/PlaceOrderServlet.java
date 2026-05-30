@@ -9,7 +9,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +68,6 @@ public class PlaceOrderServlet extends HttpServlet {
             for (OrderItem oi : orderItems) {
                 totalPrice += oi.getProduct_price() * oi.getQuantity();
             }
-            session.removeAttribute("pendingOrderItems");
         }
 
         // CHECK STOCK
@@ -132,9 +130,22 @@ public class PlaceOrderServlet extends HttpServlet {
 
         String note = request.getParameter("note");
         order.setReceiver_note(note);
-        order.setPayment_method(request.getParameter("paymentMethod"));
 
+        String paymentMethod = request.getParameter("paymentMethod");
+        order.setPayment_method(paymentMethod);
         order.setPrice(totalPrice);
+
+        if ("VNPAY".equals(paymentMethod)) {
+            order.setPayment_status("PENDING");
+            session.setAttribute("pendingOrder", order);
+            session.setAttribute("pendingOrderItems", orderItems);
+            response.sendRedirect(request.getContextPath() + "/vnpay-payment");
+            return;
+        }else {
+            order.setPayment_status("UNPAID");
+        }
+
+
 
             // ===== LƯU SESSION =====
         session.setAttribute("pendingOrder", order);

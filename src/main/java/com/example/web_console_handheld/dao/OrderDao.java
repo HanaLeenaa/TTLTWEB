@@ -113,7 +113,9 @@ public class OrderDao {
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
                     order.setReceiver_note(rs.getString("note"));
-//                    order.setPayment_method(rs.getBoolean("payment_method"));
+                    order.setPayment_method(rs.getString("payment_method"));
+                    order.setPayment_status(rs.getString("payment_status"));
+                    order.setTransaction_no(rs.getString("transaction_no"));
                 }
             }
 
@@ -388,7 +390,7 @@ public class OrderDao {
                 order.setReceiver_phone(rs.getString("phone_order"));
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
-
+                order.setPayment_method(rs.getString("payment_method"));
 
                 list.add(order);
             }
@@ -518,9 +520,11 @@ public class OrderDao {
             address_order,
             email_order,
             note,
-            payment_method
+            payment_method,
+            payment_status,
+            transaction_no
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
         String insertItemSql = """
@@ -572,6 +576,8 @@ public class OrderDao {
                 ps.setString(8, order.getReceiver_email());
                 ps.setString(9, order.getReceiver_note());
                 ps.setString(10, order.getPayment_method());
+                ps.setString(11, order.getPayment_status());
+                ps.setString(12, order.getTransaction_no());
 
                 int affectedRows = ps.executeUpdate();
 
