@@ -50,26 +50,31 @@ public class SuggestionsServlet extends HttpServlet {
             // Lấy tất cả gợi ý
             List<Product> allSuggestions = productDao.getSuggestions(user.getId(), minRange, maxRange, 200);
 
-//            // Phân trang
-//            int pageSize = 12;
-//            int currentPage = 1;
-//            String pageParam = request.getParameter("page");
-//            if (pageParam != null) {
-//                try {
-//                    currentPage = Integer.parseInt(pageParam);
-//                } catch (NumberFormatException ignored) {}
-//            }
-//
-//            int totalPage = (int) Math.ceil((double) allSuggestions.size() / pageSize);
-//
-//            int fromIndex = (currentPage - 1) * pageSize;
-//            int toIndex = Math.min(fromIndex + pageSize, allSuggestions.size());
-//            if (fromIndex < allSuggestions.size()) {
-//                suggestions = allSuggestions.subList(fromIndex, toIndex);
-//            }
-//
-//            request.setAttribute("totalPage", totalPage);
-//            request.setAttribute("currentPage", currentPage);
+            // Nếu không có gợi ý thì fallback: lấy top sản phẩm
+            if (allSuggestions.isEmpty()) {
+                allSuggestions = productDao.getTopProducts(50);
+            }
+
+            // Phân trang
+            int pageSize = 12;
+            int currentPage = 1;
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    currentPage = Integer.parseInt(pageParam);
+                } catch (NumberFormatException ignored) {}
+            }
+
+            int totalPage = (int) Math.ceil((double) allSuggestions.size() / pageSize);
+
+            int fromIndex = (currentPage - 1) * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, allSuggestions.size());
+            if (fromIndex < allSuggestions.size()) {
+                suggestions = allSuggestions.subList(fromIndex, toIndex);
+            }
+
+            request.setAttribute("totalPage", totalPage);
+            request.setAttribute("currentPage", currentPage);
         }
 
         request.setAttribute("wishlistIdString", wishlistIdString);

@@ -1,60 +1,99 @@
 package com.example.web_console_handheld.controller;
 
+import com.example.web_console_handheld.dao.OtpDao;
 import com.example.web_console_handheld.dao.UserDao;
 import com.example.web_console_handheld.model.User;
 import com.example.web_console_handheld.service.EmailService;
+import com.example.web_console_handheld.utils.OtpUtil;
+import com.example.web_console_handheld.utils.PasswordUtil;
+import com.example.web_console_handheld.utils.ValidationUtil;
+
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 
 @WebServlet("/forgot-password")
 public class ForgotPasswordServlet extends HttpServlet {
 
     private final UserDao userDao = new UserDao();
+    private final OtpDao otpDao = new OtpDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handleForgotPassword(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handleForgotPassword(req, resp);
-    }
-
-    private void handleForgotPassword(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
 
-        if (email == null || email.trim().isEmpty()) {
-            out.print("{\"success\": false, \"message\":\"Vui lòng nhập email\"}");
+        if (!ValidationUtil.isValidEmail(email)) {
+            req.setAttribute("error", "Email không hợp lệ");
+            req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp")
+                    .forward(req, resp);
             return;
         }
 
-        User user = userDao.findByEmail(email.trim());
+        User user = userDao.findByEmail(email);
+
         if (user == null) {
-            out.print("{\"success\": false, \"message\":\"Email không tồn tại\"}");
+            req.setAttribute("error", "Email không tồn tại");
+            req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp")
+                    .forward(req, resp);
             return;
         }
 
-        // Tạo token reset + lưu db với thời hạn 15 phút
-        String token = UUID.randomUUID().toString();
-        LocalDateTime expireAt = LocalDateTime.now().plusMinutes(15);
-        userDao.saveResetToken(email.trim(), token, expireAt);
+        // kiểm tra khóa
+        if (userDao.isForgotPasswordLocked(user.getId())) {
+            req.setAttribute("error", "Tài khoản đang bị khóa quên mật khẩu 15 phút");
+            req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp").forward(req, resp);
+            return;
+        }
 
-        // Tạo link reset password đầy đủ
-        String link = req.getScheme() + "://" + req.getServerName()
-                + ":" + req.getServerPort()
-                + req.getContextPath() + "/reset-password?token=" + token;
+        try {
 
-        // Gửi email
-        EmailService.sendResetPasswordEmail(email.trim(), link);
-        out.print("{\"success\": true, \"message\":\"Email đổi mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư.\"}");
+            // tăng số lần yêu cầu quên mật khẩu
+            userDao.increaseForgotPasswordAttempts(user.getId());
+
+            // nếu quá 5 lần
+            if (userDao.getForgotPasswordAttempts(user.getId()) >= 5) {
+                userDao.lockForgotPassword(user.getId());
+
+                req.setAttribute("error", "Bạn đã yêu cầu OTP quá 5 lần hãy thử lại sau 15 phút.");
+
+                req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp").forward(req, resp);
+                return;
+            }
+
+            String rawOtp = OtpUtil.generateUniqueOtp();
+
+            String otpHash = PasswordUtil.hash(rawOtp);
+
+            LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+            otpDao.saveOtp(user.getId(), otpHash, expiredAt);
+
+            EmailService.sendOtp(user.getEmail(), rawOtp);
+
+            HttpSession session = req.getSession();
+
+            session.setAttribute("forgotUser", user);
+
+            resp.sendRedirect(req.getContextPath()
+                    + "/verify-forgot-otp");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            req.setAttribute("error", "Lỗi gửi OTP");
+
+            req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp")
+                    .forward(req, resp);
+        }
     }
 }

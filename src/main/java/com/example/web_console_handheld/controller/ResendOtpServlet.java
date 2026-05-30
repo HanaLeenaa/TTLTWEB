@@ -23,7 +23,7 @@ public class ResendOtpServlet extends HttpServlet {
 
             if (tempUser == null) {
                 session.setAttribute("msg", "Phiên đăng ký đã hết hạn. Vui lòng đăng ký lại.");
-                resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/register.jsp");
+                resp.sendRedirect(req.getContextPath() + "/register");
                 return;
             }
 
@@ -33,7 +33,7 @@ public class ResendOtpServlet extends HttpServlet {
             // Tạo OTP mới duy nhất
             String rawOtp = OtpUtil.generateUniqueOtp();
             String otpHash = PasswordUtil.hash(rawOtp);
-            LocalDateTime expiry = LocalDateTime.now().plusSeconds(60);
+            LocalDateTime expiry = LocalDateTime.now().plusSeconds(300);
 
             session.setAttribute("otpHash", otpHash);
             session.setAttribute("otpExpiry", expiry);
@@ -42,12 +42,12 @@ public class ResendOtpServlet extends HttpServlet {
             EmailService.sendOtp(tempUser.getEmail(), rawOtp);
 
             session.setAttribute("msg", "Mã OTP mới đã được gửi. Vui lòng kiểm tra email.");
-            resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");
+            resp.sendRedirect(req.getContextPath() + "/verify");
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("msg", "Không thể gửi email OTP. Vui lòng thử lại sau.");
-            resp.sendRedirect(req.getContextPath() + "/Assets/component/login_logout/verify.jsp");
+            resp.sendRedirect(req.getContextPath() + "/verify");
         }
     }
 }

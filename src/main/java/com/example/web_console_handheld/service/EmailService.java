@@ -29,7 +29,7 @@ public class EmailService {
             message.setFrom(new InternetAddress(FROM_EMAIL, "Web Console HandHeld"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Mã OTP đăng nhập");
-            message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 1 phút.");
+            message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
 
             Transport.send(message);
 

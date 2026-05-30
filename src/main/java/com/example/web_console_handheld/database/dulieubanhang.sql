@@ -7,9 +7,10 @@ USE dulieubanhang;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews,
-    gallary, products, otp_tokens, brands, categories,
-    users, admin, about, discount, video, blog, banner,
-    contact, icon, logo, wishlist;
+    gallary, products, otp_tokens, brands, categories, users, admin, about,
+    discount, video, blog, banner, contact, icon, logo, wishlist, import_receipts,
+    import_receipt_items, stock_movements, product_view_history, search_history,
+    cart_items;
 
 -- 2. TẠO CÁC BẢNG
 
@@ -34,8 +35,7 @@ CREATE TABLE users (
                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                        lastLogin DATETIME,
-                       active BOOLEAN DEFAULT TRUE,
-                       deleted BOOLEAN DEFAULT FALSE
+                       active BOOLEAN DEFAULT TRUE
 );
 
 
@@ -112,13 +112,15 @@ CREATE TABLE reviews (
                          ID INT PRIMARY KEY AUTO_INCREMENT,
                          products_id INT,
                          users_id INT,
+                         order_id INT,
                          rating INT,
                          review_text VARCHAR(255),
                          imgReviews VARCHAR(255),
                          reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
                          status BOOLEAN,
                          FOREIGN KEY (products_id) REFERENCES products(ID),
-                         FOREIGN KEY (users_id) REFERENCES users(ID)
+                         FOREIGN KEY (users_id) REFERENCES users(ID),
+                         FOREIGN KEY (order_id) REFERENCES orders(ID)
 );
 
 CREATE TABLE orders (
@@ -187,6 +189,26 @@ CREATE TABLE wishlist (
                           UNIQUE KEY uq_user_product (user_id, product_id)
 );
 
+CREATE TABLE search_history (
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                user_id INT NOT NULL,
+                                keyword VARCHAR(255) NOT NULL,
+                                searched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                UNIQUE KEY unique_user_keyword (user_id, keyword)
+);
+
+CREATE TABLE cart_items (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            user_id INT NOT NULL,
+                            product_id INT NOT NULL,
+                            product_name VARCHAR(255),
+                            quantity INT NOT NULL,
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE,
+                            FOREIGN KEY (product_id) REFERENCES products(ID) ON DELETE CASCADE,
+                            UNIQUE KEY uq_user_product (user_id, product_id) -- mỗi user chỉ có 1 dòng cho 1 sản phẩm
+);
 
 -- 3. THÊM DỮ LIỆU
 
@@ -2732,7 +2754,6 @@ UPDATE products SET full_description = 'Nintendo Switch 2 là thế hệ tiếp 
 -- ID 22: AYANEO 3
 UPDATE products SET full_description = 'AYANEO 3 là biểu tượng của sự sang trọng và sức mạnh đỉnh cao với chip AMD Ryzen AI 370 mới nhất. Máy mang đến trải nghiệm Windows 11 mượt mà hơn bao giờ hết nhờ sự hỗ trợ của trí tuệ nhân tạo để tối ưu hóa hiệu năng và pin. Màn hình OLED tràn viền, hệ thống âm thanh vòm và các phím bấm đạt chuẩn e-sports biến AYANEO 3 thành một trạm chơi game di động thực thụ dành cho những người dùng không chấp nhận sự thỏa hiệp về cấu hình.' WHERE ID = 22;
 
-
 SELECT
     products.ID as ProductID,
     products.name as ProductName,
@@ -2830,10 +2851,10 @@ ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
 ALTER TABLE products ADD COLUMN stock INT DEFAULT 0,
                      ADD COLUMN sales_count INT DEFAULT 0;
 
-ALTER TABLE products ADD COLUMN stock_quantity INT NOT NULL DEFAULT 0
+ALTER TABLE products ADD COLUMN stock_quantity INT NOT NULL DEFAULT 0;
 
 -- HUỳnh Như 05/04/2026
-ALTER TABLE users ADD COLUMN deleted boolean DEFAULT FALSE
+ALTER TABLE users ADD COLUMN deleted boolean DEFAULT FALSE;
 
 -- Huỳnh Như 17/04/2026 - Thêm bảng nhập kho và lưu log
 CREATE TABLE import_receipts(
@@ -2863,18 +2884,34 @@ CREATE TABLE stock_movements (
                                  FOREIGN KEY (product_id) REFERENCES products(ID)
 );
 
+CREATE TABLE product_view_history(
+                                     ID INT AUTO_INCREMENT PRIMARY KEY,
+                                     user_id INT,
+                                     product_id INT,
+                                     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                                     CONSTRAINT unique_user_product UNIQUE (user_id, product_id),
+
+                                     FOREIGN KEY (product_id) REFERENCES products(ID),
+                                     FOREIGN KEY (user_id) REFERENCES users(ID)
+);
+
+UPDATE products
+SET stock = 10
+WHERE stock = 0;
+
+INSERT INTO users (ID, username, password, email)
+VALUES (1, 'testuser', '123456', 'test@example.com');
+
 
 SET FOREIGN_KEY_CHECKS = 1
 
 -- 25/04 Huỳnh Như - chức năng lịch sử nhập kho
 ALTER TABLE stock_movements
-    ADD user_id INT
+    ADD user_id INT;
 
 ALTER TABLE stock_movements
     ADD FOREIGN KEY (user_id) REFERENCES admin(id);
-
-SET FOREIGN_KEY_CHECKS = 1
-
 
     -- 28/04 Huỳnh Như - chức năng quản lý contact từ user
 CREATE TABLE contact_message (
@@ -2903,3 +2940,4 @@ ALTER TABLE orders
 
 ALTER TABLE orders
     ADD transaction_no VARCHAR(100);
+SET FOREIGN_KEY_CHECKS = 1

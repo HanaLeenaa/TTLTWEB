@@ -169,7 +169,12 @@
                     </c:if>
 
                     <div class="price-actions">
-                        <p class="price">${c.price}đ</p>
+                        <div class="price-block">
+                                <p class="price">${c.priceFormatted}₫</p>
+                                <c:if test="${c.priceOld > c.price}">
+                                    <p class="old-price"><s>${c.priceOldFormatted}₫</s></p>
+                                </c:if>
+                        </div>
                         <div class="actions">
                             <!-- Nút thêm vào giỏ hàng -->
                             <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">

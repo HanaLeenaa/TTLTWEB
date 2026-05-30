@@ -1,26 +1,20 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cart</title>
+    <title>Giỏ Hàng</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/cart_payment/cart.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css">
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
+
         .container {
             width: 1200px;
             margin: auto;
@@ -200,28 +194,22 @@
 
 <jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 
-<a href="${pageContext.request.contextPath}/product"
-   class="back-btn">
-    ← Tiếp tục mua sắm
-</a>
-
 <div class="container" id="cart-item">
+    <a href="${pageContext.request.contextPath}/product" class="back-btn">
+        ← Tiếp tục mua sắm
+    </a>
+
     <div class="title">
         <p>Giỏ hàng của bạn: <span id="for_you">${sessionScope.auth.username}</span></p>
         <div class="edit-area">
             <button type="button" id="editBtn">Sửa</button>
-
-            <!-- Xóa tất cả sản phẩm trong cart -->
-            <form id="deleteAllForm"
-                  action="${pageContext.request.contextPath}/cartAction"
-                  method="post">
+            <form id="deleteAllForm" action="${pageContext.request.contextPath}/cartAction" method="post">
                 <input type="hidden" name="action" value="clear">
                 <button type="submit" id="deleteAllBtn">Xóa tất cả</button>
             </form>
         </div>
     </div>
 
-    <c:set var="cart" value="${sessionScope.cart}" />
 
     <c:if test="${not empty sessionScope.cartError}">
         <div class="cart-error">
@@ -233,157 +221,128 @@
 
     <table class="cart-table">
         <tbody id="cart-items">
-
+        <%-- CHUẨN HÓA: Quét trực tiếp requestScope do Servlet đẩy sang, triệt tiêu c:set lỗi --%>
         <c:choose>
-            <c:when test="${cart == null || empty cart.cartItems}">
-
-            <tr>
-            <td colspan="4" style="text-align: center;">
-
-                <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="45"
-                        height="45"
-                        fill="currentColor"
-                        class="bi bi-cart"
-                        viewBox="0 0 16 16"
-                >
-                    <path
-                            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
-                    />
-                </svg>
-                <h3>Hiện chưa có sản phẩm nào trong giỏ hàng của bạn</h3>
-            </td>
-        </tr>
+            <c:when test="${empty requestScope.cart}">
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 50px 0;">
+                        <i class="bi bi-cart-x" style="font-size: 48px; color: #ccc;"></i>
+                        <h3 style="margin-top: 15px; color: #666;">Hiện chưa có sản phẩm nào trong giỏ hàng của bạn</h3>
+                    </td>
+                </tr>
             </c:when>
 
-
             <c:otherwise>
-                <c:set var="total" value="0" />
-
-                <c:forEach items="${cart.cartItems.values()}" var="item">
-                    <c:set var="total"
-                           value="${total + item.product.priceValue * item.quantity}" />
-
+                <c:forEach items="${requestScope.cart}" var="item">
                     <tr>
-                            <%--CHECKBOX--%>
-                        <td class="select-col">
+                        <td class="select-col" style="width: 5%;">
                             <input type="checkbox"
                                    name="selectedItems"
-                                    value="${item.product.ID}"
-                                    class="select-item"
-                                    form="mainForm"
-                                    data-price="${item.product.priceValue}"
-                                    data-id="${item.product.ID}">
+                                   value="${item.product.ID}"
+                                   class="select-item"
+                                   form="mainForm"
+                                   data-price="${item.product.price}"
+                                   data-id="${item.product.ID}"
+                                   checked>
                         </td>
 
-                        <td>
-                            <img src="${item.product.image}" width="80">
+                        <td style="width: 10%;">
+                            <img src="${item.product.image}" width="80" style="border-radius: 5px; object-fit: cover;">
                         </td>
 
-                                <td class="product-cell">
+                        <td class="product-cell" style="width: 80%;">
                                     <div class="product-row">
-
                                         <div class="product-info">
-
-                                        <span class="product-name">${item.product.name}</span>
-
+                                            <span class="product-name">${item.product.name}</span>
+                                            
+                                            <%-- ĐOẠN HIỂN THỊ LỖI KHO REALTIME (Gộp từ develop qua) --%>
                                             <c:if test="${not empty item.error}">
-                                                <p class="stock-error">
-                                                        ${item.error}
+                                                <p class="stock-error" style="color: red; font-size: 0.85rem; margin: 4px 0 0 0;">
+                                                    ${item.error}
                                                 </p>
                                             </c:if>
                                         </div>
+
+                                        <%-- CHUẨN HÓA: Đọc chính xác thuộc tính định dạng chuỗi từ Product model của bạn --%>
                                         <span class="product-price">
-                                                <fmt:formatNumber value="${item.product.priceValue}"
-                                                            type="number"
-                                                            groupingUsed="true"/>đ</span>
+                                            <fmt:formatNumber value="${item.product.price}" type="number" groupingUsed="true"/>đ
+                                        </span>
 
-                                    <%--Tang/giam so luong san pham trng gio--%>
-                        <div class="quantity">
-                            <form action="${pageContext.request.contextPath}/cartAction" method="post" class="qty-form">
-                                <button type="submit"
-                                        name="action"
-                                        value="decrease_${item.product.ID}"
-                                        class="qty-btn">−</button>
+                                        <div class="quantity">
+                                            <%-- Nút giảm số lượng của bạn --%>
+                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                                <input type="hidden" name="action" value="update">
+                                                <input type="hidden" name="productId" value="${item.product.ID}">
+                                                <input type="hidden" name="productName" value="${item.product.name}">
+                                                <input type="hidden" name="quantity" value="${item.quantity - 1}">
+                                                <button type="submit" class="qty-btn">−</button>
+                                            </form>
 
-                            <span class="qty-number"
-                                    data-id="${item.product.ID}">
-                                    ${item.quantity}
-                            </span>
+                                            <span class="qty-number" data-id="${item.product.ID}">
+                                                ${item.quantity}
+                                            </span>
 
-
-                                <button type="submit"
-                                        name="action"
-                                        value="increase_${item.product.ID}"
-                                        class="qty-btn">+</button>
-                            </form>
-                        </div>
+                                            <%-- Nút tăng số lượng của bạn --%>
+                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                                <input type="hidden" name="action" value="update">
+                                                <input type="hidden" name="productId" value="${item.product.ID}">
+                                                <input type="hidden" name="productName" value="${item.product.name}">
+                                                <input type="hidden" name="quantity" value="${item.quantity + 1}">
+                                                <button type="submit" class="qty-btn">+</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
 
-                        <%-- XÓA từng SP --%>
-                        <td>
-                            <form action="${pageContext.request.contextPath}/cartAction" method="post">
-                                <input type="hidden" name="action" value="remove_${item.product.ID}">
-                                <button type="submit"
-                                        style="border:none;background:none;cursor:pointer;">
-                                <i class="fa fa-trash"></i>
+                        <td style="width: 5%; text-align: center;">
+                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                <input type="hidden" name="action" value="remove">
+                                <input type="hidden" name="productId" value="${item.product.ID}">
+                                <button type="submit" style="border:none;background:none;cursor:pointer;">
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
                 </c:forEach>
+
+                <tr class="summary-row">
+                    <td colspan="2"></td>
+                    <td colspan="2">
+                        <span>Tổng tiền thanh toán tạm tính: </span>
+                        <span id="total-price" class="total-amount">0đ</span>
+                    </td>
+                </tr>
             </c:otherwise>
         </c:choose>
-
-</tbody>
-
-
-        <tr class="summary-row">
-            <td colspan="3" style="border-bottom: none">TỔNG TIỀN:</td>
-            <td class="total-amount" style="border-bottom: none">
-                <span id="total-price">0đ</span>
-            </td>
-        </tr>
+        </tbody>
     </table>
 
-
-
-    <form id="mainForm"
-          action="${pageContext.request.contextPath}/payment"
-          method="get">
-        <button type="submit"
-                class="btn-order"
-                ${hasStockError ? 'disabled' : ''}>
-            Đặt hàng</button>
-    </form>
-
+<form id="mainForm" action="${pageContext.request.contextPath}/payment" method="get">
+        <button type="submit" class="btn-order" ${hasStockError ? 'disabled' : ''}>Đặt hàng</button>
+</form>
 </div>
+
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 
-
 <script>
-
+    // Logic ẩn/hiện nút xóa tất cả
     const editBtn = document.getElementById("editBtn");
     const deleteAllBtn = document.getElementById("deleteAllBtn");
-
     let editing = false;
 
-    deleteAllBtn.style.display = "none";
-
-    editBtn.addEventListener("click", () => {
-        editing = !editing;
-
-        deleteAllBtn.style.display = editing ? "block" : "none";
-
-        editBtn.innerText = editing ? "Xong" : "Sửa";
-    });
+    if (editBtn && deleteAllBtn) {
+        editBtn.addEventListener("click", () => {
+            editing = !editing;
+            deleteAllBtn.style.display = editing ? "block" : "none";
+            editBtn.innerText = editing ? "Xong" : "Sửa";
+        });
+    }
 </script>
 
 <script>
+    // Tự động tính tiền dựa trên Checkbox
     document.addEventListener("DOMContentLoaded", function () {
-
         const checkboxes = document.querySelectorAll(".select-item");
         const totalPriceEl = document.getElementById("total-price");
 
@@ -393,33 +352,29 @@
 
         function calculateTotal() {
             let total = 0;
-
             checkboxes.forEach(cb => {
                 if (cb.checked) {
-                    const price = Number(cb.dataset.price);
+                    const price = Number(cb.dataset.price) || 0;
                     const id = cb.dataset.id;
+                    const qtyEl = document.querySelector(".qty-number[data-id='" + id + "']");
 
-                    const qtyEl = document.querySelector(
-                        ".qty-number[data-id='" + id + "']"
-                    );
-
-                    if (!qtyEl) return;
-
-                    const qty = Number(qtyEl.innerText.trim());
-                    total += price * qty;
+                    if (qtyEl) {
+                        const qty = Number(qtyEl.innerText.trim()) || 0;
+                        total += price * qty;
+                    }
                 }
             });
-
-            totalPriceEl.innerText = formatVND(total);
+            if(totalPriceEl) {
+                totalPriceEl.innerText = formatVND(total);
+            }
         }
 
         checkboxes.forEach(cb => {
             cb.addEventListener("change", calculateTotal);
         });
 
+        calculateTotal();
     });
 </script>
-
 </body>
 </html>
-
