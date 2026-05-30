@@ -49,8 +49,7 @@ public class ProductDetailServlet extends HttpServlet {
         List<Review> allReviews = reviewDao.getReviewByID(productId);
         int reviewQuantity = allReviews.size();
 
-        double totalRating = reviewDao.sumRating(productId);
-        double avgRating = reviewQuantity == 0 ? 0 : totalRating / reviewQuantity;
+        double avgRating = reviewDao.getAverageRating(productId);
 
         // count stars
         int fiveStars = reviewDao.countByStar(productId, 5);

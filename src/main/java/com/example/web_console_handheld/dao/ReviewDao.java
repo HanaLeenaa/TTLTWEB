@@ -41,16 +41,25 @@ public class ReviewDao extends BaseDao {
     // Lấy ID đơn hàng có thể review (chưa review trước đó)
     public int getOrderIdCanReviewV2(int userId, int productId) {
         return get().withHandle(handle ->
-                handle.createQuery("SELECT o.ID FROM orders o " +
-                                        "WHERE o.user_id = :userId AND o.status LIKE 'Đã giao%' " +
-                                        "AND EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.ID AND oi.product_id = :productId) " +
-                                        "AND NOT EXISTS (SELECT 1 FROM reviews r WHERE r.order_id = o.ID AND r.products_id = :productId AND r.users_id = :userId) " +
-                                        "ORDER BY o.ID DESC LIMIT 1")
+                handle.createQuery("""
+                SELECT o.ID
+                FROM orders o
+                JOIN order_items oi ON oi.order_id = o.ID
+                WHERE o.user_id = :userId
+                  AND oi.product_id = :productId
+                  AND LOWER(TRIM(o.status)) LIKE 'đã giao%'
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM reviews r
+                      WHERE r.order_id = o.ID
+                        AND r.products_id = :productId
+                        AND r.users_id = :userId)
+                ORDER BY o.ID DESC
+                LIMIT 1""")
                         .bind("userId", userId)
                         .bind("productId", productId)
-                        .mapTo(Long.class)
+                        .mapTo(Integer.class)
                         .findOne()
-                        .map(Long::intValue)
                         .orElse(0));
     }
 
@@ -68,5 +77,19 @@ public class ReviewDao extends BaseDao {
                         .bind("text", text)
                         .bind("image", image)
                         .execute());
+    }
+
+    public double getAverageRating(int productId){
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                    SELECT COALESCE(AVG(rating),0)
+                    FROM reviews
+                    WHERE products_id=:productId
+                    AND status=1
+                    """)
+                        .bind("productId", productId)
+                        .mapTo(Double.class)
+                        .one()
+        );
     }
 }

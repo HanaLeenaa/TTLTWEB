@@ -2865,3 +2865,28 @@ CREATE TABLE stock_movements (
 
 
 SET FOREIGN_KEY_CHECKS = 1
+
+-- =====================Châu 30/5===================================
+DROP TABLE reviews;
+
+CREATE TABLE reviews (
+                         ID INT PRIMARY KEY AUTO_INCREMENT,
+                         products_id INT NOT NULL,
+                         users_id INT NOT NULL,
+                         order_id INT NOT NULL,
+                         rating INT NOT NULL,
+                         review_text TEXT,
+                         imgReviews VARCHAR(255),
+                         reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+                         status BOOLEAN DEFAULT TRUE,
+                         CONSTRAINT fk_review_product
+                             FOREIGN KEY (products_id)
+                                 REFERENCES products(ID),
+                         CONSTRAINT fk_review_user
+                             FOREIGN KEY (users_id)
+                                 REFERENCES users(ID),
+                         CONSTRAINT fk_review_order
+                             FOREIGN KEY (order_id)
+                                 REFERENCES orders(ID),
+                         CONSTRAINT uq_review_once
+                             UNIQUE (order_id, products_id, users_id));
