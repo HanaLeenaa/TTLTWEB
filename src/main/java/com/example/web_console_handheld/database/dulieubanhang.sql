@@ -2908,13 +2908,10 @@ SET FOREIGN_KEY_CHECKS = 1
 
 -- 25/04 Huỳnh Như - chức năng lịch sử nhập kho
 ALTER TABLE stock_movements
-    ADD user_id INT
+    ADD user_id INT;
 
 ALTER TABLE stock_movements
     ADD FOREIGN KEY (user_id) REFERENCES admin(id);
-
-SET FOREIGN_KEY_CHECKS = 1
-
 
     -- 28/04 Huỳnh Như - chức năng quản lý contact từ user
 CREATE TABLE contact_message (
@@ -2935,3 +2932,5 @@ ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
 -- thêm để xử lý orders đúng logic
 ALTER TABLE orders
     ADD COLUMN payment_method VARCHAR(50);
+
+SET FOREIGN_KEY_CHECKS = 1
