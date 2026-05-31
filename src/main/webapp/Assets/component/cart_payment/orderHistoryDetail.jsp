@@ -35,24 +35,6 @@
             margin: 6px 0;
         }
 
-        /*.order-table {*/
-        /*    width: 100%;*/
-        /*    border-collapse: collapse;*/
-        /*}*/
-
-        /*.order-table th,*/
-        /*.order-table td {*/
-        /*    border-bottom: 1px solid #e5e5e5;*/
-        /*    padding: 14px 10px;*/
-        /*    text-align: center;*/
-        /*    vertical-align: middle;*/
-        /*}*/
-
-        /*.order-table th {*/
-        /*    background: #e95211;*/
-        /*    color: #FFFFFF;*/
-        /*}*/
-
         .order-table {
             width: 100%;
             border-collapse: collapse;
@@ -127,6 +109,8 @@
         <p><strong>Mã đơn hàng:</strong> #${order.ID}</p>
         <p><strong>Ngày đặt:</strong> ${order.createAt}</p>
         <p><strong>Địa chỉ nhận:</strong> ${order.receiver_address}</p>
+        <p><strong>Phương thức thanh toán:</strong> ${order.payment_method}</p>
+        <p><strong>Trạng thái thanh toán:</strong> ${order.payment_status}</p>
         <p><strong>Trạng thái:</strong> ${order.status}</p>
         <p><strong>Ghi chú đơn hàng:</strong> ${order.receiver_note}</p>
         <p>

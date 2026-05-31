@@ -42,6 +42,40 @@
         <p><strong>Họ tên:</strong> ${order.receiver_name}</p>
         <p><strong>Số điện thoại:</strong> ${order.receiver_phone}</p>
         <p><strong>Địa chỉ:</strong> ${order.receiver_address}</p>
+
+        <p><strong>Phương thức thanh toán:</strong>
+        <c:choose>
+            <c:when test="${order.payment_method == 'VNPAY'}">
+                VNPay
+            </c:when>
+
+            <c:otherwise>
+                Thanh toán khi nhận hàng (COD)
+            </c:otherwise>
+        </c:choose>
+        </p>
+
+        <p><strong>Trạng thái thanh toán:</strong>
+        <c:choose>
+            <c:when test="${order.payment_status == 'PAID'}">
+               <span style="color: green; font-weight: bold;">
+                    Đã thanh toán
+                </span>
+            </c:when>
+
+            <c:when test="${order.payment_status == 'UNPAID'}">
+                 <span style="color: orange; font-weight: bold;">
+                    Chưa thanh toán
+                </span>
+            </c:when>
+
+            <c:otherwise>
+                <span style="color: red; font-weight: bold;">
+                    Không xác định
+                </span>
+            </c:otherwise>
+        </c:choose>
+        </p>
     </div>
 
     <!-- sản phẩm -->

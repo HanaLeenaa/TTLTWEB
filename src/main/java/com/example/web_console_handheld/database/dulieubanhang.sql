@@ -2933,9 +2933,6 @@ ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
 ALTER TABLE orders
     ADD COLUMN payment_method VARCHAR(50);
 
-SET FOREIGN_KEY_CHECKS = 1
-
-
 -----------------------------------------
 ------------------- Châu 16/5---------------
 ALTER TABLE users
@@ -2987,3 +2984,12 @@ CREATE TABLE reviews (
                                  REFERENCES orders(ID),
                          CONSTRAINT uq_review_once
                              UNIQUE (order_id, products_id, users_id));
+-- 30/05 Huỳnh Như
+-- chức năng thanh toán qua VNPay
+ALTER TABLE orders
+    ADD payment_status VARCHAR(20);
+
+ALTER TABLE orders
+    ADD transaction_no VARCHAR(100);
+    
+SET FOREIGN_KEY_CHECKS = 1

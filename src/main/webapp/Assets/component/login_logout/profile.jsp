@@ -101,6 +101,7 @@
                                 <th>Ngày đặt</th>
                                 <th>Địa chỉ nhận</th>
                                 <th>Tổng tiền</th>
+                                <th>Thanh toán</th>
                                 <th>Trạng thái</th>
                                 <th></th>
                             </tr>
@@ -116,6 +117,10 @@
                                         <fmt:formatNumber
                                                 value="${o.price}"
                                                 type="number"/>đ
+                                    </td>
+
+                                    <td>
+                                        ${o.payment_method}
                                     </td>
                                     <td>${o.status}</td>
                                     <td>
