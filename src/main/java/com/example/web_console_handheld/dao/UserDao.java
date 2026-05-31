@@ -579,6 +579,32 @@ public class UserDao extends BaseDao{
         }
 
         return userId;
+    }
+
+        public boolean checkOldPassword(int userId, String oldPassword) {
+            String sql = "SELECT password FROM users WHERE id = ?";
+
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setInt(1, userId);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    String hashed = rs.getString("password");
+
+                    // so sánh BCrypt
+                    return BCrypt.checkpw(oldPassword, hashed);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
     //chức năng sửa user ở admin page
     public boolean updateUserByAdmin(int id, String username, String role, String phone, String address, boolean active) {
         String sql = "UPDATE users SET username = ?, role = ?, phoneNum = ?, location = ?, active = ?, updated_at = NOW() WHERE id = ?";
@@ -598,5 +624,4 @@ public class UserDao extends BaseDao{
     }
     }
 
-}
 

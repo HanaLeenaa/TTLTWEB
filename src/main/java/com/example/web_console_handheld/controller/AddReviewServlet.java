@@ -3,69 +3,131 @@ package com.example.web_console_handheld.controller;
 import com.example.web_console_handheld.dao.ReviewDao;
 import com.example.web_console_handheld.model.User;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @WebServlet("/add-review")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,
-        maxFileSize = 5 * 1024 * 1024,
-        maxRequestSize = 10 * 1024 * 1024)
-
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 20
+)
 public class AddReviewServlet extends HttpServlet {
 
-    private ReviewDao reviewDao = new ReviewDao();
+    private final ReviewDao reviewDao = new ReviewDao();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
-
-        // check login
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
 
         if (user == null) {
             response.sendRedirect("login");
             return;
         }
 
-        // lấy dữ liệu
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
+        int userId = user.getId();
+        int productId;
+        int rating;
 
-        // kiểm tra quyền review
-        int orderId = reviewDao.getOrderIdCanReviewV2(user.getId(), productId);
+        try {
+            productId = Integer.parseInt(request.getParameter("productId"));
+            rating = Integer.parseInt(request.getParameter("rating"));
 
-        if (orderId == 0) {
-            // không đủ điều kiện
-            response.sendRedirect("product-detail?id=" + productId);
+        } catch (NumberFormatException e) {
+
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ");
             return;
         }
 
-        // upload ảnh (nếu có)
-        Part filePart = request.getPart("image");
-        String fileName = null;
-
-        if (filePart != null && filePart.getSize() > 0) {
-            fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-
-            String uploadPath = getServletContext().getRealPath("/uploads");
-            java.io.File uploadDir = new java.io.File(uploadPath);
-
-            if (!uploadDir.exists()) uploadDir.mkdir();
-
-            filePart.write(uploadPath + "/" + fileName);
+        if (rating < 1 || rating > 5) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Số sao phải từ 1 đến 5");
+            return;
         }
 
-        // lưu review
-        reviewDao.insertReview(user.getId(), productId, orderId, rating, comment, fileName);
+        String comment = request.getParameter("comment");
+        if (comment != null) {
+            comment = comment.trim();
+        }
 
-        response.sendRedirect("product-detail?id=" + productId);
+        if (comment != null && comment.length() > 1000) {
+            request.getSession().setAttribute("error", "Nội dung đánh giá quá dài");
+
+            response.sendRedirect(
+                    request.getHeader("Referer")
+            );
+            return;
+        }
+
+        // Kiểm tra đã mua và chưa review
+        int orderId = reviewDao.getOrderIdCanReviewV2(userId, productId);
+
+        if (orderId == 0) {
+            request.getSession().setAttribute("error", "Bạn chưa mua sản phẩm này hoặc đã đánh giá rồi");
+            response.sendRedirect(request.getHeader("Referer"));
+            return;
+        }
+
+        String imageName = null;
+        Part filePart = request.getPart("review_image");
+
+        if (filePart != null && filePart.getSize() > 0) {
+
+            String contentType = filePart.getContentType();
+
+            if (contentType == null || !contentType.startsWith("image/")) {
+                request.getSession().setAttribute("error", "Chỉ được upload file ảnh");
+                response.sendRedirect(request.getHeader("Referer"));
+                return;
+            }
+
+            String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+            String lowerFileName = originalFileName.toLowerCase();
+
+            if (!lowerFileName.endsWith(".jpg")
+                    && !lowerFileName.endsWith(".jpeg")
+                    && !lowerFileName.endsWith(".png")
+                    && !lowerFileName.endsWith(".webp")) {
+
+                request.getSession().setAttribute("error", "Chỉ chấp nhận file JPG, JPEG, PNG hoặc WEBP");
+                response.sendRedirect(request.getHeader("Referer"));
+                return;
+            }
+
+            imageName = UUID.randomUUID() + "_" + originalFileName;
+
+            String uploadPath = getServletContext().getRealPath("/uploads");
+
+            File uploadDir = new File(uploadPath);
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            filePart.write(uploadPath + File.separator + imageName);
+        }
+
+        reviewDao.insertReview(
+                userId,
+                productId,
+                orderId,
+                rating,
+                comment,
+                imageName);
+
+        request.getSession().setAttribute("success", "Đánh giá thành công");
+        response.sendRedirect(request.getHeader("Referer"));
     }
 }
