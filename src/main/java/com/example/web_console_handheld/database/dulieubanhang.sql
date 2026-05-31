@@ -2935,6 +2935,34 @@ ALTER TABLE orders
 
 SET FOREIGN_KEY_CHECKS = 1
 
+
+-----------------------------------------
+------------------- Châu 16/5---------------
+ALTER TABLE users
+    ADD COLUMN otp_code VARCHAR(255),
+ADD COLUMN otp_expiry DATETIME,
+ADD COLUMN otp_attempts INT DEFAULT 0,
+ADD COLUMN forgot_attempts INT DEFAULT 0,
+ADD COLUMN lock_until DATETIME;
+
+ALTER TABLE users
+    ADD COLUMN forgot_password_attempts INT DEFAULT 0,
+ADD COLUMN forgot_lock_until DATETIME NULL;
+
+DROP TABLE IF EXISTS otp_tokens;
+
+CREATE TABLE otp_tokens (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            user_id INT NOT NULL,
+                            otp_hash VARCHAR(255) NOT NULL,
+                            expired_at DATETIME NOT NULL,
+                            failed_attempts INT DEFAULT 0,
+                            resend_count INT DEFAULT 0,
+                            used BOOLEAN DEFAULT FALSE,
+                            lock_until DATETIME NULL,
+                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY (user_id) REFERENCES users(id));
+
 -- =====================Châu 30/5===================================
 DROP TABLE reviews;
 
