@@ -5,6 +5,6 @@ public class VNPayConfig {
     public static String vnp_TmnCode = "";
     public static String secretKey = "";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl =  "http://192.168.157.133:8080/lab/vnpay-return";
+    public static String vnp_ReturnUrl =  "";
 
 }
