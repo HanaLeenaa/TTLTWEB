@@ -44,47 +44,63 @@ public class ConfirmOrderServlet extends HttpServlet {
             return;
         }
 
-        // ĐỒNG BỘ 4: Tiếp nhận danh sách ID sản phẩm được tích chọn mua thực tế
-        String[] selectedItemIds = request.getParameterValues("selectedItems");
-        List<String> selectedList = (selectedItemIds != null) ? Arrays.asList(selectedItemIds) : null;
-
-        // 2. TRUY VẤN GIỎ HÀNG THỰC TẾ TỪ DATABASE THEO USER ID
-        List<CartItem> dbCart = cartDao.getCartByUser(user.getId());
-        if (dbCart == null || dbCart.isEmpty()) {
-            session.setAttribute("cartError", "Giỏ hàng của bạn đang trống! Không thể đặt hàng.");
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
-        }
+        Boolean buyNowMode = (Boolean) session.getAttribute("buyNowMode");
 
         // 3. BỘ LỌC THÔNG MINH: Chỉ chuyển đổi những mặt hàng được tích chọn sang hóa đơn
         List<OrderItem> cartItems = new ArrayList<>();
         long totalAmount = 0;
 
-        for (CartItem cItem : dbCart) {
-            if (cItem.getProduct() == null) {
-                continue;
+        if (Boolean.TRUE.equals(buyNowMode)) {
+            // MUA NGAY
+            List<OrderItem> buyNowItems = (List<OrderItem>) session.getAttribute("pendingOrderItems");
+
+            if (buyNowItems == null || buyNowItems.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/product");
+                return;
+            }
+            cartItems.addAll(buyNowItems);
+            for (OrderItem item : cartItems) {
+                totalAmount += item.getProduct_price() * item.getQuantity();
+            }
+        } else {
+            // GIỎ HÀNG
+            List<CartItem> dbCart = cartDao.getCartByUser(user.getId());
+            if (dbCart == null || dbCart.isEmpty()) {
+                session.setAttribute("cartError", "Giỏ hàng của bạn đang trống! Không thể đặt hàng.");
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
             }
 
-            String currentProductId = String.valueOf(cItem.getProduct().getID());
+            // ĐỒNG BỘ 4: Tiếp nhận danh sách ID sản phẩm được tích chọn mua thực tế
+            String[] selectedItemIds = request.getParameterValues("selectedItems");
+            List<String> selectedList = (selectedItemIds != null) ? Arrays.asList(selectedItemIds) : null;
 
-            // Cơ chế: Nếu không truyền mảng chọn (Mặc định mua hết) HOẶC ID nằm trong danh sách chọn thì bốc vào đơn
-            if (selectedList == null || selectedList.contains(currentProductId)) {
-                OrderItem oItem = new OrderItem();
-                oItem.setProduct_id(cItem.getProduct().getID());
-                oItem.setQuantity(cItem.getQuantity());
-                oItem.setProduct_price(cItem.getProduct().getPrice());
-                oItem.setProduct_image(cItem.getProduct().getImage());
+            for (CartItem cItem : dbCart) {
+                if (cItem.getProduct() == null) {
+                    continue;
+                }
 
-                cartItems.add(oItem);
-                totalAmount += (cItem.getProduct().getPrice() * cItem.getQuantity());
+                String currentProductId = String.valueOf(cItem.getProduct().getID());
+
+                // Cơ chế: Nếu không truyền mảng chọn (Mặc định mua hết) HOẶC ID nằm trong danh sách chọn thì bốc vào đơn
+                if (selectedList == null || selectedList.contains(currentProductId)) {
+                    OrderItem oItem = new OrderItem();
+                    oItem.setProduct_id(cItem.getProduct().getID());
+                    oItem.setQuantity(cItem.getQuantity());
+                    oItem.setProduct_price(cItem.getProduct().getPrice());
+                    oItem.setProduct_image(cItem.getProduct().getImage());
+
+                    cartItems.add(oItem);
+                    totalAmount += (cItem.getProduct().getPrice() * cItem.getQuantity());
+                }
             }
-        }
 
-        // Phòng hờ bộ lọc rỗng
-        if (cartItems.isEmpty()) {
-            session.setAttribute("cartError", "Không tìm thấy sản phẩm hợp lệ nào được chọn để thanh toán!");
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
+            // Phòng hờ bộ lọc rỗng
+            if (cartItems.isEmpty()) {
+                session.setAttribute("cartError", "Không tìm thấy sản phẩm hợp lệ nào được chọn để thanh toán!");
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            }
         }
 
         // 4. LẤY THÔNG TIN NGƯỜI NHẬN TỪ FORM GIAO DIỆN
@@ -113,9 +129,16 @@ public class ConfirmOrderServlet extends HttpServlet {
             int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
 
             if (orderId > 0) {
-                // 🚨 ĐIỂM SỬA CHỐT HẠ: Chỉ xóa các món nằm trong hóa đơn vừa thanh toán khỏi DB
-                for (OrderItem item : cartItems) {
-                    cartDao.removeItem(user.getId(), item.getProduct_id());
+                if (Boolean.TRUE.equals(buyNowMode)) {
+                    session.removeAttribute("buyNowMode");
+                    session.removeAttribute("pendingOrderItems");
+                }
+
+                //ĐIỂM SỬA CHỐT HẠ: Chỉ xóa các món nằm trong hóa đơn vừa thanh toán khỏi DB
+                if (!Boolean.TRUE.equals(buyNowMode)) {
+                    for (OrderItem item : cartItems) {
+                        cartDao.removeItem(user.getId(), item.getProduct_id());
+                    }
                 }
 
                 // Tính toán chính xác số lượng icon giỏ hàng Header dựa trên các món còn sót lại
