@@ -66,7 +66,6 @@ public class OrderDao {
                 ps.addBatch();
             }
             ps.executeBatch();
-            // Không gọi conn.commit() ở đây vì mặc định kết nối này là Auto-commit = true
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +100,6 @@ public class OrderDao {
                     order.setReceiver_email(rs.getString("email_order"));
                     order.setReceiver_note(rs.getString("note"));
 
-                    // Lấy dữ liệu từ bảng payments đã được JOIN sang
                     order.setPayment_method(rs.getString("payment_method"));
                     order.setPayment_status(rs.getString("payment_status"));
                     order.setTransaction_no(rs.getString("transaction_id"));
@@ -113,7 +111,49 @@ public class OrderDao {
         return order;
     }
 
-    // ================= DANH SÁCH ĐƠN HÀNG =================
+    // ================= LẤY LỊCH SỬ ĐƠN HÀNG CỦA USER (ĐÃ KHỬ TRÙNG & THÊM LEFT JOIN CHUẨN) =================
+    public List<Order> getOrdersByUserId(int userId) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
+            FROM orders o
+            LEFT JOIN payments p ON o.ID = p.orders_id 
+            WHERE o.user_id = ?
+            ORDER BY o.order_date DESC
+        """;
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setID(rs.getInt("ID"));
+                    order.setUser_Id(rs.getInt("user_id"));
+                    order.setCreateAt(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setPrice(rs.getLong("total_amount"));
+                    order.setReceiver_name(rs.getString("fullname_order"));
+                    order.setReceiver_phone(rs.getString("phone_order"));
+                    order.setReceiver_address(rs.getString("address_order"));
+                    order.setReceiver_email(rs.getString("email_order"));
+
+                    order.setPayment_method(rs.getString("payment_method"));
+                    order.setPayment_status(rs.getString("payment_status"));
+                    order.setTransaction_no(rs.getString("transaction_id"));
+
+                    list.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // ================= DANH SÁCH ĐƠN HÀNG ADMIN =================
     public List<Order> getAllOrders() {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT * FROM orders ORDER BY order_date DESC";
@@ -143,7 +183,7 @@ public class OrderDao {
         return list;
     }
 
-    // ================= CHI TIẾT ĐƠN HÀNG (ĐÃ CHUẨN HÓA TÊN CỘT ĐỒNG BỘ ĐỒNG ĐỘI) =================
+    // ================= CHI TIẾT ĐƠN HÀNG ADMIN =================
     public Order getOrderByIdAdmin(int id) {
         Order order = null;
         String sql = "SELECT * FROM orders WHERE ID = ?";
@@ -159,11 +199,11 @@ public class OrderDao {
                 order = new Order();
                 order.setID(rs.getInt("ID"));
                 order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("order_date")); // Sửa từ createAt thành order_date
+                order.setCreateAt(rs.getTimestamp("order_date"));
                 order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("total_amount")); // Sửa từ price thành total_amount
+                order.setPrice(rs.getLong("total_amount"));
 
-                order.setReceiver_name(rs.getString("fullname_order")); // Sửa đồng bộ cột DB
+                order.setReceiver_name(rs.getString("fullname_order"));
                 order.setReceiver_phone(rs.getString("phone_order"));
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
@@ -304,38 +344,7 @@ public class OrderDao {
         return list;
     }
 
-    public List<Order> getOrdersByUserId(int userId) {
-        List<Order> list = new ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE user_id = ?";
-
-        try (
-                Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Order order = new Order();
-                order.setID(rs.getInt("ID"));
-                order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("order_date"));
-                order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("total_amount"));
-                order.setReceiver_name(rs.getString("fullname_order"));
-                order.setReceiver_phone(rs.getString("phone_order"));
-                order.setReceiver_address(rs.getString("address_order"));
-                order.setReceiver_email(rs.getString("email_order"));
-                order.setPayment_method(rs.getString("payment_method"));
-
-                list.add(order);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
+    // ================= TÌM KIẾM ĐƠN HÀNG =================
     public List<Order> searchOrders(String keyword, String status, String fromDate, String toDate, String minPrice, String maxPrice) {
         List<Order> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM orders WHERE 1=1 ");
@@ -409,9 +418,7 @@ public class OrderDao {
     }
 
     // ================= TRANSACTION ĐẶT HÀNG CHUẨN AN TOÀN =================
-    // Thay đổi kiểu trả về thành int (trả về orderId nếu thành công) và thêm "throws Exception"
     public int createOrderTransactionWithLog(Order order, List<OrderItem> items) throws Exception {
-        // 1. Câu SQL cho bảng orders (Bỏ hoàn toàn các cột payment_... thừa)
         String insertOrderSql = """
     INSERT INTO orders(
         user_id, order_date, status, total_amount, fullname_order,
@@ -420,7 +427,6 @@ public class OrderDao {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
-        // 2. Câu SQL ghi dữ liệu sang bảng payments mới của team
         String insertPaymentSql = """
     INSERT INTO payments(orders_id, payment_method, payment_status, transaction_id)
     VALUES (?, ?, ?, ?)
@@ -443,7 +449,6 @@ public class OrderDao {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
 
-            // A. Ghi đơn hàng vào bảng orders
             try (PreparedStatement ps = conn.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getUser_Id());
                 ps.setTimestamp(2, order.getCreateAt());
@@ -471,17 +476,14 @@ public class OrderDao {
                 }
             }
 
-            // B. Ghi thông tin thanh toán vào bảng payments mới
             try (PreparedStatement paymentPs = conn.prepareStatement(insertPaymentSql)) {
                 paymentPs.setInt(1, orderId);
-                // Lấy thông tin tạm từ đối tượng order để truyền sang bảng payments
                 paymentPs.setString(2, order.getPayment_method() != null ? order.getPayment_method() : "VNPAY");
                 paymentPs.setString(3, order.getPayment_status() != null ? order.getPayment_status() : "PAID");
-                paymentPs.setString(4, order.getTransaction_no()); // Mã giao dịch VNPay
+                paymentPs.setString(4, order.getTransaction_no());
                 paymentPs.executeUpdate();
             }
 
-            // C. Ghi chi tiết order_items & Trừ kho
             for (OrderItem item : items) {
                 try (PreparedStatement stockPs = conn.prepareStatement(updateStockSql)) {
                     stockPs.setInt(1, item.getQuantity());

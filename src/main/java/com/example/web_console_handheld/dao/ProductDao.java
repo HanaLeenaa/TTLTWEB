@@ -306,12 +306,14 @@ public class ProductDao extends BaseDao {
     public List<Product> searchByName(String keyword) {
         return get().withHandle(h ->
                 h.createQuery("""
-                SELECT *
-                FROM products
-                WHERE active = 1
-                  AND name LIKE :kw
-                GROUP BY COALESCE(parent_id, ID)
-                ORDER BY ispremium DESC, id ASC
+                SELECT * FROM products 
+                WHERE ID IN (
+                    SELECT MIN(ID) 
+                    FROM products 
+                    WHERE active = 1 AND name LIKE :kw
+                    GROUP BY COALESCE(parent_id, ID)
+                )
+                ORDER BY ispremium DESC, ID ASC
             """)
                         .bind("kw", "%" + keyword + "%")
                         .mapToBean(Product.class)
@@ -383,54 +385,53 @@ public class ProductDao extends BaseDao {
             int limit
     ) {
 
-        StringBuilder sql = new StringBuilder("""
-                    SELECT *
-                    FROM products
-                    WHERE active = 1
-                      AND name LIKE :kw
-                """);
+        // 1. Xây dựng điều kiện lọc (Filter) dùng bên trong Subquery
+        StringBuilder filterSql = new StringBuilder(" WHERE active = 1 AND name LIKE :kw ");
 
-        // ===== FILTER =====
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            sql.append(" AND categories_id IN (<categoryIds>)");
+            filterSql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
             switch (priceRange) {
-                case "under500" -> sql.append(" AND price < 500000");
-                case "500-1m" -> sql.append(" AND price BETWEEN 500000 AND 1000000");
-                case "1-2m" -> sql.append(" AND price BETWEEN 1000000 AND 2000000");
-                case "2-3m" -> sql.append(" AND price BETWEEN 2000000 AND 3000000");
-                case "over3m" -> sql.append(" AND price > 3000000");
+                case "under500" -> filterSql.append(" AND price < 500000");
+                case "500-1m" -> filterSql.append(" AND price BETWEEN 500000 AND 1000000");
+                case "1-2m" -> filterSql.append(" AND price BETWEEN 1000000 AND 2000000");
+                case "2-3m" -> filterSql.append(" AND price BETWEEN 2000000 AND 3000000");
+                case "over3m" -> filterSql.append(" AND price > 3000000");
             }
         }
 
         if (brandIds != null && !brandIds.isEmpty()) {
-            sql.append(" AND brand_id IN (<brandIds>)");
+            filterSql.append(" AND brand_id IN (<brandIds>)");
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND useTime IN (<useTimes>)");
+            filterSql.append(" AND useTime IN (<useTimes>)");
         }
 
-        sql.append(" GROUP BY COALESCE(parent_id, ID) ");
+        StringBuilder mainSql = new StringBuilder("SELECT * FROM products WHERE ID IN (");
+        mainSql.append(" SELECT MIN(ID) FROM products ")
+                .append(filterSql)
+                .append(" GROUP BY COALESCE(parent_id, ID) ")
+                .append(") ");
 
         // ===== SORT =====
         if (sort == null || sort.isEmpty()) {
-            sql.append(" ORDER BY ispremium DESC, ID ASC");
+            mainSql.append(" ORDER BY ispremium DESC, ID ASC");
         } else {
             switch (sort) {
-                case "price_asc" -> sql.append(" ORDER BY ispremium DESC, price ASC");
-                case "price_desc" -> sql.append(" ORDER BY ispremium DESC, price DESC");
-                case "newest" -> sql.append(" ORDER BY ispremium DESC, createdAt DESC");
-                default -> sql.append(" ORDER BY ispremium DESC, ID ASC");
+                case "price_asc" -> mainSql.append(" ORDER BY price ASC, ispremium DESC");
+                case "price_desc" -> mainSql.append(" ORDER BY price DESC, ispremium DESC");
+                case "newest" -> mainSql.append(" ORDER BY createdAt DESC, ispremium DESC");
+                default -> mainSql.append(" ORDER BY ispremium DESC, ID ASC");
             }
         }
 
-        sql.append(" LIMIT :limit OFFSET :offset");
+        mainSql.append(" LIMIT :limit OFFSET :offset");
 
         return get().withHandle(handle -> {
-            var q = handle.createQuery(sql.toString())
+            var q = handle.createQuery(mainSql.toString())
                     .bind("kw", "%" + keyword + "%")
                     .bind("limit", limit)
                     .bind("offset", offset);
@@ -438,8 +439,12 @@ public class ProductDao extends BaseDao {
             if (categoryIds != null && !categoryIds.isEmpty()) {
                 q.bindList("categoryIds", categoryIds);
             }
-            if (brandIds != null && !brandIds.isEmpty()) q.bindList("brandIds", brandIds);
-            if (useTimes != null && !useTimes.isEmpty()) q.bindList("useTimes", useTimes);
+            if (brandIds != null && !brandIds.isEmpty()) {
+                q.bindList("brandIds", brandIds);
+            }
+            if (useTimes != null && !useTimes.isEmpty()) {
+                q.bindList("useTimes", useTimes);
+            }
 
             return q.mapToBean(Product.class).list();
         });
