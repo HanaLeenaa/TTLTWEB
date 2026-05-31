@@ -12,8 +12,9 @@ public class Review {
     private LocalDateTime reviewDate;
     private boolean status;
     private String username;
+    private int order_id;
 
-    public Review(int ID, int products_id, int users_id, int rating, String review_text, String imgReviews, LocalDateTime reviewDate, boolean status, String username) {
+    public Review(int ID, int products_id, int users_id, int rating, String review_text, String imgReviews, LocalDateTime reviewDate, boolean status, String username, int order_id) {
         this.ID = ID;
         this.products_id = products_id;
         this.users_id = users_id;
@@ -23,6 +24,7 @@ public class Review {
         this.reviewDate = reviewDate;
         this.status = status;
         this.username = username;
+        this.order_id = order_id;
     }
     public Review() {}
 
@@ -96,5 +98,13 @@ public class Review {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
     }
 }

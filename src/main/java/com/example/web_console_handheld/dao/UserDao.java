@@ -423,6 +423,188 @@ public class UserDao extends BaseDao{
         }
     }
 
+    public boolean updatePassword(int userId, String newPassword) {
+
+        String sql = "UPDATE users SET password=? WHERE id=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+            ps.setString(1, hash);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void increaseForgotPasswordAttempts(int userId) {
+
+        String sql = """
+            UPDATE users
+            SET forgot_password_attempts =
+                forgot_password_attempts + 1
+            WHERE id = ?
+            """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getForgotPasswordAttempts(int userId) {
+
+        String sql = """
+            SELECT forgot_password_attempts
+            FROM users
+            WHERE id = ?
+            """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("forgot_password_attempts");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public void lockForgotPassword(int userId) {
+
+        String sql = """
+            UPDATE users
+            SET forgot_lock_until = ?
+            WHERE id = ?
+            """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            LocalDateTime lockTime = LocalDateTime.now().plusMinutes(15);
+
+            ps.setTimestamp(1, Timestamp.valueOf(lockTime));
+
+            ps.setInt(2, userId);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isForgotPasswordLocked(int userId) {
+
+        String sql = """
+            SELECT forgot_lock_until
+            FROM users
+            WHERE id = ?
+            """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                Timestamp lockUntil =
+                        rs.getTimestamp("forgot_lock_until");
+
+                if (lockUntil == null) {
+                    return false;
+                }
+
+                return lockUntil.toLocalDateTime()
+                        .isAfter(LocalDateTime.now());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Integer verifyResetToken(String token) {
+
+        Integer userId = null;
+
+        String sql = """
+        SELECT id
+        FROM users
+        WHERE reset_token = ?
+        AND reset_token_expiry > NOW()
+        """;
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setString(1, token);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                userId = rs.getInt("id");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return userId;
+    }
+
+        public boolean checkOldPassword(int userId, String oldPassword) {
+            String sql = "SELECT password FROM users WHERE id = ?";
+
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setInt(1, userId);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    String hashed = rs.getString("password");
+
+                    // so sánh BCrypt
+                    return BCrypt.checkpw(oldPassword, hashed);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
     //chức năng sửa user ở admin page
     public boolean updateUserByAdmin(int id, String username, String role, String phone, String address, boolean active) {
         String sql = "UPDATE users SET username = ?, role = ?, phoneNum = ?, location = ?, active = ?, updated_at = NOW() WHERE id = ?";
@@ -441,4 +623,5 @@ public class UserDao extends BaseDao{
         }
     }
     }
+
 

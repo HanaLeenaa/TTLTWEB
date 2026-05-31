@@ -75,6 +75,7 @@ public class BuyNowServlet extends HttpServlet {
         orderItems.add(item);
 
         session.setAttribute("pendingOrderItems", orderItems);
+        session.setAttribute("buyNowMode", true);
 
         //gửi sang payment.jsp
         request.setAttribute("orderItems", orderItems);

@@ -117,8 +117,10 @@
                         </div>
                         <div class="payment_method_2 payment">
                             <label>
-                                <input type="radio" name="payment_method" value="BANK" />
-                                Thanh toán qua ngân hàng
+                                <input type="radio"
+                                       name="paymentMethod"
+                                       value="VNPAY" />
+                                Thanh toán qua VNPay
                             </label>
                         </div>
                     </div>

@@ -16,9 +16,11 @@ private long price;
     private String receiver_email;
     private String payment_method;
     private String receiver_note;
+    private String payment_status;
+    private String transaction_no;
     public Order() {}
 
-    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note) {
+    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no) {
         this.ID = ID;
         this.user_Id = user_Id;
         this.createAt = createAt;
@@ -29,6 +31,8 @@ private long price;
         this.receiver_address = receiver_address;
         this.receiver_email = receiver_email;
         this.payment_method = payment_method;
+        this.payment_status = payment_status;
+        this.transaction_no = transaction_no;
     }
 
     public int getID() {
@@ -117,5 +121,21 @@ private long price;
 
     public void setReceiver_note(String receiver_note) {
         this.receiver_note = receiver_note;
+    }
+
+    public String getPayment_status() {
+        return payment_status;
+    }
+
+    public void setPayment_status(String payment_status) {
+        this.payment_status = payment_status;
+    }
+
+    public String getTransaction_no() {
+        return transaction_no;
+    }
+
+    public void setTransaction_no(String transaction_no) {
+        this.transaction_no = transaction_no;
     }
 }

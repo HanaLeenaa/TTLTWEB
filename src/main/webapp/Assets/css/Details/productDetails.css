@@ -512,3 +512,18 @@ ul li::before {
     transform: scale(1.1);
     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #E95221;
 }
+.alert-success{
+    background:#d4edda;
+    color:#155724;
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:10px;
+}
+
+.alert-error{
+    background:#f8d7da;
+    color:#721c24;
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:10px;
+}

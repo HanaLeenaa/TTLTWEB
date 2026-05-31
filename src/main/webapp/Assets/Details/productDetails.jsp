@@ -188,9 +188,9 @@
                 </form>
 
                 <div class="back-row">
-                    <a href="${pageContext.request.contextPath}/product" class="btn-back">
-                        <button>← Quay lại</button>
-                    </a>
+                    <button onclick="location.href='${pageContext.request.contextPath}/product'">
+                        ← Quay lại
+                    </button>
                 </div>
             </div>
         </div>
@@ -296,7 +296,7 @@
 
         <div class="overall-rating">
             <div class="score">
-                <h3>${avg}/5</h3>
+                <fmt:formatNumber value="${avg}" maxFractionDigits="1"/>
                 <div class="stars">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -386,18 +386,38 @@
             </form>
         </div>
 
+        <c:if test="${not empty success}">
+            <div class="alert-success">
+                    ${success}
+            </div>
+            <c:remove var="success" scope="session"/>
+        </c:if>
+
+        <c:if test="${not empty error}">
+            <div class="alert-error">
+                    ${error}
+            </div>
+            <c:remove var="error" scope="session"/>
+        </c:if>
+
+        <!-- List reviews -->
         <c:if test="${not empty reviews}">
             <c:forEach var="c" items="${reviews}">
                 <div class="review-item">
                     <h4>
                             ${c.username}
                         <span class="stars">
-                            <c:forEach begin="1" end="${c.rating != null ? c.rating : 0}" var="i">
-                                <i class="fas fa-star text-warning" style="font-size: 10px"></i>
+                            <c:forEach begin="1" end="5" var="i">
+                            <i class="fas fa-star
+                               ${i <= c.rating ? 'text-warning' : 'text-secondary'}">
+                            </i>
                             </c:forEach>
                         </span>
                     </h4>
-                    <p>Nhận xét: ${c.review_text}</p>
+                    <p>
+                        Nhận xét:
+                        <c:out value="${c.review_text}"/>
+                    </p>
 
                     <c:if test="${not empty c.imgReviews}">
                         <img src="${pageContext.request.contextPath}/uploads/${c.imgReviews}"
@@ -405,7 +425,12 @@
                     </c:if>
 
                     <div class="review-date">
-                        <c:out value="${c.reviewDate}"/>
+                        <fmt:parseDate value="${c.reviewDate}"
+                                       pattern="yyyy-MM-dd'T'HH:mm:ss"
+                                       var="parsedDate"/>
+
+                        <fmt:formatDate value="${parsedDate}"
+                                        pattern="dd/MM/yyyy HH:mm"/>
                     </div>
                 </div>
             </c:forEach>
