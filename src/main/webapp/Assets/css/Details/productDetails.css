@@ -476,3 +476,19 @@ ul li::before {
     cursor: pointer;
     font-size: 20px;
 }
+
+.alert-success{
+    background:#d4edda;
+    color:#155724;
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:10px;
+}
+
+.alert-error{
+    background:#f8d7da;
+    color:#721c24;
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:10px;
+}

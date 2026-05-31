@@ -579,6 +579,11 @@ public class UserDao extends BaseDao{
         }
 
         return userId;
+    }
+
+    public boolean checkOldPassword(int userId, String oldPassword) {
+        String sql = "SELECT password FROM users WHERE id = ?";
+
     //chức năng sửa user ở admin page
     public boolean updateUserByAdmin(int id, String username, String role, String phone, String address, boolean active) {
         String sql = "UPDATE users SET username = ?, role = ?, phoneNum = ?, location = ?, active = ?, updated_at = NOW() WHERE id = ?";
