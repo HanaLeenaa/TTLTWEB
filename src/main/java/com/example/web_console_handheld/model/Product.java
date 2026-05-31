@@ -62,9 +62,12 @@ public class Product {
 
     private int stock_quantity;
 
+
     public Product(long price){
         this.price = price;
     }
+
+
     public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information,
                    long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active,
                    String metatitle, boolean ispremium, String suports, String connect, String endow, int stock, int sales_count, int  stock_quantity) {
@@ -92,15 +95,22 @@ public class Product {
         this.sales_count = sales_count;
         this.stock_quantity = stock_quantity;
     }
-    public Product() {}
+    public Product() {
+    }
 
     public int getID() {
+        return ID;
+    }
+
+    public int getId() {
         return ID;
     }
 
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    public void setId(int id) { this.ID = id; }
 
     public int getCategories_id() {
         return categories_id;
@@ -304,4 +314,12 @@ public class Product {
     public int getStock_quantity() {
         return stock_quantity;
     }
+
+    public int getCategoriesId() { return categories_id; }
+    public void setCategoriesId(int categoriesId) { this.categories_id = categoriesId; }
+
+
+
+
+
 }

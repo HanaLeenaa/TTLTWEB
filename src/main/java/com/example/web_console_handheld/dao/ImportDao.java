@@ -124,11 +124,11 @@ public class ImportDao {
     }
 
     // 5. Confirm nhập kho (TRANSACTION)
-    public void confirmReceipt(int receiptId) {
+    public void confirmReceipt(int receiptId, int userId) {
 
         String getItemsSql = "SELECT * FROM import_receipt_items WHERE receipt_id = ?";
         String updateStockSql = "UPDATE products SET stock = stock + ? WHERE ID = ?";
-        String insertLogSql = "INSERT INTO stock_movements(product_id, quantity, type) VALUES(?, ?, 'IMPORT')";
+        String insertLogSql = "INSERT INTO stock_movements(product_id, quantity, type, user_id) VALUES(?, ?, 'IMPORT', ?)";
         String updateReceiptSql = "UPDATE import_receipts SET status = 'COMPLETED' WHERE ID = ?";
 
         Connection conn = null;
@@ -159,6 +159,7 @@ public class ImportDao {
                         //luu lich su bien dong (log)
                         psInsertLog.setInt(1, productId);
                         psInsertLog.setInt(2, quantity);
+                        psInsertLog.setInt(3, userId);
                         psInsertLog.executeUpdate();
                     }
                 }

@@ -7,6 +7,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/product-detail")
@@ -16,6 +18,7 @@ public class ProductDetailServlet extends HttpServlet {
     private final BrandDao brandDao = new BrandDao();
     private final GallaryDao gallaryDao = new GallaryDao();
     private final ReviewDao reviewDao = new ReviewDao();
+    private final ProductViewHistoryDao historyDao = new ProductViewHistoryDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,7 +40,17 @@ public class ProductDetailServlet extends HttpServlet {
         Category category = categoryDao.getCategoryByProductId(productId);
         Brand brand = brandDao.getBrandByProductId(productId);
 
-        List<Product> relateProductList = List.of();
+        // lấy user từ session, phải đúng tên attribute đã set khi login (ở đây là "auth")
+        User user = (User) request.getSession().getAttribute("auth");
+        if (user != null) {
+            try {
+                historyDao.insertView(user.getId(), productId);
+            } catch (Exception e) {
+                e.printStackTrace(); // log lỗi nếu insert thất bại
+            }
+        }
+
+        List<Product> relateProductList = new ArrayList<>();
         if (brand != null && category != null) {
             relateProductList = productDao.getProductListByBrandAndCategory(
                     brand.getID(), category.getID(), productId);
@@ -64,16 +77,16 @@ public class ProductDetailServlet extends HttpServlet {
         double avg2 = reviewQuantity > 0 ? twoStars * 100.0 / reviewQuantity : 0;
         double avg1 = reviewQuantity > 0 ? oneStar * 100.0 / reviewQuantity : 0;
 
-        // check review
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
+        // check review (sửa lại cho khớp với schema DB của bạn)
         int orderIdCanReview = 0;
         boolean canReview = false;
-
         if (user != null) {
-            orderIdCanReview = reviewDao.getOrderIdCanReviewV2(user.getId(), productId);
-            canReview = orderIdCanReview != 0;
+            try {
+                orderIdCanReview = reviewDao.getOrderIdCanReviewV2(user.getId(), productId);
+                canReview = orderIdCanReview != 0;
+            } catch (Exception e) {
+                e.printStackTrace(); // nếu SQL sai cột thì log ra để sửa
+            }
         }
 
         // split text

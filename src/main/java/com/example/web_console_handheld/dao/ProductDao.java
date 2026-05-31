@@ -40,6 +40,7 @@ public class ProductDao extends BaseDao {
                                         p.image,
                                         p.price,
                                         p.priceOld,
+                                        p.stock,
                                         p.short_description,
                                         p.full_description,
                                         p.information,
@@ -305,10 +306,11 @@ public class ProductDao extends BaseDao {
     }
 
     //Gợi ý tìm kiếm
+    // Gợi ý tìm kiếm - ĐÃ CẬP NHẬT THÊM PRICE VÀ STOCK
     public List<Product> suggestByName(String keyword) {
         return get().withHandle(handle ->
                 handle.createQuery("""
-                                    SELECT ID, name, image, metatitle
+                                    SELECT ID, name, image, metatitle, price, stock
                                     FROM products
                                     WHERE active = 1
                                       AND name LIKE :kw
@@ -814,27 +816,13 @@ public class ProductDao extends BaseDao {
 
     public List<Product> getSuggestions(int userId, long minPrice, long maxPrice, int limit) {
         return get().withHandle(handle -> {
-            String sql = "SELECT p.*, " +
-                    " (SELECT COUNT(*) FROM wishlist w " +
-                    "  JOIN products pw ON w.product_id = pw.ID " +
-                    "  WHERE w.user_id = :uid AND pw.categories_id = p.categories_id) AS category_score, " +
-                    " (SELECT COUNT(*) FROM wishlist w " +
-                    "  JOIN products pw ON w.product_id = pw.ID " +
-                    "  WHERE w.user_id = :uid AND pw.brand_id = p.brand_id) AS brand_score " +
+            String sql = "SELECT p.* " +
                     "FROM products p " +
                     "WHERE p.active = 1 " +
                     "AND p.stock > 0 " +
                     "AND p.ID NOT IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
-                    "AND (p.categories_id IN ( " +
-                    "       SELECT DISTINCT categories_id FROM products " +
-                    "       WHERE ID IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
-                    "   ) " +
-                    "   OR p.brand_id IN ( " +
-                    "       SELECT DISTINCT brand_id FROM products " +
-                    "       WHERE ID IN (SELECT product_id FROM wishlist WHERE user_id = :uid) " +
-                    "   )) " +
                     "AND p.price BETWEEN :minPrice AND :maxPrice " +
-                    "ORDER BY (category_score + brand_score) DESC, p.sales_count DESC, p.createdAt DESC, RAND() " +
+                    "ORDER BY p.sales_count DESC, p.createdAt DESC " +
                     "LIMIT :limit";
 
             return handle.createQuery(sql)
@@ -848,6 +836,10 @@ public class ProductDao extends BaseDao {
     }
 
 
+
+
+
+
     public List<Product> adminSearchByName(String keyword) {
         return get().withHandle(handle ->
                 handle.createQuery("""
@@ -859,6 +851,40 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+
+    public List<Product> getTopProducts(int limit) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT p.* " +
+                    "FROM products p " +
+                    "WHERE p.active = 1 " +
+                    "AND p.stock > 0 " +
+                    "ORDER BY p.createdAt DESC " +   // hoặc sales_count DESC
+                    "LIMIT :limit";
+
+            return handle.createQuery(sql)
+                    .bind("limit", limit)
+                    .mapToBean(Product.class)
+                    .list();
+        });
+    }
+
+
+    public List<Product> getTopSellingProducts(int limit) {
+        return get().withHandle(handle -> {
+            String sql = "SELECT p.* " +
+                    "FROM products p " +
+                    "WHERE p.active = 1 " +
+                    "AND p.stock > 0 " +
+                    "ORDER BY p.sales_count DESC, p.createdAt DESC " +
+                    "LIMIT :limit";
+
+            return handle.createQuery(sql)
+                    .bind("limit", limit)
+                    .mapToBean(Product.class)
+                    .list();
+        });
+    }
+
 
     //xóa dữ liệu trong bảng gallery và products dùng Transaction
     public boolean deleteProductWithGallery(int productId) {

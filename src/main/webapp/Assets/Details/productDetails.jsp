@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUU DAT
-  Date: 12/6/2025
-  Time: 7:00 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -72,14 +65,28 @@
                 <p><strong>Thương hiệu:</strong> ${brand.brand_name}</p>
 
                 <p class="price">
-                    ${product.price}đ
+                   <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/>đ
                 </p>
 
                 <p>
                     <strong>Tình trạng:</strong>
-                    <span style="color:${product.active ? 'green' : 'red'}">
-                        ${product.active ? "Còn hàng" : "Hết hàng"}
-                    </span>
+
+                    <c:choose>
+
+                        <c:when test="${product.stock > 0}">
+                            <span style="color: green;font-weight: 600;">
+                                Còn hàng
+                            </span>
+                        </c:when>
+
+                        <c:otherwise>
+                            <span style="color: red;font-weight: 600;">
+                                Hết hàng
+                            </span>
+                        </c:otherwise>
+
+                    </c:choose>
+
                 </p>
 
                 <div class="product-info-box">
@@ -129,9 +136,20 @@
                 <form method="post" action="${pageContext.request.contextPath}/buy-now">
                     <input type="hidden" name="productId" value="${product.ID}">
                     <input type="hidden" name="quantity" id="quantity-buy" value="1">
-                    <button type="submit" class="btn-buy btn">
-                        Mua ngay
-                    </button>
+                    <c:choose>
+                        <c:when test="${product.stock > 0}">
+                            <button type="submit" class="btn-buy btn">
+                                Mua ngay
+                            </button>
+                        </c:when>
+
+                        <c:otherwise>
+                            <button type="button" class="btn-buy btn"
+                                    disabled style="opacity:0.6; cursor: not-allowed;">
+                                Mua ngay
+                            </button>
+                        </c:otherwise>
+                    </c:choose>
                 </form>
 
 

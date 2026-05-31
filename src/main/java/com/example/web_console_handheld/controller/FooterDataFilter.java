@@ -25,9 +25,13 @@ public class FooterDataFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        try {
         servletRequest.setAttribute("infor", inforDao.getContact(1));
         servletRequest.setAttribute("icon", iconDao.getIcon());
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
