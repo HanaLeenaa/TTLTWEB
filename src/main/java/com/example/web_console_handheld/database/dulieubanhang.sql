@@ -4,7 +4,6 @@ CREATE DATABASE dulieubanhang
 USE dulieubanhang;
 
 
-
 -- 1. XÓA BẢNG CŨ
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -114,19 +113,21 @@ CREATE TABLE gallary (
                          FOREIGN KEY (product_id) REFERENCES products(ID)
 );
 
-CREATE TABLE reviews (
+-- ===================== CHÂU (30/05) =====================
+CREATE TABLE  (
                          ID INT PRIMARY KEY AUTO_INCREMENT,
-                         products_id INT,
-                         users_id INT,
-                         order_id INT,
-                         rating INT,
-                         review_text VARCHAR(255),
+                         products_id INT NOT NULL,
+                         users_id INT NOT NULL,
+                         order_id INT NOT NULL,
+                         rating INT NOT NULL,
+                         review_text TEXT,
                          imgReviews VARCHAR(255),
                          reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                         status BOOLEAN,
-                         FOREIGN KEY (products_id) REFERENCES products(ID),
-                         FOREIGN KEY (users_id) REFERENCES users(ID),
-                         FOREIGN KEY (order_id) REFERENCES orders(ID)
+                         status BOOLEAN DEFAULT TRUE,
+                         CONSTRAINT fk_review_product FOREIGN KEY (products_id) REFERENCES products(ID),
+                         CONSTRAINT fk_review_user FOREIGN KEY (users_id) REFERENCES users(ID),
+                         CONSTRAINT fk_review_order FOREIGN KEY (order_id) REFERENCES orders(ID),
+                         CONSTRAINT uq_review_once UNIQUE (order_id, products_id, users_id)
 );
 
 CREATE TABLE orders (
@@ -160,6 +161,7 @@ CREATE TABLE order_items (
 CREATE TABLE payments (
                           ID INT AUTO_INCREMENT PRIMARY KEY,
                           orders_id INT,
+--HUỲNH NHƯ (18/05 - 30/05)
                           payment_method VARCHAR(100),
                           payment_status VARCHAR(100) DEFAULT 'Unpaid',
                           payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -2353,58 +2355,43 @@ UPDATE products
 SET stock = 10
 WHERE stock = 0;
 
-INSERT INTO users (ID, username, password, email)
+INSERT IGNORE INTO users (ID, username, password, email)
 VALUES (1, 'testuser', '123456', 'test@example.com');
 
 
+-- ===================== HUỲNH NHƯ (25/04 - 28/04) =====================
+-- Chức năng lịch sử nhập kho
+ALTER TABLE stock_movements ADD COLUMN user_id INT;
+ALTER TABLE stock_movements ADD FOREIGN KEY (user_id) REFERENCES admin(id);
 
--- 25/04 Huỳnh Như - chức năng lịch sử nhập kho
-ALTER TABLE stock_movements
-    ADD user_id INT;
+-- Chức năng quản lý contact từ user
+CREATE TABLE IF NOT EXISTS contact_message (
+                                               ID INT AUTO_INCREMENT PRIMARY KEY,
+                                               user_id INT,
+                                               name VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(50),
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) DEFAULT 'NEW'
+    );
 
-ALTER TABLE stock_movements
-    ADD FOREIGN KEY (user_id) REFERENCES admin(id);
-
--- 28/04 Huỳnh Như - chức năng quản lý contact từ user
-CREATE TABLE contact_message (
-                                 ID INT AUTO_INCREMENT PRIMARY KEY,
-                                 user_id INT,
-                                 name VARCHAR(255),
-                                 email VARCHAR(255),
-                                 phone VARCHAR(50),
-                                 message TEXT,
-                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                 status VARCHAR(50) DEFAULT 'NEW'
-);
-
-ALTER TABLE contact_message ADD reply TEXT;
+ALTER TABLE contact_message ADD COLUMN reply TEXT;
 ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
 
--- 18/05/2026 Huỳnh Như
--- thêm để xử lý orders đúng logic
-ALTER TABLE orders
-    ADD COLUMN payment_method VARCHAR(50);
 
---  Han 30/5
-ALTER TABLE products ADD COLUMN parent_id INT DEFAULT NULL;
-
-ALTER TABLE products ADD COLUMN color_name VARCHAR(50) DEFAULT NULL;
-
-ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
-
-
------------------------------------------
-------------------- Châu 16/5---------------
+-- ===================== CHÂU (16/05) =====================
+-- Cập nhật thông tin OTP cho bảng users
 ALTER TABLE users
     ADD COLUMN otp_code VARCHAR(255),
-ADD COLUMN otp_expiry DATETIME,
-ADD COLUMN otp_attempts INT DEFAULT 0,
-ADD COLUMN forgot_attempts INT DEFAULT 0,
-ADD COLUMN lock_until DATETIME;
+    ADD COLUMN otp_expiry DATETIME,
+    ADD COLUMN otp_attempts INT DEFAULT 0,
+    ADD COLUMN forgot_attempts INT DEFAULT 0,
+    ADD COLUMN lock_until DATETIME;
 
 ALTER TABLE users
     ADD COLUMN forgot_password_attempts INT DEFAULT 0,
-ADD COLUMN forgot_lock_until DATETIME NULL;
+    ADD COLUMN forgot_lock_until DATETIME NULL;
 
 DROP TABLE IF EXISTS otp_tokens;
 
@@ -2418,38 +2405,12 @@ CREATE TABLE otp_tokens (
                             used BOOLEAN DEFAULT FALSE,
                             lock_until DATETIME NULL,
                             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                            FOREIGN KEY (user_id) REFERENCES users(id));
+                            FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
--- =====================Châu 30/5===================================
-DROP TABLE reviews;
+-- ===================== HÂN (30/05) =====================
+ALTER TABLE products ADD COLUMN parent_id INT DEFAULT NULL;
+ALTER TABLE products ADD COLUMN color_name VARCHAR(50) DEFAULT NULL;
+ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
 
-CREATE TABLE reviews (
-                         ID INT PRIMARY KEY AUTO_INCREMENT,
-                         products_id INT NOT NULL,
-                         users_id INT NOT NULL,
-                         order_id INT NOT NULL,
-                         rating INT NOT NULL,
-                         review_text TEXT,
-                         imgReviews VARCHAR(255),
-                         reviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                         status BOOLEAN DEFAULT TRUE,
-                         CONSTRAINT fk_review_product
-                             FOREIGN KEY (products_id)
-                                 REFERENCES products(ID),
-                         CONSTRAINT fk_review_user
-                             FOREIGN KEY (users_id)
-                                 REFERENCES users(ID),
-                         CONSTRAINT fk_review_order
-                             FOREIGN KEY (order_id)
-                                 REFERENCES orders(ID),
-                         CONSTRAINT uq_review_once
-                             UNIQUE (order_id, products_id, users_id));
--- 30/05 Huỳnh Như
--- chức năng thanh toán qua VNPay
-ALTER TABLE orders
-    ADD payment_status VARCHAR(20);
-
-ALTER TABLE orders
-    ADD transaction_no VARCHAR(100);
-    
-SET FOREIGN_KEY_CHECKS = 1
+SET FOREIGN_KEY_CHECKS = 1;
