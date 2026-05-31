@@ -21,6 +21,76 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <style>
+        /* ===== MODAL OVERLAY ===== */
+        .review-modal{
+            display: none;              /* 🔥 QUAN TRỌNG: mặc định ẩn */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 99999;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .review-modal.show{
+            display: flex;
+        }
+
+        /* ===== BOX ===== */
+        .review-modal-box{
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            animation: pop .2s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        @keyframes pop{
+            from {transform: scale(0.8); opacity:0;}
+            to {transform: scale(1); opacity:1;}
+        }
+
+        /* ===== HEADER ===== */
+        .review-modal-header{
+            display:flex;
+            justify-content: space-between;
+            align-items:center;
+            margin-bottom: 10px;
+        }
+
+        .close-x{
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* ===== BUTTONS ===== */
+        .review-actions{
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ===== FORM ===== */
+        .review-modal-box label{
+            display:block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .review-modal-box textarea{
+            width: 100%;
+            min-height: 80px;
+        }
+    </style>
+
 </head>
 <body>
 <!-- <div id="header"></div> -->
@@ -273,11 +343,11 @@
             <div class="score">
                 <fmt:formatNumber value="${avg}" maxFractionDigits="1"/>
                 <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
+                    <span class="stars">
+                        <c:forEach begin="1" end="5" var="i">
+                            <i class="fas fa-star ${i <= c.rating ? 'active' : ''}"></i>
+                        </c:forEach>
+                    </span>
                 </div>
                 <p>${quantity} đánh giá</p>
             </div>
@@ -335,36 +405,44 @@
         </c:choose>
 
         <!-- REVIEW MODAL -->
-        <div id="reviewModal" style="display:none;">
-            <form action="${pageContext.request.contextPath}/add-review"
-                  method="post"
-                  enctype="multipart/form-data">
+        <div id="reviewModal" class="review-modal">
 
-                <input type="hidden" name="productId" value="${product.ID}">
+            <div class="review-modal-box">
 
-                <h3>Đánh giá sản phẩm</h3>
+                <div class="review-modal-header">
+                    <h3>Đánh giá sản phẩm</h3>
+                    <span class="close-x" onclick="closeReviewModal()">×</span>
+                </div>
 
-                <!-- Rating -->
-                <label>Số sao:</label>
-                <select name="rating" required>
-                    <option value="5">5 sao</option>
-                    <option value="4">4 sao</option>
-                    <option value="3">3 sao</option>
-                    <option value="2">2 sao</option>
-                    <option value="1">1 sao</option>
-                </select>
+                <form action="${pageContext.request.contextPath}/add-review"
+                      method="post"
+                      enctype="multipart/form-data">
 
-                <!-- Nội dung -->
-                <label>Nhận xét:</label>
+                    <input type="hidden" name="productId" value="${product.ID}">
 
-                <textarea name="comment"></textarea>
-                <label>Ảnh review:</label>
-                <input type="file" name="review_image" accept="image/*">
+                    <label>Số sao:</label>
+                    <select name="rating" required>
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
 
-                <br><br>
-                <button type="submit">Gửi đánh giá</button>
-                <button type="button" onclick="closeReviewModal()">Hủy</button>
-            </form>
+                    <label>Nhận xét:</label>
+                    <textarea name="comment"></textarea>
+
+                    <label>Ảnh review:</label>
+                    <input type="file" name="review_image" accept="image/*">
+
+                    <div class="review-actions">
+                        <button type="submit">Gửi</button>
+                        <button type="button" onclick="closeReviewModal()">Huỷ</button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
 
         <c:if test="${not empty success}">
@@ -383,30 +461,42 @@
 
         <!-- List reviews -->
         <c:if test="${not empty reviews}">
-            <c:forEach var="c" items="${reviews}">
+            <c:forEach var="r" items="${reviews}">
                 <div class="review-item">
                     <h4>
-                            ${c.username}
-                        <span class="stars">
-                            <c:forEach begin="1" end="5" var="i">
-                            <i class="fas fa-star
-                               ${i <= c.rating ? 'text-warning' : 'text-secondary'}">
-                            </i>
-                            </c:forEach>
-                        </span>
+                            ${r.username}
+
+                                <span class="stars">
+                        <c:forEach begin="1" end="5" var="i">
+                            <c:choose>
+                                <c:when test="${i <= r.rating}">
+                                    <i class="fas fa-star full"></i>
+                                </c:when>
+
+                                <c:when test="${i - r.rating < 1}">
+                                    <i class="fas fa-star-half-alt half"></i>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <i class="far fa-star empty"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </span>
                     </h4>
+
                     <p>
                         Nhận xét:
-                        <c:out value="${c.review_text}"/>
+                        <c:out value="${r.review_text}"/>
                     </p>
 
-                    <c:if test="${not empty c.imgReviews}">
-                        <img src="${pageContext.request.contextPath}/uploads/${c.imgReviews}"
+                    <c:if test="${not empty r.imgReviews}">
+                        <img src="${pageContext.request.contextPath}/images/${r.imgReviews}"
                              style="width:100px; margin-top:10px;">
                     </c:if>
 
                     <div class="review-date">
-                        <fmt:parseDate value="${c.reviewDate}"
+                        <fmt:parseDate value="${r.reviewDate}"
                                        pattern="yyyy-MM-dd'T'HH:mm:ss"
                                        var="parsedDate"/>
 
@@ -423,11 +513,11 @@
 
 <script>
     function openReviewModal() {
-        document.getElementById("reviewModal").style.display = "block";
+        document.getElementById("reviewModal").classList.add("show");
     }
 
     function closeReviewModal() {
-        document.getElementById("reviewModal").style.display = "none";
+        document.getElementById("reviewModal").classList.remove("show");
     }
 </script>
 

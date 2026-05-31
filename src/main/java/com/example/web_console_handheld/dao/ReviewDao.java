@@ -8,10 +8,22 @@ public class ReviewDao extends BaseDao {
     // Lấy danh sách review theo product
     public List<Review> getReviewByID(int productID) {
         return get().withHandle(handle ->
-                handle.createQuery("SELECT r.*, u.username FROM reviews r " +
-                                        "JOIN users u ON r.users_id = u.ID " +
-                                        "WHERE r.products_id = :productID AND r.status = 1 " +
-                                        "ORDER BY r.reviewDate DESC")
+                handle.createQuery("""
+                                    SELECT 
+                                        r.ID,
+                                        r.products_id,
+                                        r.users_id,
+                                        r.rating,
+                                        r.review_text,
+                                        r.imgReviews,
+                                        r.reviewDate,
+                                        r.status,
+                                        u.username
+                                    FROM reviews r
+                                    JOIN users u ON r.users_id = u.ID
+                                    WHERE r.products_id = :productID 
+                                      AND r.status = 1
+                                    ORDER BY r.reviewDate DESC""")
                         .bind("productID", productID)
                         .mapToBean(Review.class)
                         .list());
