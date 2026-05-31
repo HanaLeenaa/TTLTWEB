@@ -581,8 +581,6 @@ public class UserDao extends BaseDao{
         return userId;
     }
 
-    public boolean checkOldPassword(int userId, String oldPassword) {
-        String sql = "SELECT password FROM users WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -621,6 +619,29 @@ public class UserDao extends BaseDao{
             e.printStackTrace();
             return false;
         }
+    }
+    public boolean checkOldPassword(int userId, String oldPassword) {
+        String sql = "SELECT password FROM users WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String hashed = rs.getString("password");
+
+                // so sánh BCrypt
+                return BCrypt.checkpw(oldPassword, hashed);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
     }
 

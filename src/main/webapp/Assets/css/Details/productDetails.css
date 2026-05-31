@@ -311,9 +311,9 @@ ul li::before {
     color: #888;
     text-align: right;
 }
-.overall-rating i{
-    color: #ffcc00;
-}
+/*.overall-rating i{*/
+/*    color: #ffcc00;*/
+/*}*/
 .breadcrumb {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -526,4 +526,23 @@ ul li::before {
     padding:10px;
     border-radius:6px;
     margin-bottom:10px;
+}
+
+.review-item .stars i {
+    color: #ccc;
+}
+
+.review-item .stars i.active {
+    color: #ffcc00;
+}
+.full {
+    color: #ffcc00;
+}
+
+.half {
+    color: #ffcc00;
+}
+
+.empty {
+    color: #ccc;
 }

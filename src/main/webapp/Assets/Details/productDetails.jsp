@@ -23,38 +23,77 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-        /* CSS bổ sung cho phần chọn biến thể màu sắc */
-        .color-selection-section {
-            margin: 20px 0;
-            padding: 10px 0;
-            border-top: 1px dashed #eee;
-            border-bottom: 1px dashed #eee;
-        }
-        .color-swatches {
-            display: flex;
-            gap: 12px;
+        /* ===== MODAL OVERLAY ===== */
+        .review-modal{
+            display: none;              /* 🔥 QUAN TRỌNG: mặc định ẩn */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 99999;
+
+            justify-content: center;
             align-items: center;
-            margin-top: 8px;
         }
-        .swatch-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+
+        .review-modal.show{
+            display: flex;
+        }
+
+        /* ===== BOX ===== */
+        .review-modal-box{
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            animation: pop .2s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        @keyframes pop{
+            from {transform: scale(0.8); opacity:0;}
+            to {transform: scale(1); opacity:1;}
+        }
+
+        /* ===== HEADER ===== */
+        .review-modal-header{
+            display:flex;
+            justify-content: space-between;
+            align-items:center;
+            margin-bottom: 10px;
+        }
+
+        .close-x{
+            font-size: 22px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
         }
-        .swatch-btn:hover {
-            transform: scale(1.15);
+
+        /* ===== BUTTONS ===== */
+        .review-actions{
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
         }
-        .swatch-btn.active {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+
+        /* ===== FORM ===== */
+        .review-modal-box label{
+            display:block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .review-modal-box textarea{
+            width: 100%;
+            min-height: 80px;
         }
     </style>
+
 </head>
 <body>
+<!-- <div id="header"></div> -->
 
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
@@ -62,6 +101,7 @@
     <section class="product-details">
         <div class="product-container">
 
+            <!-- LEFT -->
             <div class="left">
                 <img id="mainImage"
                      src="${product.image}"
@@ -70,12 +110,12 @@
                      class="main-img"/>
 
                 <div class="gallery">
-                    <%--Ảnh gốc--%>
-                    <img id="thumb-base" src="${product.image}"
+                        <%--Ảnh gốc--%>
+                    <img src="${product.image}"
                     class="thumb-img active"
                     onclick="changeImage(this)">
 
-                    <%--3 Ảnh phụ--%>
+                            <%--3 Ảnh phụ--%>
                     <c:forEach var="c" items="${gallary}">
                         <img src="${c.img}"
                              alt="${c.metatitle}"
@@ -85,10 +125,11 @@
                 </div>
             </div>
 
+            <!-- RIGHT -->
             <div class="right">
-                <h2 id="display-product-name">${product.name}</h2>
+                <h2>${product.name}</h2>
 
-                <p><strong>Mã sản phẩm:</strong> <span id="display-product-id">#${product.ID}</span></p>
+                <p><strong>Mã sản phẩm:</strong> #${product.ID}</p>
 
                 <p><strong>Danh mục:</strong> ${category.name}</p>
                 <p><strong>Thương hiệu:</strong> ${brand.brand_name}</p>
@@ -97,35 +138,25 @@
                    <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/>đ
                 </p>
 
-                <c:if test="${not empty colorVariants && colorVariants.size() > 1}">
-                    <div class="color-selection-section">
-                        <p><strong>Màu sắc:</strong> <span id="selected-color-name" style="font-weight: 600; color: #ff5722;">${not empty product.color_name ? product.color_name : 'Mặc định'}</span></p>
-                        <div class="color-swatches">
-                            <c:forEach var="v" items="${colorVariants}">
-                                <button type="button"
-                                        class="swatch-btn ${v.ID == product.ID ? 'active' : ''}"
-                                        style="background-color: ${not empty v.color_code ? v.color_code : '#ccc'}; border: 1px solid #ddd;"
-                                        title="${v.color_name}"
-                                        onclick="changeProductVariant(this)"
-                                        data-id="${v.ID}">
-                                </button>
-                            </c:forEach>
-                        </div>
-                    </div>
-                </c:if>
-
                 <p>
                     <strong>Tình trạng:</strong>
-                    <span id="stock-status-display">
-                        <c:choose>
-                            <c:when test="${product.stock > 0}">
-                                <span style="color: green;font-weight: 600;">Còn hàng</span>
-                            </c:when>
-                            <c:otherwise>
-                                <span style="color: red;font-weight: 600;">Hết hàng</span>
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
+
+                    <c:choose>
+
+                        <c:when test="${product.stock > 0}">
+                            <span style="color: green;font-weight: 600;">
+                                Còn hàng
+                            </span>
+                        </c:when>
+
+                        <c:otherwise>
+                            <span style="color: red;font-weight: 600;">
+                                Hết hàng
+                            </span>
+                        </c:otherwise>
+
+                    </c:choose>
+
                 </p>
 
                 <div class="product-info-box">
@@ -141,7 +172,7 @@
                     <div class="product-description">
                         <h3>Mô tả sản phẩm</h3>
                         <ul class="short-desc">
-                            <strong id="desc-product-title">${product.name}</strong>
+                            <strong>${product.name}</strong>
                             <c:forEach items="${descLines}" var="line">
                                 <li>
                                     <c:out value="${line}" escapeXml="false"/>
@@ -151,26 +182,29 @@
                     </div>
                 </div>
 
+                <!-- quantity control (dùng chung) -->
                 <div class="quantity-control">
                     <button type="button" onclick="decrease()">−</button>
                     <span id="qty-display">1</span>
                     <button type="button" onclick="increase()">+</button>
                 </div>
 
-                <form action="${pageContext.request.contextPath}/AddCart" method="post" id="form-add-cart">
-                    <input type="hidden" name="productId" id="cart-productId" value="${product.ID}">
-                    <input type="hidden" name="name" id="cart-name" value="${product.name}">
-                    <input type="hidden" name="price" id="cart-price" value="${product.price}">
-                    <input type="hidden" name="image" id="cart-image" value="${product.image}">
-                    <input type="hidden" name="quantity" id="quantity-cart" value="1">
+                <!-- ADD CART -->
+                <form action="${pageContext.request.contextPath}/AddCart" method="post">
+                    <input type="hidden" name="productId" value="${param.id}"> <input type="hidden" name="name"
+                                                                                        value="${product.name}"> <input
+                        type="hidden" name="price" value="${product.price}"> <input type="hidden" name="image"
+                                                                                    value="${product.image}"> <input
+                        type="hidden" name="quantity" id="quantity-cart" value="1">
 
-                    <button type="button" class="btn-add btn" onclick="addToCart()">
-                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
-                    </button>
+                        <button type="button" class="btn-add btn" onclick="addToCart()">
+                            <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                        </button>
                 </form>
 
-                <form method="post" action="${pageContext.request.contextPath}/buy-now" id="form-buy-now">
-                    <input type="hidden" name="productId" id="buy-productId" value="${product.ID}">
+                <!-- BUY NOW -->
+                <form method="post" action="${pageContext.request.contextPath}/buy-now">
+                    <input type="hidden" name="productId" value="${product.ID}">
                     <input type="hidden" name="quantity" id="quantity-buy" value="1">
                     <c:choose>
                         <c:when test="${product.stock > 0}">
@@ -178,6 +212,7 @@
                                 Mua ngay
                             </button>
                         </c:when>
+
                         <c:otherwise>
                             <button type="button" class="btn-buy btn"
                                     disabled style="opacity:0.6; cursor: not-allowed;">
@@ -186,6 +221,8 @@
                         </c:otherwise>
                     </c:choose>
                 </form>
+
+
 
                 <div class="back-row">
                     <button onclick="location.href='${pageContext.request.contextPath}/product'">
@@ -265,12 +302,15 @@
     </section>
 </main>
 
+<!-- <div id="footer"></div> -->
+<!-- sản phẩm liên quan -->
 <div class="related-section">
     <div class="container">
         <h3>Sản phẩm liên quan</h3>
 
         <div class="swiper related-swiper">
             <div class="swiper-wrapper">
+
                 <c:forEach var="c" items="${relateProductList}">
                     <div class="swiper-slide">
                         <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}" class="related-link">
@@ -282,10 +322,15 @@
                         </a>
                     </div>
                 </c:forEach>
+
             </div>
+
+
+            <!-- Nút điều hướng -->
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
+
     </div>
 </div>
 
@@ -298,11 +343,11 @@
             <div class="score">
                 <fmt:formatNumber value="${avg}" maxFractionDigits="1"/>
                 <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
+                    <span class="stars">
+                        <c:forEach begin="1" end="5" var="i">
+                            <i class="fas fa-star ${i <= c.rating ? 'active' : ''}"></i>
+                        </c:forEach>
+                    </span>
                 </div>
                 <p>${quantity} đánh giá</p>
             </div>
@@ -351,6 +396,7 @@
                     Đánh giá ngay
                 </button>
             </c:when>
+
             <c:otherwise>
                 <button class="review-button" onclick="alert('Bạn cần mua sản phẩm này trước khi đánh giá!')">
                     Đánh giá ngay
@@ -358,32 +404,45 @@
             </c:otherwise>
         </c:choose>
 
-        <div id="reviewModal" style="display:none;">
-            <form action="${pageContext.request.contextPath}/add-review"
-                  method="post"
-                  enctype="multipart/form-data">
+        <!-- REVIEW MODAL -->
+        <div id="reviewModal" class="review-modal">
 
-                <input type="hidden" name="productId" value="${product.ID}">
-                <h3>Đánh giá sản phẩm</h3>
+            <div class="review-modal-box">
 
-                <label>Số sao:</label>
-                <select name="rating" required>
-                    <option value="5">5 sao</option>
-                    <option value="4">4 sao</option>
-                    <option value="3">3 sao</option>
-                    <option value="2">2 sao</option>
-                    <option value="1">1 sao</option>
-                </select>
+                <div class="review-modal-header">
+                    <h3>Đánh giá sản phẩm</h3>
+                    <span class="close-x" onclick="closeReviewModal()">×</span>
+                </div>
 
-                <label>Nhận xét:</label>
-                <textarea name="comment"></textarea>
-                <label>Ảnh review:</label>
-                <input type="file" name="review_image" accept="image/*">
+                <form action="${pageContext.request.contextPath}/add-review"
+                      method="post"
+                      enctype="multipart/form-data">
 
-                <br><br>
-                <button type="submit">Gửi đánh giá</button>
-                <button type="button" onclick="closeReviewModal()">Hủy</button>
-            </form>
+                    <input type="hidden" name="productId" value="${product.ID}">
+
+                    <label>Số sao:</label>
+                    <select name="rating" required>
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+
+                    <label>Nhận xét:</label>
+                    <textarea name="comment"></textarea>
+
+                    <label>Ảnh review:</label>
+                    <input type="file" name="review_image" accept="image/*">
+
+                    <div class="review-actions">
+                        <button type="submit">Gửi</button>
+                        <button type="button" onclick="closeReviewModal()">Huỷ</button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
 
         <c:if test="${not empty success}">
@@ -402,30 +461,42 @@
 
         <!-- List reviews -->
         <c:if test="${not empty reviews}">
-            <c:forEach var="c" items="${reviews}">
+            <c:forEach var="r" items="${reviews}">
                 <div class="review-item">
                     <h4>
-                            ${c.username}
-                        <span class="stars">
-                            <c:forEach begin="1" end="5" var="i">
-                            <i class="fas fa-star
-                               ${i <= c.rating ? 'text-warning' : 'text-secondary'}">
-                            </i>
-                            </c:forEach>
-                        </span>
+                            ${r.username}
+
+                                <span class="stars">
+                        <c:forEach begin="1" end="5" var="i">
+                            <c:choose>
+                                <c:when test="${i <= r.rating}">
+                                    <i class="fas fa-star full"></i>
+                                </c:when>
+
+                                <c:when test="${i - r.rating < 1}">
+                                    <i class="fas fa-star-half-alt half"></i>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <i class="far fa-star empty"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </span>
                     </h4>
+
                     <p>
                         Nhận xét:
-                        <c:out value="${c.review_text}"/>
+                        <c:out value="${r.review_text}"/>
                     </p>
 
-                    <c:if test="${not empty c.imgReviews}">
-                        <img src="${pageContext.request.contextPath}/uploads/${c.imgReviews}"
+                    <c:if test="${not empty r.imgReviews}">
+                        <img src="${pageContext.request.contextPath}/images/${r.imgReviews}"
                              style="width:100px; margin-top:10px;">
                     </c:if>
 
                     <div class="review-date">
-                        <fmt:parseDate value="${c.reviewDate}"
+                        <fmt:parseDate value="${r.reviewDate}"
                                        pattern="yyyy-MM-dd'T'HH:mm:ss"
                                        var="parsedDate"/>
 
@@ -441,24 +512,12 @@
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 
 <script>
-    function changeProductVariant(element) {
-        // 1. Lấy ra ID của biến thể sản phẩm màu sắc được người dùng click
-        const variantId = element.getAttribute('data-id');
-
-        // 2. Chuyển hướng trình duyệt sang URL của sản phẩm mới ngay lập tức
-        // Server (Servlet) nhận ID mới này sẽ tự động truy vấn lại Database,
-        // lôi chuẩn bộ ảnh phụ Gallery và thông số của màu mới ra để render lại trang!
-        window.location.href = "${pageContext.request.contextPath}/product-detail?id=" + variantId;
-    }
-</script>
-
-<script>
     function openReviewModal() {
-        document.getElementById("reviewModal").style.display = "block";
+        document.getElementById("reviewModal").classList.add("show");
     }
 
     function closeReviewModal() {
-        document.getElementById("reviewModal").style.display = "none";
+        document.getElementById("reviewModal").classList.remove("show");
     }
 </script>
 
@@ -498,19 +557,22 @@
 <script>
     function changeImage(el) {
         document.getElementById("mainImage").src = el.src;
-        document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+
+        document.querySelectorAll('.thumb-img')
+            .forEach(img => img.classList.remove('active'));
+
         el.classList.add('active');
     }
 </script>
 
-<%-- Thong bao them san pham vao gio hang --%>
+<%--   Thong bao them san pham vao gio hang--%>
 <script>
     function addToCart(){
         const formData = new URLSearchParams();
-        formData.append("productId", document.getElementById("cart-productId").value);
-        formData.append("name", document.getElementById("cart-name").value);
-        formData.append("price", document.getElementById("cart-price").value);
-        formData.append("image", document.getElementById("cart-image").value);
+        formData.append("productId", "${product.ID}");
+        formData.append("name", "${product.name}");
+        formData.append("price", "${product.price}");
+        formData.append("image", "${product.image}");
         formData.append("quantity", document.getElementById("quantity-cart").value);
 
         fetch("${pageContext.request.contextPath}/AddCart", {
@@ -522,17 +584,19 @@
         })
             .then(res => res.json())
             .then(data => {
+                //neu chua login => chuyen qua trang login
                 if (data.notLoggedIn){
                     window.location.href = data.redirect;
                     return;
                 }
 
                 showToast(data.message);
+
                 document.getElementById("cart_num").innerText = data.total;
             });
     }
-</script>
 
+</script>
 <script>
     new Swiper('.related-swiper', {
         slidesPerView: 4,
@@ -555,5 +619,4 @@
     });
 </script>
 
-</body>
 </html>

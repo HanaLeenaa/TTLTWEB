@@ -30,7 +30,7 @@ public class AddReviewServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("auth");
 
         if (user == null) {
             response.sendRedirect("login");
@@ -108,7 +108,7 @@ public class AddReviewServlet extends HttpServlet {
 
             imageName = UUID.randomUUID() + "_" + originalFileName;
 
-            String uploadPath = getServletContext().getRealPath("/uploads");
+            String uploadPath = getServletContext().getRealPath("/images");
 
             File uploadDir = new File(uploadPath);
 
