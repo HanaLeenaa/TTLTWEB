@@ -21,9 +21,40 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <style>
+        /* CSS bổ sung cho phần chọn biến thể màu sắc */
+        .color-selection-section {
+            margin: 20px 0;
+            padding: 10px 0;
+            border-top: 1px dashed #eee;
+            border-bottom: 1px dashed #eee;
+        }
+        .color-swatches {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .swatch-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+        }
+        .swatch-btn:hover {
+            transform: scale(1.15);
+        }
+        .swatch-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+        }
+    </style>
 </head>
 <body>
-<!-- <div id="header"></div> -->
 
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
@@ -31,7 +62,6 @@
     <section class="product-details">
         <div class="product-container">
 
-            <!-- LEFT -->
             <div class="left">
                 <img id="mainImage"
                      src="${product.image}"
@@ -40,12 +70,12 @@
                      class="main-img"/>
 
                 <div class="gallery">
-                        <%--Ảnh gốc--%>
-                    <img src="${product.image}"
+                    <%--Ảnh gốc--%>
+                    <img id="thumb-base" src="${product.image}"
                     class="thumb-img active"
                     onclick="changeImage(this)">
 
-                            <%--3 Ảnh phụ--%>
+                    <%--3 Ảnh phụ--%>
                     <c:forEach var="c" items="${gallary}">
                         <img src="${c.img}"
                              alt="${c.metatitle}"
@@ -55,11 +85,10 @@
                 </div>
             </div>
 
-            <!-- RIGHT -->
             <div class="right">
-                <h2>${product.name}</h2>
+                <h2 id="display-product-name">${product.name}</h2>
 
-                <p><strong>Mã sản phẩm:</strong> #${product.ID}</p>
+                <p><strong>Mã sản phẩm:</strong> <span id="display-product-id">#${product.ID}</span></p>
 
                 <p><strong>Danh mục:</strong> ${category.name}</p>
                 <p><strong>Thương hiệu:</strong> ${brand.brand_name}</p>
@@ -68,25 +97,35 @@
                    <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/>đ
                 </p>
 
+                <c:if test="${not empty colorVariants && colorVariants.size() > 1}">
+                    <div class="color-selection-section">
+                        <p><strong>Màu sắc:</strong> <span id="selected-color-name" style="font-weight: 600; color: #ff5722;">${not empty product.color_name ? product.color_name : 'Mặc định'}</span></p>
+                        <div class="color-swatches">
+                            <c:forEach var="v" items="${colorVariants}">
+                                <button type="button"
+                                        class="swatch-btn ${v.ID == product.ID ? 'active' : ''}"
+                                        style="background-color: ${not empty v.color_code ? v.color_code : '#ccc'}; border: 1px solid #ddd;"
+                                        title="${v.color_name}"
+                                        onclick="changeProductVariant(this)"
+                                        data-id="${v.ID}">
+                                </button>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+
                 <p>
                     <strong>Tình trạng:</strong>
-
-                    <c:choose>
-
-                        <c:when test="${product.stock > 0}">
-                            <span style="color: green;font-weight: 600;">
-                                Còn hàng
-                            </span>
-                        </c:when>
-
-                        <c:otherwise>
-                            <span style="color: red;font-weight: 600;">
-                                Hết hàng
-                            </span>
-                        </c:otherwise>
-
-                    </c:choose>
-
+                    <span id="stock-status-display">
+                        <c:choose>
+                            <c:when test="${product.stock > 0}">
+                                <span style="color: green;font-weight: 600;">Còn hàng</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: red;font-weight: 600;">Hết hàng</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
                 </p>
 
                 <div class="product-info-box">
@@ -102,7 +141,7 @@
                     <div class="product-description">
                         <h3>Mô tả sản phẩm</h3>
                         <ul class="short-desc">
-                            <strong>${product.name}</strong>
+                            <strong id="desc-product-title">${product.name}</strong>
                             <c:forEach items="${descLines}" var="line">
                                 <li>
                                     <c:out value="${line}" escapeXml="false"/>
@@ -112,29 +151,26 @@
                     </div>
                 </div>
 
-                <!-- quantity control (dùng chung) -->
                 <div class="quantity-control">
                     <button type="button" onclick="decrease()">−</button>
                     <span id="qty-display">1</span>
                     <button type="button" onclick="increase()">+</button>
                 </div>
 
-                <!-- ADD CART -->
-                <form action="${pageContext.request.contextPath}/AddCart" method="post">
-                    <input type="hidden" name="productId" value="${param.id}"> <input type="hidden" name="name"
-                                                                                        value="${product.name}"> <input
-                        type="hidden" name="price" value="${product.price}"> <input type="hidden" name="image"
-                                                                                    value="${product.image}"> <input
-                        type="hidden" name="quantity" id="quantity-cart" value="1">
+                <form action="${pageContext.request.contextPath}/AddCart" method="post" id="form-add-cart">
+                    <input type="hidden" name="productId" id="cart-productId" value="${product.ID}">
+                    <input type="hidden" name="name" id="cart-name" value="${product.name}">
+                    <input type="hidden" name="price" id="cart-price" value="${product.price}">
+                    <input type="hidden" name="image" id="cart-image" value="${product.image}">
+                    <input type="hidden" name="quantity" id="quantity-cart" value="1">
 
-                        <button type="button" class="btn-add btn" onclick="addToCart()">
-                            <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
-                        </button>
+                    <button type="button" class="btn-add btn" onclick="addToCart()">
+                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                    </button>
                 </form>
 
-                <!-- BUY NOW -->
-                <form method="post" action="${pageContext.request.contextPath}/buy-now">
-                    <input type="hidden" name="productId" value="${product.ID}">
+                <form method="post" action="${pageContext.request.contextPath}/buy-now" id="form-buy-now">
+                    <input type="hidden" name="productId" id="buy-productId" value="${product.ID}">
                     <input type="hidden" name="quantity" id="quantity-buy" value="1">
                     <c:choose>
                         <c:when test="${product.stock > 0}">
@@ -142,7 +178,6 @@
                                 Mua ngay
                             </button>
                         </c:when>
-
                         <c:otherwise>
                             <button type="button" class="btn-buy btn"
                                     disabled style="opacity:0.6; cursor: not-allowed;">
@@ -151,8 +186,6 @@
                         </c:otherwise>
                     </c:choose>
                 </form>
-
-
 
                 <div class="back-row">
                     <button onclick="location.href='${pageContext.request.contextPath}/product'">
@@ -232,15 +265,12 @@
     </section>
 </main>
 
-<!-- <div id="footer"></div> -->
-<!-- sản phẩm liên quan -->
 <div class="related-section">
     <div class="container">
         <h3>Sản phẩm liên quan</h3>
 
         <div class="swiper related-swiper">
             <div class="swiper-wrapper">
-
                 <c:forEach var="c" items="${relateProductList}">
                     <div class="swiper-slide">
                         <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}" class="related-link">
@@ -252,15 +282,10 @@
                         </a>
                     </div>
                 </c:forEach>
-
             </div>
-
-
-            <!-- Nút điều hướng -->
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
-
     </div>
 </div>
 
@@ -326,7 +351,6 @@
                     Đánh giá ngay
                 </button>
             </c:when>
-
             <c:otherwise>
                 <button class="review-button" onclick="alert('Bạn cần mua sản phẩm này trước khi đánh giá!')">
                     Đánh giá ngay
@@ -334,17 +358,14 @@
             </c:otherwise>
         </c:choose>
 
-        <!-- REVIEW MODAL -->
         <div id="reviewModal" style="display:none;">
             <form action="${pageContext.request.contextPath}/add-review"
                   method="post"
                   enctype="multipart/form-data">
 
                 <input type="hidden" name="productId" value="${product.ID}">
-
                 <h3>Đánh giá sản phẩm</h3>
 
-                <!-- Rating -->
                 <label>Số sao:</label>
                 <select name="rating" required>
                     <option value="5">5 sao</option>
@@ -354,9 +375,7 @@
                     <option value="1">1 sao</option>
                 </select>
 
-                <!-- Nội dung -->
                 <label>Nhận xét:</label>
-
                 <textarea name="comment"></textarea>
                 <label>Ảnh review:</label>
                 <input type="file" name="review_image" accept="image/*">
@@ -422,6 +441,18 @@
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 
 <script>
+    function changeProductVariant(element) {
+        // 1. Lấy ra ID của biến thể sản phẩm màu sắc được người dùng click
+        const variantId = element.getAttribute('data-id');
+
+        // 2. Chuyển hướng trình duyệt sang URL của sản phẩm mới ngay lập tức
+        // Server (Servlet) nhận ID mới này sẽ tự động truy vấn lại Database,
+        // lôi chuẩn bộ ảnh phụ Gallery và thông số của màu mới ra để render lại trang!
+        window.location.href = "${pageContext.request.contextPath}/product-detail?id=" + variantId;
+    }
+</script>
+
+<script>
     function openReviewModal() {
         document.getElementById("reviewModal").style.display = "block";
     }
@@ -467,22 +498,19 @@
 <script>
     function changeImage(el) {
         document.getElementById("mainImage").src = el.src;
-
-        document.querySelectorAll('.thumb-img')
-            .forEach(img => img.classList.remove('active'));
-
+        document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
         el.classList.add('active');
     }
 </script>
 
-<%--   Thong bao them san pham vao gio hang--%>
+<%-- Thong bao them san pham vao gio hang --%>
 <script>
     function addToCart(){
         const formData = new URLSearchParams();
-        formData.append("productId", "${product.ID}");
-        formData.append("name", "${product.name}");
-        formData.append("price", "${product.price}");
-        formData.append("image", "${product.image}");
+        formData.append("productId", document.getElementById("cart-productId").value);
+        formData.append("name", document.getElementById("cart-name").value);
+        formData.append("price", document.getElementById("cart-price").value);
+        formData.append("image", document.getElementById("cart-image").value);
         formData.append("quantity", document.getElementById("quantity-cart").value);
 
         fetch("${pageContext.request.contextPath}/AddCart", {
@@ -494,19 +522,17 @@
         })
             .then(res => res.json())
             .then(data => {
-                //neu chua login => chuyen qua trang login
                 if (data.notLoggedIn){
                     window.location.href = data.redirect;
                     return;
                 }
 
                 showToast(data.message);
-
                 document.getElementById("cart_num").innerText = data.total;
             });
     }
-
 </script>
+
 <script>
     new Swiper('.related-swiper', {
         slidesPerView: 4,
@@ -529,4 +555,5 @@
     });
 </script>
 
+</body>
 </html>
