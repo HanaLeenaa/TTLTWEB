@@ -476,3 +476,39 @@ ul li::before {
     cursor: pointer;
     font-size: 20px;
 }
+
+.color-selection-section {
+    margin: 20px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #eee;
+    border-bottom: 1px dashed #eee;
+}
+
+.color-swatches {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.swatch-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.swatch-btn:hover {
+    transform: scale(1.15);
+}
+
+.swatch-btn.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #E95221;
+}
