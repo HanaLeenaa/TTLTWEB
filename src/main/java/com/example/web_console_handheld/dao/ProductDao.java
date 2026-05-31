@@ -36,6 +36,9 @@ public class ProductDao extends BaseDao {
                 handle.createQuery("""
                                     SELECT
                                         p.ID,
+                                        p.parent_id,
+                                        p.color_name,
+                                        p.color_code,
                                         p.name,
                                         p.image,
                                         p.price,
@@ -102,6 +105,7 @@ public class ProductDao extends BaseDao {
                                         "AND price IS NOT NULL " +
                                         "AND priceOld > price " +
                                         "AND active = 1 " +
+                                        "GROUP BY COALESCE(parent_id, ID) " + // Gộp nhóm tại đây
                                         "ORDER BY (priceOld - price) DESC " +
                                         "LIMIT 4"
                         )
@@ -112,9 +116,16 @@ public class ProductDao extends BaseDao {
 
     public List<Product> getProductList() {
         return get().withHandle(handle ->
-                handle.createQuery(
-                                "select * from products where active = 1 ORDER BY ispremium DESC"
-                        )
+                handle.createQuery("""
+                SELECT p.* FROM products p
+                INNER JOIN (
+                    SELECT MIN(ID) as target_id
+                    FROM products
+                    WHERE active = 1
+                    GROUP BY COALESCE(parent_id, ID)
+                ) temp ON p.ID = temp.target_id
+                ORDER BY p.ispremium DESC
+            """)
                         .mapToBean(Product.class)
                         .list()
         );
@@ -172,7 +183,7 @@ public class ProductDao extends BaseDao {
                            List<Integer> useTimes) {
 
         StringBuilder sql = new StringBuilder("""
-            SELECT COUNT(*)
+            SELECT COUNT(DISTINCT COALESCE(parent_id, ID))
             FROM products
             WHERE active = 1
         """);
@@ -254,6 +265,8 @@ public class ProductDao extends BaseDao {
             sql.append(" AND use_time IN (<useTimes>)");
         }
 
+        sql.append(" GROUP BY COALESCE(parent_id, ID) ");
+
         // ===== SORT =====
         if (sort == null || sort.isEmpty()) {
             sql.append(" ORDER BY id ASC, ispremium DESC");
@@ -297,6 +310,7 @@ public class ProductDao extends BaseDao {
                 FROM products
                 WHERE active = 1
                   AND name LIKE :kw
+                GROUP BY COALESCE(parent_id, ID)
                 ORDER BY ispremium DESC, id ASC
             """)
                         .bind("kw", "%" + keyword + "%")
@@ -343,7 +357,7 @@ public class ProductDao extends BaseDao {
     public int countSearchByName(String keyword) {
         return get().withHandle(h ->
                 h.createQuery("""
-            SELECT COUNT(*)
+            SELECT COUNT(DISTINCT COALESCE(parent_id, ID))
             FROM products
             WHERE active = 1
               AND name LIKE :kw
@@ -399,6 +413,8 @@ public class ProductDao extends BaseDao {
             sql.append(" AND useTime IN (<useTimes>)");
         }
 
+        sql.append(" GROUP BY COALESCE(parent_id, ID) ");
+
         // ===== SORT =====
         if (sort == null || sort.isEmpty()) {
             sql.append(" ORDER BY ispremium DESC, ID ASC");
@@ -439,7 +455,7 @@ public class ProductDao extends BaseDao {
     ) {
 
         StringBuilder sql = new StringBuilder("""
-                    SELECT COUNT(*)
+                    SELECT COUNT(DISTINCT COALESCE(parent_id, ID))
                     FROM products
                     WHERE active = 1
                       AND name LIKE :kw
@@ -641,48 +657,50 @@ public class ProductDao extends BaseDao {
                                             int offset,
                                             int limit) {
         return get().withHandle(handle -> {
-            StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
+            // Sử dụng Subquery để gom nhóm và chỉ lấy ra 1 ID đại diện nhỏ nhất (MIN) cho mỗi cụm biến thể
+            StringBuilder subSql = new StringBuilder("SELECT MIN(ID) FROM products WHERE active = 1 ");
 
-            // lọc theo price
             if (priceRange != null) {
                 switch (priceRange) {
-                    case "under500" -> sql.append("AND price < 500000 ");
-                    case "500-1m" -> sql.append("AND price BETWEEN 500000 AND 1000000 ");
-                    case "1-2m" -> sql.append("AND price BETWEEN 1000000 AND 2000000 ");
-                    case "2-3m" -> sql.append("AND price BETWEEN 2000000 AND 3000000 ");
-                    case "over3m" -> sql.append("AND price > 3000000 ");
+                    case "under500" -> subSql.append("AND price < 500000 ");
+                    case "500-1m" -> subSql.append("AND price BETWEEN 500000 AND 1000000 ");
+                    case "1-2m" -> subSql.append("AND price BETWEEN 1000000 AND 2000000 ");
+                    case "2-3m" -> subSql.append("AND price BETWEEN 2000000 AND 3000000 ");
+                    case "over3m" -> subSql.append("AND price > 3000000 ");
                 }
             }
-
-            // lọc theo category
             if (categoryIds != null && !categoryIds.isEmpty()) {
-                sql.append("AND categories_id IN (<categoryIds>) ");
+                subSql.append("AND categories_id IN (<categoryIds>) ");
             }
-
-            // lọc theo brand
             if (brandIds != null && !brandIds.isEmpty()) {
-                sql.append("AND brand_id IN (<brandIds>) ");
+                subSql.append("AND brand_id IN (<brandIds>) ");
             }
-
-            // lọc theo useTime
             if (useTimes != null && !useTimes.isEmpty()) {
-                sql.append("AND useTime IN (<useTimes>) ");
+                subSql.append("AND useTime IN (<useTimes>) ");
             }
 
-            // sort
+            // Tiến hành gộp nhóm ở Subquery
+            subSql.append("GROUP BY COALESCE(parent_id, ID)");
+
+            // Câu lệnh SQL chính: Lấy đầy đủ thông tin từ danh sách ID đại diện đã gộp ở trên
+            StringBuilder mainSql = new StringBuilder("SELECT * FROM products WHERE ID IN (")
+                    .append(subSql)
+                    .append(") ");
+
+            // Xử lý Sort dữ liệu sau khi gộp
             if ("price_asc".equals(sort)) {
-                sql.append("ORDER BY price ASC ");
+                mainSql.append("ORDER BY price ASC ");
             } else if ("price_desc".equals(sort)) {
-                sql.append("ORDER BY price DESC ");
+                mainSql.append("ORDER BY price DESC ");
             } else if ("newest".equals(sort)) {
-                sql.append("ORDER BY createdAt DESC "); // đúng tên cột trong DB
+                mainSql.append("ORDER BY createdAt DESC ");
             } else {
-                sql.append("ORDER BY ID ");
+                mainSql.append("ORDER BY ispremium DESC, ID ASC ");
             }
 
-            sql.append("LIMIT :limit OFFSET :offset");
+            mainSql.append("LIMIT :limit OFFSET :offset");
 
-            var query = handle.createQuery(sql.toString())
+            var query = handle.createQuery(mainSql.toString())
                     .bind("limit", limit)
                     .bind("offset", offset);
 
@@ -705,9 +723,9 @@ public class ProductDao extends BaseDao {
                                 List<Integer> brandIds,
                                 List<Integer> useTimes) {
         return get().withHandle(handle -> {
-            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
+            // Đếm số lượng nhóm duy nhất dựa vào DISTINCT COALESCE
+            StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT COALESCE(parent_id, ID)) FROM products WHERE active = 1 ");
 
-            // lọc theo price
             if (priceRange != null) {
                 switch (priceRange) {
                     case "under500" -> sql.append("AND price < 500000 ");
@@ -717,7 +735,6 @@ public class ProductDao extends BaseDao {
                     case "over3m" -> sql.append("AND price > 3000000 ");
                 }
             }
-
             if (categoryIds != null && !categoryIds.isEmpty()) {
                 sql.append("AND categories_id IN (<categoryIds>) ");
             }
@@ -906,6 +923,30 @@ public class ProductDao extends BaseDao {
 
             return rows > 0;
         });
+    }
+
+    // Lấy tất cả danh sách các biến thể màu sắc thuộc cùng một nhóm sản phẩm cha
+    public List<Product> getColorVariants(int parentId) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT 
+                                        ID, 
+                                        parent_id, 
+                                        color_name, 
+                                        color_code, 
+                                        name, 
+                                        price, 
+                                        image, 
+                                        stock 
+                                    FROM products 
+                                    WHERE (ID = :parentId OR parent_id = :parentId) 
+                                      AND active = 1
+                                    ORDER BY ID ASC
+                                """)
+                        .bind("parentId", parentId)
+                        .mapToBean(Product.class)
+                        .list()
+        );
     }
 }
 
