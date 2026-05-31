@@ -482,10 +482,22 @@
             <p><b>Email:</b> ${selectedOrder.receiver_email}</p>
             <p><b>Địa chỉ:</b> ${selectedOrder.receiver_address}</p>
 
-            <p><b>Thanh toán:</b>
+            <p><b>Phương thức thanh toán:</b>
                 <c:choose>
-                    <c:when test="${selectedOrder.payment_method}">Online</c:when>
+                    <c:when test="${selectedOrder.payment_method == 'VNPAY'}">
+                        VNPay
+                    </c:when>
                     <c:otherwise>COD</c:otherwise>
+                </c:choose>
+            </p>
+
+            <p><b>Trạng thái thanh toán:</b>
+                <c:choose>
+                    <c:when test="${selectedOrder.payment_status == 'PAID'}">
+                     Đã thanh toán
+                    </c:when>
+
+                    <c:otherwise>Chưa thanh toán</c:otherwise>
                 </c:choose>
             </p>
 

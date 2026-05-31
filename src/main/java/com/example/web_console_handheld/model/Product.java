@@ -10,6 +10,15 @@ public class Product {
     @ColumnName("ID")
     private int ID;
 
+    @ColumnName("parent_id")
+    private Integer parent_id;
+
+    @ColumnName("color_name")
+    private String color_name;
+
+    @ColumnName("color_code")
+    private String color_code;
+
     @ColumnName("categories_id")
     private int categories_id;
 
@@ -68,10 +77,13 @@ public class Product {
     }
 
 
-    public Product(int ID, int categories_id, int brand_id, String name, String short_description, String full_description, String information,
+    public Product(int ID, Integer parent_id, String color_name, String color_code, int categories_id, int brand_id, String name, String short_description, String full_description, String information,
                    long price, long priceOld, String image, LocalDateTime createdAt, int energy, int useTime, int weight, boolean active,
                    String metatitle, boolean ispremium, String suports, String connect, String endow, int stock, int sales_count, int  stock_quantity) {
         this.ID = ID;
+        this.parent_id = parent_id;
+        this.color_name = color_name;
+        this.color_code = color_code;
         this.categories_id = categories_id;
         this.brand_id = brand_id;
         this.name = name;
@@ -111,6 +123,13 @@ public class Product {
     }
 
     public void setId(int id) { this.ID = id; }
+
+    public Integer getParent_id() { return parent_id; }
+    public void setParent_id(Integer parent_id) { this.parent_id = parent_id; }
+    public String getColor_name() { return color_name; }
+    public void setColor_name(String color_name) { this.color_name = color_name; }
+    public String getColor_code() { return color_code; }
+    public void setColor_code(String color_code) { this.color_code = color_code; }
 
     public int getCategories_id() {
         return categories_id;

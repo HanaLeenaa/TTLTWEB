@@ -58,7 +58,6 @@ public class PlaceOrderServlet extends HttpServlet {
             for (OrderItem oi : orderItems) {
                 totalPrice += oi.getProduct_price() * oi.getQuantity();
             }
-            session.removeAttribute("pendingOrderItems");
         }
 
         // CHECK STOCK REALTIME
@@ -100,10 +99,24 @@ public class PlaceOrderServlet extends HttpServlet {
 
         String note = request.getParameter("note");
         order.setReceiver_note(note);
-        order.setPayment_method(request.getParameter("paymentMethod"));
+
+        String paymentMethod = request.getParameter("paymentMethod");
+        order.setPayment_method(paymentMethod);
         order.setPrice(totalPrice);
 
-        // ===== LƯU VÀO SESSION CHỜ XÁC NHẬN CUỐI =====
+        if ("VNPAY".equals(paymentMethod)) {
+            order.setPayment_status("PENDING");
+            session.setAttribute("pendingOrder", order);
+            session.setAttribute("pendingOrderItems", orderItems);
+            response.sendRedirect(request.getContextPath() + "/vnpay-payment");
+            return;
+        }else {
+            order.setPayment_status("UNPAID");
+        }
+
+
+
+            // ===== LƯU SESSION =====
         session.setAttribute("pendingOrder", order);
         session.setAttribute("pendingOrderItems", orderItems);
 
