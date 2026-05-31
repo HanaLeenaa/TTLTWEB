@@ -582,7 +582,6 @@ public class UserDao extends BaseDao{
     }
 
     public boolean checkOldPassword(int userId, String oldPassword) {
-
         String sql = "SELECT password FROM users WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();
