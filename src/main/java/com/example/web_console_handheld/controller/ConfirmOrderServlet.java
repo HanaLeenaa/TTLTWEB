@@ -19,7 +19,6 @@ import java.util.List;
 @WebServlet("/confirm-order")
 public class ConfirmOrderServlet extends HttpServlet {
 
-    private OrderDao orderDao = new OrderDao();
     private CartDao cartDao = new CartDao();
 
     @Override
@@ -46,14 +45,12 @@ public class ConfirmOrderServlet extends HttpServlet {
 
         Boolean buyNowMode = (Boolean) session.getAttribute("buyNowMode");
 
-        // 3. BỘ LỌC THÔNG MINH: Chỉ chuyển đổi những mặt hàng được tích chọn sang hóa đơn
+        // 3. BỘ LỌC MẶT HÀNG ĐƯỢC CHỌN
         List<OrderItem> cartItems = new ArrayList<>();
         long totalAmount = 0;
 
         if (Boolean.TRUE.equals(buyNowMode)) {
-            // MUA NGAY
             List<OrderItem> buyNowItems = (List<OrderItem>) session.getAttribute("pendingOrderItems");
-
             if (buyNowItems == null || buyNowItems.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/product");
                 return;
@@ -63,7 +60,6 @@ public class ConfirmOrderServlet extends HttpServlet {
                 totalAmount += item.getProduct_price() * item.getQuantity();
             }
         } else {
-            // GIỎ HÀNG
             List<CartItem> dbCart = cartDao.getCartByUser(user.getId());
             if (dbCart == null || dbCart.isEmpty()) {
                 session.setAttribute("cartError", "Giỏ hàng của bạn đang trống! Không thể đặt hàng.");
@@ -71,31 +67,27 @@ public class ConfirmOrderServlet extends HttpServlet {
                 return;
             }
 
-            // ĐỒNG BỘ 4: Tiếp nhận danh sách ID sản phẩm được tích chọn mua thực tế
             String[] selectedItemIds = request.getParameterValues("selectedItems");
             List<String> selectedList = (selectedItemIds != null) ? Arrays.asList(selectedItemIds) : null;
 
             for (CartItem cItem : dbCart) {
-                if (cItem.getProduct() == null) {
-                    continue;
-                }
+                if (cItem.getProduct() == null) continue;
 
                 String currentProductId = String.valueOf(cItem.getProduct().getID());
 
-                // Cơ chế: Nếu không truyền mảng chọn (Mặc định mua hết) HOẶC ID nằm trong danh sách chọn thì bốc vào đơn
                 if (selectedList == null || selectedList.contains(currentProductId)) {
                     OrderItem oItem = new OrderItem();
                     oItem.setProduct_id(cItem.getProduct().getID());
                     oItem.setQuantity(cItem.getQuantity());
                     oItem.setProduct_price(cItem.getProduct().getPrice());
                     oItem.setProduct_image(cItem.getProduct().getImage());
+                    oItem.setProduct_name(cItem.getProduct().getName()); // Lấy thêm tên để hiển thị ở trang Order.jsp
 
                     cartItems.add(oItem);
                     totalAmount += (cItem.getProduct().getPrice() * cItem.getQuantity());
                 }
             }
 
-            // Phòng hờ bộ lọc rỗng
             if (cartItems.isEmpty()) {
                 session.setAttribute("cartError", "Không tìm thấy sản phẩm hợp lệ nào được chọn để thanh toán!");
                 response.sendRedirect(request.getContextPath() + "/cart");
@@ -111,7 +103,7 @@ public class ConfirmOrderServlet extends HttpServlet {
         String note = request.getParameter("note");
         String paymentMethod = request.getParameter("payment_method");
 
-        // 5. ĐÓNG GÓI ĐỐI TƯỢNG ORDER
+        // 5. ĐÓNG GÓI ĐỐI TƯỢNG ORDER TẠM THỜI
         Order order = new Order();
         order.setUser_Id(user.getId());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
@@ -123,49 +115,17 @@ public class ConfirmOrderServlet extends HttpServlet {
         order.setReceiver_email(email);
         order.setReceiver_note(note);
         order.setPayment_method(paymentMethod != null && !paymentMethod.isEmpty() ? paymentMethod : "COD");
+        order.setPayment_status("UNPAID"); // Mặc định hiển thị xem trước là chưa thanh toán
 
-        // 6. CHẠY TRANSACTION LƯU ĐƠN & TRỪ KHO TỰ ĐỘNG
-        try {
-            int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
+        // 6. CẤT TOÀN BỘ VÀO SESSION ĐỂ CÁC BƯỚC SAU SỬ DỤNG
+        session.setAttribute("pendingOrder", order);
+        session.setAttribute("pendingOrderItems", cartItems);
 
-            if (orderId > 0) {
-                if (Boolean.TRUE.equals(buyNowMode)) {
-                    session.removeAttribute("buyNowMode");
-                    session.removeAttribute("pendingOrderItems");
-                }
+        // 7. CHUYỂN HƯỚNG SANG TRANG XEM TRƯỚC HÓA ĐƠN VỚI confirmed = false
+        request.setAttribute("confirmed", false);
+        request.setAttribute("order", order);
+        request.setAttribute("orderItems", cartItems);
 
-                //ĐIỂM SỬA CHỐT HẠ: Chỉ xóa các món nằm trong hóa đơn vừa thanh toán khỏi DB
-                if (!Boolean.TRUE.equals(buyNowMode)) {
-                    for (OrderItem item : cartItems) {
-                        cartDao.removeItem(user.getId(), item.getProduct_id());
-                    }
-                }
-
-                // Tính toán chính xác số lượng icon giỏ hàng Header dựa trên các món còn sót lại
-                List<CartItem> remainingCart = cartDao.getCartByUser(user.getId());
-                int remainingQuantities = 0;
-
-                if (remainingCart != null) {
-                    for (CartItem cItem : remainingCart) {
-                        remainingQuantities += cItem.getQuantity();
-                    }
-                }
-
-                // Cập nhật số lượng chuẩn lên thanh tiêu đề Header
-                session.setAttribute("cartSize", remainingQuantities);
-
-                // Chuyển hướng sang trang đặt hàng thành công hoàn chỉnh
-                response.sendRedirect(request.getContextPath() + "/order-success?id=" + orderId);
-            } else {
-                session.setAttribute("cartError", "Đặt hàng thất bại! Hệ thống không thể khởi tạo hóa đơn.");
-                response.sendRedirect(request.getContextPath() + "/cart");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            String dbError = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
-            session.setAttribute("cartError", "LỖI HỆ THỐNG LIVE: " + dbError);
-            response.sendRedirect(request.getContextPath() + "/cart");
-        }
+        request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
     }
 }

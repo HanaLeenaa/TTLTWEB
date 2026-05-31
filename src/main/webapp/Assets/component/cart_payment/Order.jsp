@@ -19,12 +19,11 @@
 
 <body>
 
-<!-- HEADER -->
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 <div class="order-detail-container">
     <h2>CHI TIẾT ĐƠN HÀNG</h2>
-    <!-- thông báo đặt hàng thành công -->
+
     <c:if test="${confirmed}">
         <div class="order-success">
             <i class="fa-solid fa-circle-check"></i>
@@ -36,7 +35,6 @@
         <fmt:formatDate value="${order.createAt}" pattern="dd/MM/yyyy HH:mm"/>
     </p>
 
-    <!-- thông tin khách hàng -->
     <div class="order-info">
         <h3>THÔNG TIN KHÁCH HÀNG</h3>
         <p><strong>Họ tên:</strong> ${order.receiver_name}</p>
@@ -48,7 +46,6 @@
             <c:when test="${order.payment_method == 'VNPAY'}">
                 VNPay
             </c:when>
-
             <c:otherwise>
                 Thanh toán khi nhận hàng (COD)
             </c:otherwise>
@@ -57,18 +54,16 @@
 
         <p><strong>Trạng thái thanh toán:</strong>
         <c:choose>
-            <c:when test="${order.payment_status == 'PAID'}">
+            <c:when test="${order.payment_status == 'PAID' || order.payment_status == 'Paid'}">
                <span style="color: green; font-weight: bold;">
                     Đã thanh toán
                 </span>
             </c:when>
-
-            <c:when test="${order.payment_status == 'UNPAID'}">
+            <c:when test="${order.payment_status == 'UNPAID' || order.payment_status == 'Unpaid'}">
                  <span style="color: orange; font-weight: bold;">
                     Chưa thanh toán
                 </span>
             </c:when>
-
             <c:otherwise>
                 <span style="color: red; font-weight: bold;">
                     Không xác định
@@ -78,7 +73,6 @@
         </p>
     </div>
 
-    <!-- sản phẩm -->
     <div class="order-products">
         <h3>SẢN PHẨM</h3>
         <table>
@@ -107,7 +101,6 @@
         </table>
     </div>
 
-    <!-- tổng tiền -->
     <div class="order-summary">
         <p>
             <strong>Tổng cộng:</strong>
@@ -117,18 +110,17 @@
         </p>
     </div>
 
-    <!-- button -->
     <div class="order-actions" style="margin-bottom: 10px">
         <c:if test="${!confirmed}">
-            <form action="${pageContext.request.contextPath}/confirm-order" method="post">
+            <form id="finalConfirmForm" action="" method="post">
                 <button type="submit" class="confirm-btn">
                     <i class="fa-solid fa-check"></i> Xác nhận đặt hàng
                 </button>
             </form>
         </c:if>
     </div>
-    <a href="${pageContext.request.contextPath}/product"
-       class="btn btn-secondary">
+
+    <a href="${pageContext.request.contextPath}/product" class="btn btn-secondary">
         Tiếp tục mua hàng
     </a>
 
@@ -141,9 +133,23 @@
     <c:remove var="confirmedOrderId" scope="session"/>
 </c:if>
 
-
-<!-- FOOTER -->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
+
+<script>
+    // Chuẩn hóa chuỗi phương thức thanh toán từ JSTL EL sang JavaScript
+    const method = "${order.payment_method}".toUpperCase().trim();
+    const finalForm = document.getElementById("finalConfirmForm");
+
+    if (finalForm) {
+        if (method === "VNPAY") {
+            // Nếu chọn VNPay -> Gửi tới servlet tạo link thanh toán kết nối ngân hàng VNPay
+            finalForm.action = "${pageContext.request.contextPath}/vnpay-payment";
+        } else {
+            // Nếu chọn COD -> Gửi tới servlet mới tạo để thực thi lưu vào database chính thức
+            finalForm.action = "${pageContext.request.contextPath}/submit-order-database";
+        }
+    }
+</script>
 
 </body>
 </html>
