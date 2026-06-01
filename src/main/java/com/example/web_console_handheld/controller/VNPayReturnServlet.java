@@ -25,7 +25,7 @@ import java.util.Map;
 public class VNPayReturnServlet extends HttpServlet {
 
     private OrderDao orderDao = new OrderDao();
-    private CartDao cartDao = new CartDao(); // Khai báo thêm CartDao để xóa giỏ hàng DB
+    private CartDao cartDao = new CartDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,8 +37,15 @@ public class VNPayReturnServlet extends HttpServlet {
             List<OrderItem> items = (List<OrderItem>) session.getAttribute("pendingOrderItems");
             Boolean buyNowMode = (Boolean) session.getAttribute("buyNowMode");
 
+            // IN LOG DEBUG: Xem hệ thống có thực sự bị mất dữ liệu phiên làm việc hay không
+            System.out.println(">>> VNPayReturn: user=" + (user != null ? user.getUsername() : "NULL")
+                    + ", order=" + (order != null ? order.getID() : "NULL")
+                    + ", items=" + (items != null ? items.size() : "NULL"));
+
+            // Cải tiến kiểm tra: Nếu mất Session, đẩy thẳng về trang chủ kèm thông báo thay vì để lỗi 404
             if (order == null || items == null || user == null) {
-                response.sendRedirect(request.getContextPath() + "/cart");
+                System.err.println("❌ Lỗi: Session bị mất sau khi quay về từ VNPay!");
+                response.sendRedirect(request.getContextPath() + "/home?error=session-lost");
                 return;
             }
 
@@ -50,17 +57,23 @@ public class VNPayReturnServlet extends HttpServlet {
                 String fieldName = parameterNames.nextElement();
                 String fieldValue = request.getParameter(fieldName);
 
-                if (fieldValue != null && !fieldValue.isEmpty()) {
+                // Chỉ lấy các tham số hợp lệ của VNPay (Bắt đầu bằng vnp_) để chuẩn bị xác thực chữ ký
+                if (fieldName != null && fieldName.startsWith("vnp_") && fieldValue != null && !fieldValue.isEmpty()) {
                     fields.put(fieldName, fieldValue);
                 }
             }
 
             String vnpSecureHash = fields.remove("vnp_SecureHash");
             fields.remove("vnp_SecureHashType");
+
+            // Thực hiện tính toán lại chữ ký băm bảo mật mã hóa từ danh sách tham số thực tế nhận được
             String signValue = VNPayUtil.hashAllFields(fields, VNPayConfig.secretKey);
+
+            System.out.println(">>> Check Sign: vnpSecureHash=" + vnpSecureHash + " | signValue=" + signValue);
 
             // Kiểm tra chữ ký bảo mật chữ chéo dữ liệu đầu cuối
             if (vnpSecureHash == null || !signValue.equalsIgnoreCase(vnpSecureHash)) {
+                System.err.println("❌ Lỗi: Chữ ký bảo mật VNPay không khớp!");
                 response.sendRedirect(request.getContextPath() + "/cart?error=invalid-sign");
                 return;
             }
