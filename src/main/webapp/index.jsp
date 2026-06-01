@@ -157,6 +157,9 @@
 </div>
 
 <!--hien thi san pham da xem gan day-->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <c:if test="${not empty recentProducts}">
     <div class="recent-header">
         <h2>Sản phẩm đã xem</h2>
@@ -168,35 +171,39 @@
 
     <div class="carousel-wrapper">
         <div id="recent-list">
-            <c:forEach var="p" items="${recentProducts}">
-                <div class="product-item">
-                    <!-- Nút X xoá sản phẩm -->
-                    <form action="recent-views" method="post" class="remove-form">
-                        <input type="hidden" name="action" value="deleteOne"/>
-                        <input type="hidden" name="productId" value="${p.ID}"/>
-                        <button type="submit" class="btn-remove">X</button>
-                    </form>
+            <c:set var="renderedRecentIds" value="," />
 
-                    <!-- Bao toàn bộ card bằng thẻ a -->
-                    <a href="${pageContext.request.contextPath}/product-detail?id=${p.ID}">
-                        <img src="${p.image}" alt="${p.name}">
-                        <h4>${p.name}</h4>
-                        <div class="price-actions">
-                            <p class="price">${p.priceFormatted}đ</p>
-                            <c:if test="${p.priceOld > p.price}">
-                                <p class="old-price"><s>${p.priceOldFormatted}đ</s></p>
-                            </c:if>
-                        </div>
-                    </a>
-                </div>
+            <c:forEach var="p" items="${recentProducts}">
+                <c:set var="targetId" value="${p.parent_id > 0 ? p.parent_id : p.ID}" />
+                <c:set var="checkId" value=",${targetId}," />
+
+                <c:if test="${not fn:contains(renderedRecentIds, checkId)}">
+                    <c:set var="renderedRecentIds" value="${renderedRecentIds}${targetId}," />
+
+                    <div class="product-item">
+                        <form action="recent-views" method="post" class="remove-form">
+                            <input type="hidden" name="action" value="deleteOne"/>
+                            <input type="hidden" name="productId" value="${targetId}"/>
+                            <button type="submit" class="btn-remove">X</button>
+                        </form>
+
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${targetId}">
+                            <img src="${p.image}" alt="${p.name}">
+                            <h4>${p.name}</h4>
+                            <div class="price-actions">
+                                <p class="price">${p.priceFormatted}đ</p>
+                                <c:if test="${p.priceOld > p.price}">
+                                    <p class="old-price"><s>${p.priceOldFormatted}đ</s></p>
+                                </c:if>
+                            </div>
+                        </a>
+                    </div>
+                </c:if>
             </c:forEach>
         </div>
     </div>
 </c:if>
 
-
-
-<!-- Product Category Section -->
 <section class="product-category">
     <div class="container">
         <h2 class="section-title">Danh Mục Console & Tay Cầm</h2>
@@ -216,23 +223,31 @@
     </div>
 </section>
 
-<!--goi y san pham theo yeu thich-->
-<div>
-    <div class="suggestion-header">
-        <h2>Sản phẩm gợi ý cho bạn</h2>
-        <div class="view-all">
-            <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
-                Xem tất cả >
-            </a>
+<c:if test="${not empty suggestions}">
+    <div>
+        <div class="suggestion-header">
+            <h2>Sản phẩm gợi ý cho bạn</h2>
+            <div class="view-all">
+                <a href="${pageContext.request.contextPath}/suggestions" class="btn-view-all">
+                    Xem tất cả >
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div id="suggestions-list">
-        <c:choose>
-            <c:when test="${not empty suggestions}">
-                <c:forEach var="c" items="${suggestions}" begin="0" end="6">
+        <div id="suggestions-list">
+            <c:set var="renderedFavIds" value="," />
+            <c:set var="countFav" value="0" />
+
+            <c:forEach var="c" items="${suggestions}">
+                <c:set var="targetId" value="${c.parent_id > 0 ? c.parent_id : c.ID}" />
+                <c:set var="checkId" value=",${targetId}," />
+
+                <c:if test="${not fn:contains(renderedFavIds, checkId) && countFav < 7}">
+                    <c:set var="renderedFavIds" value="${renderedFavIds}${targetId}," />
+                    <c:set var="countFav" value="${countFav + 1}" />
+
                     <div class="product-item sony handheldpc">
-                        <a href="${pageContext.request.contextPath}/product-detail?id=${c.ID}">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${targetId}">
                             <img src="${c.image}" alt="">
                             <h4>${c.name}</h4>
                         </a>
@@ -249,7 +264,7 @@
 
                             <div class="actions">
                                 <button class="add-cart"
-                                        data-id="${c.ID}"
+                                        data-id="${targetId}"
                                         data-name="${c.name}"
                                         data-price="${c.price}"
                                         data-image="${c.image}">
@@ -257,17 +272,17 @@
                                 </button>
 
                                 <c:choose>
-                                    <c:when test="${fn:contains(wishlistIdString, c.ID)}">
+                                    <c:when test="${fn:contains(wishlistIdString, targetId)}">
                                         <button type="button" class="btn-fav active"
-                                                data-id="${c.ID}"
-                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                                data-id="${targetId}"
+                                                onclick="toggleWishlist(this, '${targetId}')">
                                             <i class="fa fa-heart"></i>
                                         </button>
                                     </c:when>
                                     <c:otherwise>
                                         <button type="button" class="btn-fav"
-                                                data-id="${c.ID}"
-                                                onclick="toggleWishlist(this, '${c.ID}')">
+                                                data-id="${targetId}"
+                                                onclick="toggleWishlist(this, '${targetId}')">
                                             <i class="fa fa-heart"></i>
                                         </button>
                                     </c:otherwise>
@@ -275,38 +290,85 @@
                             </div>
                         </div>
                     </div>
-                </c:forEach>
-                <c:forEach var="c" items="${suggestions}">
-                    <script>
-                        console.log("Suggestion product:", "${c.name}", "Price:", "${c.price}");
-                    </script>
-                </c:forEach>
-                <script>
-                    console.log("Wishlist IDs:", "${wishlistIdString}");
-                    console.log("MinRange:", "${minRange}");
-                    console.log("MaxRange:", "${maxRange}");
-                    console.log("Suggestions count:", "${fn:length(suggestions)}");
-                </script>
-
-                <c:forEach var="c" items="${suggestions}">
-                    <script>
-                        console.log("Suggestion product:", "${c.name}", "Price:", "${c.price}");
-                    </script>
-                </c:forEach>
-
-
-            </c:when>
-
-            <c:otherwise>
-                <p>Chưa có sản phẩm gợi ý.</p>
-            </c:otherwise>
-        </c:choose>
+                </c:if>
+            </c:forEach>
+        </div>
     </div>
-</div>
+</c:if>
 
+<c:if test="${not empty orderSuggestions}">
+    <div class="order-suggestions-section" style="margin-top: 40px;">
+        <div class="suggestion-header">
+            <h2>Sản phẩm gợi ý dựa trên đơn hàng của bạn</h2>
+            <div class="view-all">
+                <a href="${pageContext.request.contextPath}/order-suggestions" class="btn-view-all">
+                    Xem tất cả >
+                </a>
+            </div>
+        </div>
 
+        <div id="order-suggestions-list" class="suggestions-list-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <c:set var="renderedOrderIds" value="," />
+            <c:set var="countOrder" value="0" />
 
+            <c:forEach var="c" items="${orderSuggestions}">
+                <c:set var="targetId" value="${c.parent_id > 0 ? p.parent_id : c.ID}" />
+                <c:set var="checkId" value=",${targetId}," />
 
+                <c:if test="${not fn:contains(renderedOrderIds, checkId) && countOrder < 7}">
+                    <c:set var="renderedOrderIds" value="${renderedOrderIds}${targetId}," />
+                    <c:set var="countOrder" value="${countOrder + 1}" />
+
+                    <div class="product-item sony handheldpc">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${targetId}">
+                            <img src="${c.image}" alt="${c.metatitle}">
+                            <h4>${c.name}</h4>
+                        </a>
+
+                        <c:if test="${c.ispremium}">
+                            <div class="tag">Premium</div>
+                        </c:if>
+
+                        <div class="price-actions">
+                             <p class="price">${c.priceFormatted}đ</p>
+                             <c:if test="${c.priceOld > c.price}">
+                                 <p class="old-price"><s>${c.priceOldFormatted}đ</s></p>
+                             </c:if>
+
+                            <div class="actions">
+                                <button class="add-cart"
+                                        type="button"
+                                        data-id="${targetId}"
+                                        data-name="${c.name}"
+                                        data-price="${c.price}"
+                                        data-image="${c.image}">
+                                    <i class="fa fa-cart-plus"></i>
+                                </button>
+
+                                <c:choose>
+                                    <c:when test="${fn:contains(wishlistIdString, targetId)}">
+                                        <button type="button" class="btn-fav active"
+                                                data-id="${targetId}"
+                                                onclick="toggleWishlist(this, '${targetId}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="button" class="btn-fav"
+                                                data-id="${targetId}"
+                                                onclick="toggleWishlist(this, '${targetId}')">
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
+            </c:forEach>
+        </div>
+    </div>
+</c:if>
 
 <!--products section-->
 <section class="product-section">
