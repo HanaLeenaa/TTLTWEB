@@ -2424,3 +2424,7 @@ ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
 
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-----------------Châu 1/6------------------
+ALTER TABLE users
+    ADD COLUMN forgot_password_first_attempt DATETIME NULL;
