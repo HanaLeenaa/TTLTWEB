@@ -36,6 +36,12 @@ public class ProductDetailServlet extends HttpServlet {
             response.sendRedirect("product");
             return;
         }
+        int targetParentId = (product.getParent_id() != null && product.getParent_id() > 0)
+                ? product.getParent_id()
+                : product.getID();
+
+        List<Product> colorVariants = productDao.getColorVariants(targetParentId);
+        request.setAttribute("colorVariants", colorVariants);
 
         Category category = categoryDao.getCategoryByProductId(productId);
         Brand brand = brandDao.getBrandByProductId(productId);

@@ -3,6 +3,7 @@ package com.example.web_console_handheld.controller;
 import com.example.web_console_handheld.dao.UserDao;
 import com.example.web_console_handheld.model.User;
 import com.example.web_console_handheld.utils.PasswordUtil;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
@@ -13,6 +14,11 @@ import java.time.LocalDateTime;
 public class VerifyOtpServlet extends HttpServlet {
 
     private final UserDao userDao = new UserDao();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/Assets/component/login_logout/verify.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

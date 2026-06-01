@@ -35,24 +35,6 @@
             margin: 6px 0;
         }
 
-        /*.order-table {*/
-        /*    width: 100%;*/
-        /*    border-collapse: collapse;*/
-        /*}*/
-
-        /*.order-table th,*/
-        /*.order-table td {*/
-        /*    border-bottom: 1px solid #e5e5e5;*/
-        /*    padding: 14px 10px;*/
-        /*    text-align: center;*/
-        /*    vertical-align: middle;*/
-        /*}*/
-
-        /*.order-table th {*/
-        /*    background: #e95211;*/
-        /*    color: #FFFFFF;*/
-        /*}*/
-
         .order-table {
             width: 100%;
             border-collapse: collapse;
@@ -112,6 +94,26 @@
         .back-btn:hover {
             opacity: 0.9;
         }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .cancel-order-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .cancel-order-btn:hover {
+            background: #bb2d3b;
+        }
     </style>
 
 </head>
@@ -120,6 +122,22 @@
 <!-- HEADER -->
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<%--thông báo hủy đơn thành công--%>
+<c:if test="${not empty sessionScope.success}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thông báo',
+                text: '${sessionScope.success}'
+            });
+        });
+    </script>
+    <c:remove var="success" scope="session"/>
+</c:if>
+
 <div class="order-detail-container">
     <div class="order-detail-title">Chi tiết lịch sử mua hàng</div>
 
@@ -127,6 +145,8 @@
         <p><strong>Mã đơn hàng:</strong> #${order.ID}</p>
         <p><strong>Ngày đặt:</strong> ${order.createAt}</p>
         <p><strong>Địa chỉ nhận:</strong> ${order.receiver_address}</p>
+        <p><strong>Phương thức thanh toán:</strong> ${order.payment_method}</p>
+        <p><strong>Trạng thái thanh toán:</strong> ${order.payment_status}</p>
         <p><strong>Trạng thái:</strong> ${order.status}</p>
         <p><strong>Ghi chú đơn hàng:</strong> ${order.receiver_note}</p>
         <p>
@@ -170,14 +190,59 @@
         Tổng cộng: <fmt:formatNumber value="${order.price}" type="number"/>đ
     </div>
 
+    <div class="action-buttons">
+
     <a class="back-btn" href="${pageContext.request.contextPath}/profile?tab=orders">
         ← Quay lại lịch sử mua hàng
     </a>
+
+    <%--NÚT HỦY ĐƠN--%>
+    <c:if test="${order.status == 'Chờ xác nhận'
+                || order.status == 'Đã xác nhận'
+                || order.status == 'Đang giao'}">
+
+        <form id="cancelOrderForm"
+              action="${pageContext.request.contextPath}/cancel-order"
+              method="post">
+
+            <input type="hidden"
+                    name="orderId"
+                    value="${order.ID}">
+
+            <button type="button"
+                    class="cancel-order-btn"
+                    onclick="confirmCancelOrder()">
+                Hủy đơn hàng
+            </button>
+
+        </form>
+
+    </c:if>
+    </div>
 </div>
 
 
 <!-- FOOTER -->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 
+
+<script>
+    function confirmCancelOrder() {
+        Swal.fire({
+            title: 'Xác nhận hủy đơn?',
+            text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53935',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Có, hủy đơn',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('cancelOrderForm').submit();
+            }
+        });
+    }
+</script>
 </body>
 </html>

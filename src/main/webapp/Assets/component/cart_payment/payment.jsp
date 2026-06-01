@@ -22,7 +22,7 @@
 <jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 
 <main>
-    <form action="${pageContext.request.contextPath}/confirm-order" method="post">
+    <form id="paymentForm" action="${pageContext.request.contextPath}/confirm-order" method="post">
 
         <c:forEach items="${paramValues.selectedItems}" var="productId">
             <input type="hidden" name="selectedItems" value="${productId}" />
@@ -117,8 +117,8 @@
                         </div>
                         <div class="payment_method_2 payment">
                             <label>
-                                <input type="radio" name="payment_method" value="BANK" />
-                                Thanh toán qua ngân hàng
+                                <input type="radio" name="payment_method" value="VNPAY" required />
+                                Thanh toán qua VNPay
                             </label>
                         </div>
                     </div>
@@ -159,6 +159,11 @@
             body: "address=" + encodeURIComponent(address)
         }).then(res => res.text()).then(() => { location.reload(); });
     }
+
+    document.getElementById("paymentForm").addEventListener("submit", function(event) {
+        // Cả 2 phương thức đều chuyển hướng về servlet trung gian để hiển thị trang Order.jsp (chế độ chưa confirm)
+        this.action = "${pageContext.request.contextPath}/confirm-order";
+    });
 </script>
 </body>
 </html>

@@ -311,9 +311,9 @@ ul li::before {
     color: #888;
     text-align: right;
 }
-.overall-rating i{
-    color: #ffcc00;
-}
+/*.overall-rating i{*/
+/*    color: #ffcc00;*/
+/*}*/
 .breadcrumb {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -477,6 +477,41 @@ ul li::before {
     font-size: 20px;
 }
 
+.color-selection-section {
+    margin: 20px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #eee;
+    border-bottom: 1px dashed #eee;
+}
+
+.color-swatches {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.swatch-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.swatch-btn:hover {
+    transform: scale(1.15);
+}
+
+.swatch-btn.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #E95221;
+}
 .alert-success{
     background:#d4edda;
     color:#155724;
@@ -491,4 +526,23 @@ ul li::before {
     padding:10px;
     border-radius:6px;
     margin-bottom:10px;
+}
+
+.review-item .stars i {
+    color: #ccc;
+}
+
+.review-item .stars i.active {
+    color: #ffcc00;
+}
+.full {
+    color: #ffcc00;
+}
+
+.half {
+    color: #ffcc00;
+}
+
+.empty {
+    color: #ccc;
 }

@@ -130,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
             OtpUtil.expireOtp(rawOtp);
 
             setMsg(session, "Đăng ký thành công! Vui lòng kiểm tra email để nhập mã OTP.");
-            resp.sendRedirect(req.getContextPath() + "/verify");
+            resp.sendRedirect(req.getContextPath() + "/verify-otp");
 
         } catch (Exception e) {
             e.printStackTrace();
