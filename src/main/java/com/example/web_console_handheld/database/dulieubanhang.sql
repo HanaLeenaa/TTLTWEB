@@ -4,6 +4,7 @@ CREATE DATABASE dulieubanhang
 USE dulieubanhang;
 
 
+
 -- 1. XÓA BẢNG CŨ
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -114,7 +115,7 @@ CREATE TABLE gallary (
 );
 
 -- ===================== CHÂU (30/05) =====================
-CREATE TABLE  (
+CREATE TABLE reviews (
                          ID INT PRIMARY KEY AUTO_INCREMENT,
                          products_id INT NOT NULL,
                          users_id INT NOT NULL,
@@ -161,7 +162,6 @@ CREATE TABLE order_items (
 CREATE TABLE payments (
                           ID INT AUTO_INCREMENT PRIMARY KEY,
                           orders_id INT,
---HUỲNH NHƯ (18/05 - 30/05)
                           payment_method VARCHAR(100),
                           payment_status VARCHAR(100) DEFAULT 'Unpaid',
                           payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -2408,9 +2408,19 @@ CREATE TABLE otp_tokens (
                             FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+
+-- ===================== HUỲNH NHƯ (18/05 - 30/05) =====================
+-- Đồng bộ toàn bộ các cột cần thiết cho việc xử lý Đơn hàng & Thanh toán VNPay vào bảng orders
+ALTER TABLE orders ADD COLUMN payment_method VARCHAR(50);
+ALTER TABLE orders ADD COLUMN payment_status VARCHAR(20);
+ALTER TABLE orders ADD COLUMN transaction_no VARCHAR(100);
+
+
 -- ===================== HÂN (30/05) =====================
 ALTER TABLE products ADD COLUMN parent_id INT DEFAULT NULL;
 ALTER TABLE products ADD COLUMN color_name VARCHAR(50) DEFAULT NULL;
 ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
+
+
 
 SET FOREIGN_KEY_CHECKS = 1;
