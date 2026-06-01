@@ -18,6 +18,114 @@
 
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css">
+
+
+    <style>
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2147483647;
+            overflow: hidden;
+        }
+
+        .popup-box {
+            width: 420px;
+            max-width: 92%;
+
+            background: #fff;
+            border-radius: 16px;
+
+            padding: 24px;
+
+            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+
+            animation: popIn 0.2s ease-out;
+
+            position: relative;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .popup-box h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .popup-box label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .popup-box input,
+        .popup-box textarea {
+            width: 100%;
+            padding: 10px 12px;
+
+            border: 1px solid #ddd;
+            border-radius: 10px;
+
+            outline: none;
+            font-size: 14px;
+        }
+
+        .popup-box input:focus,
+        .popup-box textarea:focus {
+            border-color: #ff5722;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.15);
+        }
+
+        .popup-box textarea {
+            min-height: 100px;
+            resize: none;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .popup-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .popup-actions button[type="submit"] {
+            background: #ff5722;
+            color: white;
+        }
+
+        .popup-actions button[type="button"] {
+            background: #eee;
+        }
+
+        body.modal-open {
+            overflow: hidden !important;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -90,11 +198,7 @@
                     </c:if>
 
                     <c:if test="${not empty orders}">
-
-                        <table class="order-table"
-                               width="100%"
-                               cellpadding="10">
-
+                        <table class="order-table" width="100%" cellpadding="10">
                             <thead>
                             <tr>
                                 <th>Mã đơn</th>
@@ -114,18 +218,12 @@
                                     <td>${o.createAt}</td>
                                     <td>${o.receiver_address}</td>
                                     <td>
-                                        <fmt:formatNumber
-                                                value="${o.price}"
-                                                type="number"/>đ
+                                        <fmt:formatNumber value="${o.price}" type="number"/>đ
                                     </td>
-
-                                    <td>
-                                        ${o.payment_method}
-                                    </td>
+                                    <td>${o.payment_method}</td>
                                     <td>${o.status}</td>
                                     <td>
-                                        <a class="detail-link"
-                                           href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
+                                        <a href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
                                             Xem chi tiết
                                         </a>
                                     </td>
@@ -146,17 +244,70 @@
                         <p>Chưa có đánh giá nào.</p>
                     </c:if>
 
-                    <c:forEach var="r" items="${reviews}">
-                        <div class="review-item">
-                            <b>${r.productName}</b>
+                    <c:if test="${not empty reviews}">
+                        <table class="order-table" width="100%" cellpadding="10">
+                            <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Đánh giá</th>
+                                <th>Nhận xét</th>
+                                <th>Ngày</th>
+                                <th>Giờ</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
 
-                            <p>
-                                Đánh giá: ${r.rating}/5
-                            </p>
+                            <tbody>
+                            <c:forEach var="r" items="${reviews}">
+                                <tr>
+                                    <td>${r.productName}</td>
+                                    <td>${r.rating}/5 ⭐</td>
+                                    <td>${r.review_text}</td>
+                                    <td>${r.reviewDateOnly}</td>
+                                    <td>${r.reviewTimeOnly}</td>
 
-                            <p>${r.comment}</p>
+                                    <td>
+                                        <!-- SỬA -->
+                                        <button type="button"
+                                                onclick="openEditModal(
+                                                        '${r.ID}',
+                                                        '${r.rating}',
+                                                        '${r.review_text}'
+                                                        )">
+                                            Sửa
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+
+                        <!-- PAGINATION PHẢI NẰM TRONG REVIEWS -->
+                        <div style="margin-top: 20px; text-align: center;">
+
+                            <c:if test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${currentPage - 1}">
+                                    ◀ Trước
+                                </a>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${i}"
+                                   style="margin:0 5px; font-weight:${i == currentPage ? 'bold' : 'normal'}">
+                                        ${i}
+                                </a>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${currentPage + 1}">
+                                    Sau ▶
+                                </a>
+                            </c:if>
+
                         </div>
-                    </c:forEach>
+
+                    </c:if>
                 </div>
             </c:when>
 
@@ -323,7 +474,46 @@
     </div>
 </c:if>
 
+<script>
+    function openEditModal(id, rating, text) {
+        document.getElementById("editReviewId").value = id;
+        document.getElementById("editRating").value = rating;
+        document.getElementById("editText").value = text;
+
+        document.getElementById("editModal").style.display = "flex";
+
+        // khóa scroll toàn trang
+        document.body.classList.add("modal-open");
+    }
+
+    function closeEditModal() {
+        document.getElementById("editModal").style.display = "none";
+
+        document.body.classList.remove("modal-open");
+    }
+</script>
+
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
+<div id="editModal" class="popup-overlay" style="display:none;">
+    <div class="popup-box">
+        <h3>Chỉnh sửa đánh giá</h3>
+
+        <form action="${pageContext.request.contextPath}/edit-review" method="post">
+            <input type="hidden" name="reviewId" id="editReviewId">
+
+            <label>Rating</label>
+            <input type="number" name="rating" id="editRating" min="1" max="5">
+
+            <label>Review</label>
+            <textarea name="review_text" id="editText"></textarea>
+
+            <div class="popup-actions">
+                <button type="submit">Lưu</button>
+                <button type="button" onclick="closeEditModal()">Huỷ</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
