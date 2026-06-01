@@ -2,6 +2,9 @@ package com.example.web_console_handheld.dao;
 
 import com.example.web_console_handheld.model.Review;
 import java.util.List;
+import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class ReviewDao extends BaseDao {
 
@@ -101,6 +104,71 @@ public class ReviewDao extends BaseDao {
                     """)
                         .bind("productId", productId)
                         .mapTo(Double.class)
+                        .one()
+        );
+    }
+
+    public List<Review> getReviewsByUserId(int userId) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT
+                    r.ID,
+                    r.products_id,
+                    r.users_id,
+                    r.rating,
+                    r.review_text,
+                    r.imgReviews,
+                    r.reviewDate,
+                    r.status,
+                    p.name AS productName
+                FROM reviews r
+                JOIN products p
+                    ON r.products_id = p.ID
+                WHERE r.users_id = :userId
+                ORDER BY r.reviewDate DESC
+            """)
+                        .bind("userId", userId)
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+
+    public List<Review> getReviewsByUserIdPaging(int userId, int offset, int limit) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT
+                    r.ID,
+                    r.products_id,
+                    r.users_id,
+                    r.rating,
+                    r.review_text,
+                    r.imgReviews,
+                    r.reviewDate,
+                    r.status,
+                    p.name AS productName
+                FROM reviews r
+                JOIN products p ON r.products_id = p.ID
+                WHERE r.users_id = :userId
+                ORDER BY r.reviewDate DESC
+                LIMIT :limit OFFSET :offset
+            """)
+                        .bind("userId", userId)
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+
+    public int countReviewsByUserId(int userId) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT COUNT(*)
+                FROM reviews
+                WHERE users_id = :userId
+            """)
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
                         .one()
         );
     }
