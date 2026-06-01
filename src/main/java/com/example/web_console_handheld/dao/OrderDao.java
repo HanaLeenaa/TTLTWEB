@@ -292,7 +292,10 @@ public class OrderDao {
             case "Đã xác nhận":
                 return next.equals("Đang giao") || next.equals("Đã huỷ");
             case "Đang giao":
-                return next.equals("Đã giao");
+                return next.equals("Đã giao") ||next.equals("Yêu cầu hủy");
+            case "Yêu cầu hủy":
+                return next.equals("Đã hủy");
+
             case "Đã giao":
             case "Đã huỷ":
             default:
@@ -520,5 +523,86 @@ public class OrderDao {
                 try { conn.setAutoCommit(true); } catch (Exception ex) {}
             }
         }
+    }
+
+    //Hoàn kho khi HỦY ĐƠN
+    public void restoreStock(Connection conn, int orderId) throws Exception {
+        String sql = """
+                SELECT product_id, quantity
+                FROM order_items
+                WHERE order_id = ?
+                """;
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, orderId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int productId = rs.getInt("product_id");
+            int quantity = rs.getInt("quantity");
+            String updateSql = """
+                    UPDATE products
+                    SET stock = stock + ?,
+                    sales_count = sales_count - ?
+                    WHERE ID = ?
+                    """;
+            PreparedStatement updatePs = conn.prepareStatement(updateSql);
+            updatePs.setInt(1, quantity);
+            updatePs.setInt(2, quantity);
+            updatePs.setInt(3, productId);
+
+            updatePs.executeUpdate();
+        }
+    }
+
+    // HỦY trực tiếp (trạng thái chờ xác nhận và đã xác nhận)
+    public boolean cancelOrder(int orderId) {
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            Order order = getOrderById(orderId);
+            if (order == null) {
+                return false;
+            }
+            restoreStock(conn, orderId);
+
+            String sql = "UPDATE orders SET status = 'Đã hủy' WHERE ID = ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+            conn.commit();
+            return true;
+
+        } catch (Exception e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    //Gửi yêu cầu HỦY (đối với đơn ĐANG GIAO)
+    public boolean requestCancelOrder(int orderId) {
+        String sql = """
+                UPDATE orders
+                SET status = "Yêu cầu hủy"
+                WHERE ID = ?
+                """;
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)){
+                ps.setInt(1, orderId);
+                return ps.executeUpdate() > 0;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

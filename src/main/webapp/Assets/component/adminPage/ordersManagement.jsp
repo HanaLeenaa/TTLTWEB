@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng | Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- CSS -->
     <link rel="stylesheet"
@@ -32,13 +33,34 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
-        .admin-orders-wrapper > .order-list {
-            flex: 1.2;
-            margin: 20px;
+        .admin-orders-wrapper {
+            display: flex;
+            min-height: 100vh;
+            transition: all 0.3s ease;
         }
 
-        .admin-orders-wrapper > .order-detail {
+        .admin-orders-wrapper .order-list {
             flex: 1;
+            margin: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-orders-wrapper .order-detail {
+            width: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .admin-orders-wrapper.show-detail .order-list {
+            flex: 0.6;
+        }
+
+        .admin-orders-wrapper.show-detail .order-detail {
+            flex: 0.4;
+            width: auto;
+            opacity: 1;
             margin: 20px 20px 20px 0;
         }
 
@@ -302,16 +324,64 @@
         .order-list .fa-box {
             color: #e95211;
         }
+        .status.cancel-request {
+            background: #ffe0e0;
+            color: #c0392b;
+            font-weight: bold;
+            border: 1px solid #ff4d4d;
+            padding: 5px 10px;
+            border-radius: 20px;
+            animation: glow 1.2s infinite;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+            }
+            50% {
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+            }
+        }
     </style>
 </head>
 
 <body>
 
-<div class="admin-orders-wrapper">
+<div class="admin-orders-wrapper ${not empty selectedOrder ? 'show-detail' : ''}">
     <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
     <!-- ================= DANH SÁCH ĐƠN ================= -->
     <div class="order-list">
         <h2><i class="fa-solid fa-box"></i> Quản lý đơn hàng</h2>
+
+<%--THÔNG BÁO DUYỆT HỦY ĐƠN --%>
+        <c:if test="${param.success == 'cancel-approved'}">
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Duyệt hủy đơn thành công',
+                        text: 'Đơn hàng đã được cập nhật sang trạng thái đã hủy',
+                        confirmButtonColor: '#28a745'
+                    });
+                });
+            </script>
+        </c:if>
+
+        <c:if test="${param.error == 'cancel-failed'}">
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Duyệt hủy thất bại',
+                        text: 'Không thể cập nhật trạng thái đơn hàng',
+                        confirmButtonColor: '#d33'
+                    });
+                });
+            </script>
+        </c:if>
 
 <%--Thông báo khi cập nhật status đơn hàng --%>
         <c:if test="${param.success == 'updated'}">
@@ -399,6 +469,8 @@
                     <option value="Đang giao" ${param.status=='Đang giao'?'selected':''}>Đang giao</option>
                     <option value="Đã giao" ${param.status=='Đã giao'?'selected':''}>Đã giao</option>
                     <option value="Đã huỷ" ${param.status=='Đã huỷ'?'selected':''}>Đã huỷ</option>
+                    <option value="Yêu cầu hủy" ${param.status=='Yêu cầu hủy'?'selected':''}>Yêu cầu hủy</option>
+
                 </select>
 
                 <!-- FILTER BUTTON -->
@@ -455,9 +527,19 @@
                     <td>${o.receiver_phone}</td>
                     <td><fmt:formatNumber value="${o.price}" type="number" groupingUsed="true"/>đ</td>
                     <td>
-    <span class="status ${o.status}">
-            ${o.status}
-    </span>
+                        <c:choose>
+                            <c:when test="${o.status == 'Yêu cầu hủy'}">
+                              <span class="status cancel-request">
+                                     <i class="fa-solid fa-triangle-exclamation"></i> ${o.status}
+                              </span>
+                            </c:when>
+
+                            <c:otherwise>
+                                <span class="status ${o.status}">
+                                    ${o.status}
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
 
                     <td>${o.createAt}</td>
@@ -515,6 +597,23 @@
 
                 <button type="submit">Cập nhật</button>
             </form>
+
+            <%--Nút duyệt hủy--%>
+            <c:if test="${selectedOrder.status == 'Yêu cầu hủy'}">
+                <form action="${pageContext.request.contextPath}/admin/approve-cancel-order"
+                      method="post"
+                      style="margin-top:10px">
+
+                    <input type="hidden"
+                            name="orderId"
+                            value="${selectedOrder.ID}">
+
+                    <button type="submit"
+                            style="background: red">
+                        Duyệt hủy đơn
+                    </button>
+                </form>
+            </c:if>
 
             <hr>
 
