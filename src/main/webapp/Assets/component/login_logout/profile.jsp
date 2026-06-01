@@ -90,11 +90,7 @@
                     </c:if>
 
                     <c:if test="${not empty orders}">
-
-                        <table class="order-table"
-                               width="100%"
-                               cellpadding="10">
-
+                        <table class="order-table" width="100%" cellpadding="10">
                             <thead>
                             <tr>
                                 <th>Mã đơn</th>
@@ -114,18 +110,12 @@
                                     <td>${o.createAt}</td>
                                     <td>${o.receiver_address}</td>
                                     <td>
-                                        <fmt:formatNumber
-                                                value="${o.price}"
-                                                type="number"/>đ
+                                        <fmt:formatNumber value="${o.price}" type="number"/>đ
                                     </td>
-
-                                    <td>
-                                        ${o.payment_method}
-                                    </td>
+                                    <td>${o.payment_method}</td>
                                     <td>${o.status}</td>
                                     <td>
-                                        <a class="detail-link"
-                                           href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
+                                        <a href="${pageContext.request.contextPath}/order-history-detail?id=${o.ID}">
                                             Xem chi tiết
                                         </a>
                                     </td>
@@ -146,17 +136,56 @@
                         <p>Chưa có đánh giá nào.</p>
                     </c:if>
 
-                    <c:forEach var="r" items="${reviews}">
-                        <div class="review-item">
-                            <b>${r.productName}</b>
+                    <c:if test="${not empty reviews}">
+                        <table class="order-table" width="100%" cellpadding="10">
+                            <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Đánh giá</th>
+                                <th>Nhận xét</th>
+                                <th>Ngày</th>
+                                <th>Giờ</th>
+                            </tr>
+                            </thead>
 
-                            <p>
-                                Đánh giá: ${r.rating}/5
-                            </p>
+                            <tbody>
+                            <c:forEach var="r" items="${reviews}">
+                                <tr>
+                                    <td>${r.productName}</td>
+                                    <td>${r.rating}/5 ⭐</td>
+                                    <td>${r.review_text}</td>
+                                    <td>${r.reviewDateOnly}</td>
+                                    <td>${r.reviewTimeOnly}</td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
 
-                            <p>${r.comment}</p>
+                        <!-- PAGINATION PHẢI NẰM TRONG REVIEWS -->
+                        <div style="margin-top: 20px; text-align: center;">
+
+                            <c:if test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${currentPage - 1}">
+                                    ◀ Trước
+                                </a>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${i}"
+                                   style="margin:0 5px; font-weight:${i == currentPage ? 'bold' : 'normal'}">
+                                        ${i}
+                                </a>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/profile?tab=reviews&page=${currentPage + 1}">
+                                    Sau ▶
+                                </a>
+                            </c:if>
+
                         </div>
-                    </c:forEach>
+
+                    </c:if>
                 </div>
             </c:when>
 
