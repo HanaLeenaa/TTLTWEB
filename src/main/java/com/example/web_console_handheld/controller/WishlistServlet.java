@@ -60,7 +60,7 @@ public class WishlistServlet extends HttpServlet {
                         .toList())
                 .orElse(List.of());
 
-        // ====== Gọi DAO duy nhất để lọc wishlist và gợi ý ======
+        // ====== KHÔI PHỤC: Gọi duy nhất hàm filterWishlist cũ ======
         List<Product> suggestions = productDao.filterWishlist(
                 wishlistIds,
                 categoryIds,
@@ -70,10 +70,10 @@ public class WishlistServlet extends HttpServlet {
                 sort
         );
 
-        // ====== Set attribute cho JSP ======
+        // ====== Set attribute y chang ban đầu ======
         request.setAttribute("wishlist", suggestions);
-        request.setAttribute("suggestions", suggestions);
-        // set attribute cho JSP
+        request.setAttribute("suggestions", suggestions); // Trả lại biến suggestions cũ
+
         request.setAttribute("categories", categoryDao.getCategory());
         request.setAttribute("brands", brandDao.getBrands());
 
@@ -82,6 +82,10 @@ public class WishlistServlet extends HttpServlet {
         request.setAttribute("selectedPriceRange", priceRange);
         request.setAttribute("selectedSort", sort);
         request.setAttribute("selectedUseTimes", useTimes);
+
+        // Chuỗi check tim yêu thích ngoài JSP
+        String wishlistIdString = wishlistIds.toString();
+        request.setAttribute("wishlistIdString", wishlistIdString);
 
         request.getRequestDispatcher("/Assets/component/login_logout/wishlist.jsp").forward(request, response);
     }

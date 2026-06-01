@@ -34,16 +34,53 @@ public class HomeServlet extends HttpServlet {
 
         System.out.println(">>> HomeServlet doGet called, user=" + (user != null ? user.getUsername() : "null"));
 
-        // dữ liệu chung cho home
+        // ====== DỮ LIỆU CHUNG CHO HOME (ĐÃ TÁCH BIỆT TRÁNH SẬP DÂY CHUYỀN) ======
         try {
             request.setAttribute("banners", bannerDao.getActiveBanners());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại bannerDao.getActiveBanners()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("categories", categoryDao.getCategory());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại categoryDao.getCategory()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("products", productDao.getProductListForHome());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại productDao.getProductListForHome()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("highest", productDao.getHighestDiscountProduct());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại productDao.getHighestDiscountProduct()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("smaller", productDao.getProductSmallerThanList());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại productDao.getProductSmallerThanList()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("smallest", productDao.getSmallestProduct());
+        } catch (Exception e) {
+            System.err.println("Lỗi tại productDao.getSmallestProduct()");
+            e.printStackTrace();
+        }
+
+        try {
             request.setAttribute("bloglist", blogDao.getBlogList());
         } catch (Exception e) {
+            System.err.println("Lỗi tại blogDao.getBlogList()");
             e.printStackTrace();
         }
 
@@ -60,7 +97,7 @@ public class HomeServlet extends HttpServlet {
             request.setAttribute("recentProducts", new ArrayList<>());
         }
 
-        // wishlist và gợi ý
+        // ====== LOGIC 1: WISHLIST VÀ GỢI Ý THEO SẢN PHẨM YÊU THÍCH ======
         String wishlistIdString = "";
         List<Product> suggestions = new ArrayList<>();
 
@@ -68,8 +105,6 @@ public class HomeServlet extends HttpServlet {
             try {
                 List<Product> wishlist = new ArrayList<>();
                 Object wlObj = session.getAttribute("wishlist");
-
-
 
                 if (wlObj instanceof List<?>) {
                     try {
@@ -96,23 +131,37 @@ public class HomeServlet extends HttpServlet {
                     long minRange = (long) (minPrice * 0.5);
                     long maxRange = (long) (maxPrice * 1.5);
 
-
-                    // sau đoạn lấy suggestions
                     suggestions = productDao.getSuggestions(user.getId(), minRange, maxRange, 5);
-
-
 
                     System.out.println(">>> wishlist size=" + wishlist.size());
                     System.out.println(">>> minRange=" + minRange + ", maxRange=" + maxRange);
                     System.out.println(">>> suggestions size=" + (suggestions != null ? suggestions.size() : 0));
                 }
             } catch (Exception e) {
+                System.err.println("Lỗi xử lý suggestions theo wishlist");
                 e.printStackTrace();
             }
         }
 
         request.setAttribute("wishlistIdString", wishlistIdString);
         request.setAttribute("suggestions", suggestions);
+
+
+        // ====== LOGIC 2: GỢI Ý THEO SẢN PHẨM ĐÃ ĐẶT MUA (MỚI THÊM VÀO) ======
+        List<Product> orderSuggestions = new ArrayList<>();
+        if (user != null) {
+            try {
+                // Gọi hàm lấy tối đa 5 sản phẩm gợi ý dựa vào lịch sử đơn hàng thành công
+                orderSuggestions = productDao.getSuggestionsByOrders(user.getId(), 5);
+                System.out.println(">>> orderSuggestions size=" + (orderSuggestions != null ? orderSuggestions.size() : 0));
+            } catch (Exception e) {
+                System.err.println("❌ Lỗi tại productDao.getSuggestionsByOrders()");
+                e.printStackTrace();
+            }
+        }
+
+        // Đẩy danh sách gợi ý theo đơn hàng sang JSP
+        request.setAttribute("orderSuggestions", orderSuggestions);
 
 
         request.getRequestDispatcher("/index.jsp").forward(request, resp);

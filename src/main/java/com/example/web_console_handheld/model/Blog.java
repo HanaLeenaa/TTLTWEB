@@ -1,8 +1,13 @@
 package com.example.web_console_handheld.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 public class Blog {
     private int ID;
+
+    @ColumnName("image")
     private String img;
+
     private String title;
     private String metatitle;
     private String description;
@@ -18,6 +23,7 @@ public class Blog {
         this.active = active;
         this.playorder = playorder;
     }
+
     public Blog() {
     }
 
