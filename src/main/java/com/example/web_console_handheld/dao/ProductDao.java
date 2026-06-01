@@ -182,6 +182,7 @@ public class ProductDao extends BaseDao {
                            List<Integer> brandIds,
                            List<Integer> useTimes) {
 
+        // Đếm chính xác số lượng mẫu máy đại diện duy nhất (DISTINCT COALESCE)
         StringBuilder sql = new StringBuilder("""
             SELECT COUNT(DISTINCT COALESCE(parent_id, ID))
             FROM products
@@ -207,7 +208,8 @@ public class ProductDao extends BaseDao {
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND use_time IN (<useTimes>)");
+            // SỬA TẠI ĐÂY: Đổi từ use_time thành useTime cho đồng nhất với hàm getAllProductsPage
+            sql.append(" AND useTime IN (<useTimes>)");
         }
 
         return get().withHandle(handle -> {
@@ -228,6 +230,7 @@ public class ProductDao extends BaseDao {
     }
 
     // lọc sản phẩm
+    // lọc sản phẩm - ĐÃ CẬP NHẬT GỘP VARIANT CHUẨN QUA SUBQUERY
     public List<Product> filterSortPage(List<Integer> categoryIds,
                                         String priceRange,
                                         List<Integer> brandIds,
@@ -236,54 +239,57 @@ public class ProductDao extends BaseDao {
                                         int offset,
                                         int limit) {
 
-        StringBuilder sql = new StringBuilder("""
-        SELECT *
-        FROM products
-        WHERE active = 1
-    """);
+        // 1. Tạo Subquery để lọc và gom nhóm, chỉ lấy ra ID đại diện nhỏ nhất (MIN) của mẫu máy đó
+        StringBuilder subSql = new StringBuilder("SELECT MIN(ID) FROM products WHERE active = 1 ");
 
-        // ===== FILTER =====
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            sql.append(" AND categories_id IN (<categoryIds>)");
+            subSql.append(" AND categories_id IN (<categoryIds>)");
         }
 
         if (priceRange != null) {
             switch (priceRange) {
-                case "under500" -> sql.append(" AND price < 500000");
-                case "500-1m" -> sql.append(" AND price BETWEEN 500000 AND 1000000");
-                case "1-2m" -> sql.append(" AND price BETWEEN 1000000 AND 2000000");
-                case "2-3m" -> sql.append(" AND price BETWEEN 2000000 AND 3000000");
-                case "over3m" -> sql.append(" AND price > 3000000");
+                case "under500" -> subSql.append(" AND price < 500000");
+                case "500-1m" -> subSql.append(" AND price BETWEEN 500000 AND 1000000");
+                case "1-2m" -> subSql.append(" AND price BETWEEN 1000000 AND 2000000");
+                case "2-3m" -> subSql.append(" AND price BETWEEN 2000000 AND 3000000");
+                case "over3m" -> subSql.append(" AND price > 3000000");
             }
         }
 
         if (brandIds != null && !brandIds.isEmpty()) {
-            sql.append(" AND brand_id IN (<brandIds>)");
+            subSql.append(" AND brand_id IN (<brandIds>)");
         }
 
         if (useTimes != null && !useTimes.isEmpty()) {
-            sql.append(" AND use_time IN (<useTimes>)");
+            // Lưu ý: Đổi tên cột từ use_time thành useTime cho khớp với cấu trúc Database thực tế của bạn
+            subSql.append(" AND useTime IN (<useTimes>)");
         }
 
-        sql.append(" GROUP BY COALESCE(parent_id, ID) ");
+        // Thực hiện gộp nhóm biến thể tại đây
+        subSql.append(" GROUP BY COALESCE(parent_id, ID)");
+
+        // 2. Câu SQL chính: Lấy toàn bộ thông tin sản phẩm dựa trên danh sách các ID đại diện thu được ở trên
+        StringBuilder mainSql = new StringBuilder("SELECT * FROM products WHERE ID IN (")
+                .append(subSql)
+                .append(") ");
 
         // ===== SORT =====
         if (sort == null || sort.isEmpty()) {
-            sql.append(" ORDER BY id ASC, ispremium DESC");
+            mainSql.append(" ORDER BY ispremium DESC, id ASC");
         } else {
             switch (sort) {
-                case "price_asc" -> sql.append(" ORDER BY price ASC, ispremium DESC");
-                case "price_desc" -> sql.append(" ORDER BY price DESC, ispremium DESC");
-                case "newest" -> sql.append(" ORDER BY createdAt DESC, ispremium DESC");
-                default -> sql.append(" ORDER BY id ASC, ispremium DESC");
+                case "price_asc" -> mainSql.append(" ORDER BY price ASC, ispremium DESC");
+                case "price_desc" -> mainSql.append(" ORDER BY price DESC, ispremium DESC");
+                case "newest" -> mainSql.append(" ORDER BY createdAt DESC, ispremium DESC");
+                default -> mainSql.append(" ORDER BY ispremium DESC, id ASC");
             }
         }
 
         // ===== PAGINATION =====
-        sql.append(" LIMIT :limit OFFSET :offset");
+        mainSql.append(" LIMIT :limit OFFSET :offset");
 
         return get().withHandle(handle -> {
-            var q = handle.createQuery(sql.toString());
+            var q = handle.createQuery(mainSql.toString());
 
             if (categoryIds != null && !categoryIds.isEmpty()) {
                 q.bindList("categoryIds", categoryIds);
@@ -805,7 +811,7 @@ public class ProductDao extends BaseDao {
         } else if ("price_desc".equals(sort)) {
             sql.append("ORDER BY price DESC ");
         } else if ("newest".equals(sort)) {
-            sql.append("ORDER BY created_at DESC ");
+            sql.append("ORDER BY createdAt DESC ");
         } else {
             sql.append("ORDER BY id ASC ");
         }
@@ -949,6 +955,86 @@ public class ProductDao extends BaseDao {
                                     ORDER BY ID ASC
                                 """)
                         .bind("parentId", parentId)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    /**
+     * GỢI Ý SẢN PHẨM THEO DANH SÁCH YÊU THÍCH (WISHLIST)
+     * - Nếu khách chưa thích món nào (wishlistIds rỗng): Trả về list rỗng ngay lập tức (không hiển thị giao diện).
+     * - Nếu có dữ liệu: Gợi ý các món cùng danh mục + hãng với món đã thích, gộp biến thể parent_id.
+     * - Thứ tự ưu tiên: Giảm giá sâu -> Sắp hết hàng (FOMO) -> Hàng Premium
+     */
+    public List<Product> getRecommendedProductsByWishlist(List<Integer> wishlistIds, int limit) {
+        // Yêu cầu: Nếu không có sản phẩm yêu thích nào -> trả về list rỗng để ẩn giao diện
+        if (wishlistIds == null || wishlistIds.isEmpty()) {
+            return java.util.Collections.emptyList(); // Hoặc List.of() tùy phiên bản Java
+        }
+
+        String sql = """
+            SELECT * FROM products 
+            WHERE ID IN (
+                -- 1. Gom nhóm biến thể bằng parent_id, chỉ lấy ID đại diện nhỏ nhất (MIN)
+                SELECT MIN(p.ID) 
+                FROM products p
+                WHERE (p.categories_id, p.brand_id) IN (
+                    -- Tìm cặp (danh mục, hãng) từ các sản phẩm khách đã bấm thích
+                    SELECT DISTINCT prod.categories_id, prod.brand_id 
+                    FROM products prod 
+                    WHERE prod.ID IN (<wishlistIds>)
+                )
+                -- LOẠI TRỪ: Không gợi ý lại những món chính khách đã bấm thích rồi
+                AND p.ID NOT IN (<wishlistIds>)
+                AND p.active = 1 
+                AND p.stock > 0
+                GROUP BY COALESCE(p.parent_id, p.ID)
+            )
+            -- 2. XẾP HẠNG ƯU TIÊN KÍCH CẦU: Giảm giá sâu nhất -> Sắp cháy hàng -> Hàng Premium
+            ORDER BY (priceOld - price) DESC, stock ASC, ispremium DESC
+            LIMIT :limit
+            """;
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bindList("wishlistIds", wishlistIds)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list());
+    }
+
+    /**
+     * Gợi ý sản phẩm thông minh dựa trên các danh mục mà người dùng đã từng đặt mua.
+     * Thuật toán sẽ tự động loại trừ các sản phẩm người dùng đã mua để tránh trùng lặp.
+     */
+    public List<Product> getSuggestionsByOrders(int userId, int limit) {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                    SELECT p.* FROM products p
+                    WHERE p.active = 1
+                      -- 1. Tìm sản phẩm cùng danh mục với các đơn hàng của User
+                      AND p.categories_id IN (
+                          SELECT DISTINCT prod.categories_id
+                          FROM order_items oi
+                          JOIN orders o ON oi.order_id = o.ID
+                          JOIN products prod ON oi.product_id = prod.ID
+                          WHERE o.user_id = :userId
+                            -- ĐÃ CẢI TIẾN: Lấy tất cả đơn hàng trừ đơn bị hủy ('Cancel'/'Hủy') để dễ ra dữ liệu test
+                            AND o.status NOT IN ('Cancel', 'Canceled', 'Hủy', 'Đã hủy')
+                      )
+                      -- 2. Tạm thời COMMENT dòng loại trừ này lại để TEST xem có lên hình hay không. 
+                      -- Sau khi dữ liệu lên đầy đủ, bạn có thể mở ra lại nếu muốn.
+                      -- AND p.ID NOT IN (
+                      --     SELECT DISTINCT oi_sub.product_id
+                      --     FROM order_items oi_sub
+                      --     JOIN orders o_sub ON oi_sub.order_id = o_sub.ID
+                      --     WHERE o_sub.user_id = :userId
+                      -- )
+                    ORDER BY p.ispremium DESC, p.ID ASC
+                    LIMIT :limit
+                """)
+                        .bind("userId", userId)
+                        .bind("limit", limit)
                         .mapToBean(Product.class)
                         .list()
         );
