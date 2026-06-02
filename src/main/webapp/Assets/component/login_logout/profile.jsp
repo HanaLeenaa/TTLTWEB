@@ -231,6 +231,30 @@
                             </tbody>
                         </table>
                     </c:if>
+
+                    <div style="margin-top: 20px; text-align: center;">
+
+                        <c:if test="${currentPage > 1}">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${currentPage - 1}">
+                                ◀ Trước
+                            </a>
+                        </c:if>
+
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${i}"
+                               style="margin:0 5px; font-weight:${i == currentPage ? 'bold' : 'normal'}">
+                                    ${i}
+                            </a>
+                        </c:forEach>
+
+                        <c:if test="${currentPage < totalPages}">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${currentPage + 1}">
+                                Sau ▶
+                            </a>
+                        </c:if>
+
+                    </div>
+
                 </div>
             </c:when>
 

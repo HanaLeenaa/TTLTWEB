@@ -75,10 +75,11 @@ public class OrderDao {
     public Order getOrderById(int orderId) {
         Order order = null;
         String sql = """
-            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
-            FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id 
-            WHERE o.ID = ?
+            SELECT o.*
+                          FROM orders o
+                          WHERE o.user_id = ?
+                          ORDER BY o.order_date DESC
+                          LIMIT ? OFFSET ?
         """;
 
         try (
@@ -607,5 +608,61 @@ public class OrderDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Order> getOrdersByUserIdPaging(int userId, int offset, int limit) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY order_date DESC
+        LIMIT ? OFFSET ?
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setID(rs.getInt("ID"));
+                order.setUser_Id(rs.getInt("user_id"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
+                order.setStatus(rs.getString("status"));
+                order.setPrice(rs.getLong("total_amount"));
+                order.setReceiver_address(rs.getString("address_order"));
+
+                order.setPayment_method(rs.getString("payment_method"));
+
+                list.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public int countOrdersByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
