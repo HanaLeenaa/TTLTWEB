@@ -99,7 +99,13 @@ public class OrderDao {
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
                     order.setReceiver_note(rs.getString("note"));
+                    order.setDiscount_amount(rs.getLong("discount_amount"));
+                    order.setFinal_amount(rs.getLong("final_amount"));
 
+                    int voucherId = rs.getInt("voucher_id");
+                    if(!rs.wasNull()){
+                        order.setVoucher_id(voucherId);
+                    }
                     order.setPayment_method(rs.getString("pay_method"));
                     order.setPayment_status(rs.getString("pay_status"));
                     order.setTransaction_no(rs.getString("pay_transaction"));
@@ -139,7 +145,13 @@ public class OrderDao {
                     order.setReceiver_phone(rs.getString("phone_order"));
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
+                    order.setDiscount_amount(rs.getLong("discount_amount"));
+                    order.setFinal_amount(rs.getLong("final_amount"));
 
+                    int voucherId = rs.getInt("voucher_id");
+                    if(!rs.wasNull()){
+                        order.setVoucher_id(voucherId);
+                    }
                     order.setPayment_method(rs.getString("pay_method"));
                     order.setPayment_status(rs.getString("pay_status"));
                     order.setTransaction_no(rs.getString("pay_transaction"));
@@ -175,6 +187,13 @@ public class OrderDao {
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
                 order.setPayment_method(rs.getString("payment_method"));
+                order.setDiscount_amount(rs.getLong("discount_amount"));
+                order.setFinal_amount(rs.getLong("final_amount"));
+
+                int voucherId = rs.getInt("voucher_id");
+                if(!rs.wasNull()){
+                    order.setVoucher_id(voucherId);
+                }
                 list.add(order);
             }
         } catch (Exception e) {
@@ -208,6 +227,13 @@ public class OrderDao {
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
                 order.setPayment_method(rs.getString("payment_method"));
+                order.setDiscount_amount(rs.getLong("discount_amount"));
+                order.setFinal_amount(rs.getLong("final_amount"));
+
+                int voucherId = rs.getInt("voucher_id");
+                if(!rs.wasNull()){
+                    order.setVoucher_id(voucherId);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -305,7 +331,7 @@ public class OrderDao {
 
     public double getTotalRevenue() {
         double total = 0;
-        String sql = "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE status = 'Đã giao'";
+        String sql = "SELECT COALESCE(SUM(final_amount),0) FROM orders WHERE status = 'Đã giao'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -410,6 +436,8 @@ public class OrderDao {
                 o.setReceiver_name(rs.getString("fullname_order"));
                 o.setReceiver_phone(rs.getString("phone_order"));
                 o.setPrice(rs.getLong("total_amount"));
+                o.setDiscount_amount(rs.getLong("discount_amount"));
+                o.setFinal_amount(rs.getLong("final_amount"));
                 o.setStatus(rs.getString("status"));
                 o.setCreateAt(rs.getTimestamp("order_date"));
                 list.add(o);
@@ -424,10 +452,10 @@ public class OrderDao {
     public int createOrderTransactionWithLog(Order order, List<OrderItem> items) throws Exception {
         String insertOrderSql = """
     INSERT INTO orders(
-        user_id, order_date, status, total_amount, fullname_order,
-        phone_order, address_order, email_order, note
+        user_id, order_date, status, total_amount, discount_amount, final_amount,
+        voucher_id, fullname_order, phone_order, address_order, email_order, note
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
         String insertPaymentSql = """
@@ -456,12 +484,21 @@ public class OrderDao {
                 ps.setInt(1, order.getUser_Id());
                 ps.setTimestamp(2, order.getCreateAt());
                 ps.setString(3, order.getStatus());
-                ps.setLong(4, order.getPrice());
-                ps.setString(5, order.getReceiver_name());
-                ps.setString(6, order.getReceiver_phone());
-                ps.setString(7, order.getReceiver_address());
-                ps.setString(8, order.getReceiver_email());
-                ps.setString(9, order.getReceiver_note());
+                ps.setLong(4, order.getPrice());           // giá gốc
+                ps.setLong(5, order.getDiscount_amount()); // giảm giá
+                ps.setLong(6, order.getFinal_amount());    // giá cuối(sau khi áp dụng voucher)
+
+                if (order.getVoucher_id() != null) {
+                    ps.setInt(7, order.getVoucher_id());
+                }else {
+                    ps.setNull(7, Types.INTEGER);
+                }
+
+                ps.setString(8, order.getReceiver_name());
+                ps.setString(9, order.getReceiver_phone());
+                ps.setString(10, order.getReceiver_address());
+                ps.setString(11, order.getReceiver_email());
+                ps.setString(12, order.getReceiver_note());
 
                 int affectedRows = ps.executeUpdate();
 
@@ -579,6 +616,15 @@ public class OrderDao {
                 return false;
             }
             restoreStock(conn, orderId);
+
+            //hoàn voucher
+            if (order.getVoucher_id() != null) {
+                VoucherDao voucherDao = new VoucherDao();
+
+                voucherDao.increaseQuantity(order.getVoucher_id());
+
+                voucherDao.removeUserVoucher(order.getUser_Id(), order.getVoucher_id());
+            }
 
             updatePaymentWhenCancel(conn, orderId);
 
