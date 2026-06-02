@@ -2428,3 +2428,16 @@ SET FOREIGN_KEY_CHECKS = 1;
 -----------------Châu 1/6------------------
 ALTER TABLE users
     ADD COLUMN forgot_password_first_attempt DATETIME NULL;
+
+--------------------------Châu 2/6 (test vận chuyển) ---------------------------
+CREATE TABLE shipment (shipment_id INT AUTO_INCREMENT PRIMARY KEY,
+                          order_id INT NOT NULL,
+                          ghn_order_code VARCHAR(100),
+                          shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
+                          shipping_status VARCHAR(50)DEFAULT 'WAITING_PICKUP',
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          CONSTRAINT fk_shipment_order
+                              FOREIGN KEY(order_id)
+                                  REFERENCES orders(ID)
+                                  ON DELETE CASCADE
+);
