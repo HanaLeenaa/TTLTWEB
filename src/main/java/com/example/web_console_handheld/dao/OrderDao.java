@@ -75,9 +75,9 @@ public class OrderDao {
     public Order getOrderById(int orderId) {
         Order order = null;
         String sql = """
-            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
+            SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id  AS pay_transaction
             FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id 
+            LEFT JOIN payments p ON o.ID = p.orders_id
             WHERE o.ID = ?
         """;
 
@@ -100,9 +100,9 @@ public class OrderDao {
                     order.setReceiver_email(rs.getString("email_order"));
                     order.setReceiver_note(rs.getString("note"));
 
-                    order.setPayment_method(rs.getString("payment_method"));
-                    order.setPayment_status(rs.getString("payment_status"));
-                    order.setTransaction_no(rs.getString("transaction_id"));
+                    order.setPayment_method(rs.getString("pay_method"));
+                    order.setPayment_status(rs.getString("pay_status"));
+                    order.setTransaction_no(rs.getString("pay_transaction"));
                 }
             }
         } catch (Exception e) {
@@ -115,9 +115,9 @@ public class OrderDao {
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> list = new ArrayList<>();
         String sql = """
-            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
+            SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id AS pay_transaction
             FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id 
+            LEFT JOIN payments p ON o.ID = p.orders_id
             WHERE o.user_id = ?
             ORDER BY o.order_date DESC
         """;
@@ -140,9 +140,9 @@ public class OrderDao {
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
 
-                    order.setPayment_method(rs.getString("payment_method"));
-                    order.setPayment_status(rs.getString("payment_status"));
-                    order.setTransaction_no(rs.getString("transaction_id"));
+                    order.setPayment_method(rs.getString("pay_method"));
+                    order.setPayment_status(rs.getString("pay_status"));
+                    order.setTransaction_no(rs.getString("pay_transaction"));
 
                     list.add(order);
                 }
@@ -553,6 +553,20 @@ public class OrderDao {
         }
     }
 
+    //Cập nhật payment_status khi HUỶ ĐƠN
+    public void updatePaymentWhenCancel(Connection conn, int orderId) throws Exception {
+        String sql = """
+                UPDATE payments
+                SET payment_status = 'CANCELLED'
+                WHERE orders_id = ?
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+        }
+    }
+
     // HỦY trực tiếp (trạng thái chờ xác nhận và đã xác nhận)
     public boolean cancelOrder(int orderId) {
         Connection conn = null;
@@ -565,6 +579,8 @@ public class OrderDao {
                 return false;
             }
             restoreStock(conn, orderId);
+
+            updatePaymentWhenCancel(conn, orderId);
 
             String sql = "UPDATE orders SET status = 'Đã hủy' WHERE ID = ?";
 
