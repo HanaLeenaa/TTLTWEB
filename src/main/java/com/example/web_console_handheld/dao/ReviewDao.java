@@ -172,4 +172,21 @@ public class ReviewDao extends BaseDao {
                         .one()
         );
     }
+    // Cập nhật review
+    public void updateReview(int reviewId, int userId, int rating, String text) {
+        get().withHandle(handle ->
+                handle.createUpdate("""
+                UPDATE reviews
+                SET rating = :rating,
+                    review_text = :text
+                WHERE ID = :id AND users_id = :userId
+            """)
+                        .bind("id", reviewId)
+                        .bind("userId", userId)
+                        .bind("rating", rating)
+                        .bind("text", text)
+                        .execute()
+        );
+    }
+
 }
