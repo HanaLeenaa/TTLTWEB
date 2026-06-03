@@ -423,27 +423,32 @@ public class OrderDao {
     // ================= TRANSACTION ĐẶT HÀNG CHUẨN AN TOÀN =================
     public int createOrderTransactionWithLog(Order order, List<OrderItem> items) throws Exception {
         String insertOrderSql = """
-    INSERT INTO orders(
-        user_id, order_date, status, total_amount, fullname_order,
-        phone_order, address_order, email_order, note
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO orders(
+            user_id, order_date, status, total_amount, fullname_order,
+            phone_order, address_order, email_order, note
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
         String insertPaymentSql = """
-    INSERT INTO payments(orders_id, payment_method, payment_status, transaction_id)
-    VALUES (?, ?, ?, ?)
+        INSERT INTO payments(orders_id, payment_method, payment_status, transaction_id)
+        VALUES (?, ?, ?, ?)
     """;
 
         String insertItemSql = """
-    INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase, product_image)
-    VALUES (?, ?, ?, ?, ?)
+        INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase, product_image)
+        VALUES (?, ?, ?, ?, ?)
     """;
 
         String updateStockSql = """
-    UPDATE products
-    SET stock = stock - ?, sales_count = sales_count + ?
-    WHERE ID = ? AND stock >= ?
+        UPDATE products
+        SET stock = stock - ?, sales_count = sales_count + ?
+        WHERE ID = ? AND stock >= ?
+    """;
+
+        String insertShipmentSql = """
+        INSERT INTO shipment(order_id, ghn_order_code, shipping_fee, shipping_status)
+        VALUES (?, ?, ?, ?)
     """;
 
         Connection conn = null;
@@ -463,65 +468,63 @@ public class OrderDao {
                 ps.setString(8, order.getReceiver_email());
                 ps.setString(9, order.getReceiver_note());
 
-                int affectedRows = ps.executeUpdate();
+                ps.executeUpdate();
 
-                if (affectedRows <= 0) {
-                    conn.rollback();
-                    return -1;
-                }
-
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        orderId = rs.getInt(1);
-                    } else {
-                        throw new SQLException("Database không tự sinh được ID đơn hàng.");
-                    }
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    orderId = rs.getInt(1);
                 }
             }
 
-            try (PreparedStatement paymentPs = conn.prepareStatement(insertPaymentSql)) {
-                paymentPs.setInt(1, orderId);
-                paymentPs.setString(2, order.getPayment_method() != null ? order.getPayment_method() : "VNPAY");
-                paymentPs.setString(3, order.getPayment_status() != null ? order.getPayment_status() : "PAID");
-                paymentPs.setString(4, order.getTransaction_no());
-                paymentPs.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(insertPaymentSql)) {
+                ps.setInt(1, orderId);
+                ps.setString(2, order.getPayment_method());
+                ps.setString(3, order.getPayment_status());
+                ps.setString(4, order.getTransaction_no());
+                ps.executeUpdate();
             }
 
             for (OrderItem item : items) {
-                try (PreparedStatement stockPs = conn.prepareStatement(updateStockSql)) {
-                    stockPs.setInt(1, item.getQuantity());
-                    stockPs.setInt(2, item.getQuantity());
-                    stockPs.setInt(3, item.getProduct_id());
-                    stockPs.setInt(4, item.getQuantity());
 
-                    int updated = stockPs.executeUpdate();
-                    if (updated <= 0) {
-                        throw new SQLException("Sản phẩm ID " + item.getProduct_id() + " không đủ hàng tồn kho hoặc sai ID sản phẩm!");
+                try (PreparedStatement ps = conn.prepareStatement(updateStockSql)) {
+                    ps.setInt(1, item.getQuantity());
+                    ps.setInt(2, item.getQuantity());
+                    ps.setInt(3, item.getProduct_id());
+                    ps.setInt(4, item.getQuantity());
+
+                    if (ps.executeUpdate() <= 0) {
+                        throw new Exception("Out of stock product ID: " + item.getProduct_id());
                     }
                 }
 
-                try (PreparedStatement itemPs = conn.prepareStatement(insertItemSql)) {
-                    itemPs.setInt(1, orderId);
-                    itemPs.setInt(2, item.getProduct_id());
-                    itemPs.setInt(3, item.getQuantity());
-                    itemPs.setLong(4, item.getProduct_price());
-                    itemPs.setString(5, item.getProduct_image());
-                    itemPs.executeUpdate();
+                try (PreparedStatement ps = conn.prepareStatement(insertItemSql)) {
+                    ps.setInt(1, orderId);
+                    ps.setInt(2, item.getProduct_id());
+                    ps.setInt(3, item.getQuantity());
+                    ps.setLong(4, item.getProduct_price());
+                    ps.setString(5, item.getProduct_image());
+                    ps.executeUpdate();
                 }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(insertShipmentSql)) {
+                ps.setInt(1, orderId);
+                ps.setString(2, "GHN-" + System.currentTimeMillis());
+                ps.setDouble(3, 0);
+                ps.setString(4, "WAITING_PICKUP");
+
+                ps.executeUpdate();
             }
 
             conn.commit();
             return orderId;
 
         } catch (Exception e) {
-            if (conn != null) {
-                try { conn.rollback(); } catch (Exception ex) {}
-            }
-            throw new Exception("Lỗi hệ thống ngầm: " + e.getMessage(), e);
+            if (conn != null) conn.rollback();
+            throw e;
+
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); } catch (Exception ex) {}
-            }
+            if (conn != null) conn.close();
         }
     }
 
@@ -620,5 +623,61 @@ public class OrderDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Order> getOrdersByUserIdPaging(int userId, int offset, int limit) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY order_date DESC
+        LIMIT ? OFFSET ?
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setID(rs.getInt("ID"));
+                order.setUser_Id(rs.getInt("user_id"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
+                order.setStatus(rs.getString("status"));
+                order.setPrice(rs.getLong("total_amount"));
+                order.setReceiver_address(rs.getString("address_order"));
+
+                order.setPayment_method(rs.getString("payment_method"));
+
+                list.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public int countOrdersByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

@@ -62,7 +62,14 @@ public class ProfileServlet extends HttpServlet {
         List<Review> reviews = new ArrayList<>();
 
         if ("orders".equals(tab)) {
-            orders = orderDao.getOrdersByUserId(user.getId());
+
+            int totalOrders = orderDao.countOrdersByUserId(user.getId());
+            int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+
+            orders = orderDao.getOrdersByUserIdPaging(user.getId(), offset, pageSize);
+
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
         }
 
         if ("reviews".equals(tab)) {

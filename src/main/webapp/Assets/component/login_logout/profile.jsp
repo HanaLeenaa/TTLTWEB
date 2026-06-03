@@ -19,7 +19,6 @@
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css">
 
-
     <style>
         .popup-overlay {
             position: fixed;
@@ -232,6 +231,30 @@
                             </tbody>
                         </table>
                     </c:if>
+
+                    <div style="margin-top: 20px; text-align: center;">
+
+                        <c:if test="${currentPage > 1}">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${currentPage - 1}">
+                                ◀ Trước
+                            </a>
+                        </c:if>
+
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${i}"
+                               style="margin:0 5px; font-weight:${i == currentPage ? 'bold' : 'normal'}">
+                                    ${i}
+                            </a>
+                        </c:forEach>
+
+                        <c:if test="${currentPage < totalPages}">
+                            <a href="${pageContext.request.contextPath}/profile?tab=orders&page=${currentPage + 1}">
+                                Sau ▶
+                            </a>
+                        </c:if>
+
+                    </div>
+
                 </div>
             </c:when>
 
@@ -265,7 +288,6 @@
                                     <td>${r.review_text}</td>
                                     <td>${r.reviewDateOnly}</td>
                                     <td>${r.reviewTimeOnly}</td>
-
                                     <td>
                                         <!-- SỬA -->
                                         <button type="button"
@@ -316,55 +338,39 @@
                 <div class="edit-profile">
                     <h2>Sửa thông tin</h2>
 
+                    <c:if test="${not empty param.success}">
+                        <div class="success-message">
+                            Cập nhật thông tin thành công
+                        </div>
+                    </c:if>
+
                     <form action="${pageContext.request.contextPath}/update-profile"
                           method="post">
 
                         <label>Tên người dùng</label>
-
-                        <input class="input"
-                               name="username"
-                               value="${user.username}" />
+                        <input class="input" name="username" value="${user.username}" />
 
                         <label>Email</label>
-
-                        <input class="input"
-                               name="email"
-                               value="${user.email}" />
+                        <input class="input" name="email" value="${user.email}" />
 
                         <label>Số điện thoại</label>
-
-                        <input class="input"
-                               name="phoneNum"
-                               value="${user.phoneNum}" />
+                        <input class="input" name="phoneNum" value="${user.phoneNum}" />
 
                         <label>Địa chỉ</label>
-
-                        <input class="input"
-                               name="location"
-                               value="${user.location}" />
+                        <input class="input" name="location" value="${user.location}" />
 
                         <div class="btn-box">
-
-                            <button class="btn1"
-                                    type="submit">
-
-                                Lưu thay đổi
-
-                            </button>
+                            <button class="btn1" type="submit">Lưu thay đổi</button>
 
                             <button type="button"
                                     class="btn1 cancel"
                                     onclick="window.location.href='${pageContext.request.contextPath}/profile?tab=edit'">
                                 Huỷ
-
                             </button>
-
                         </div>
 
                     </form>
-
                 </div>
-
             </c:when>
 
 <%--             ĐỔI MẬT KHẨU --%>
