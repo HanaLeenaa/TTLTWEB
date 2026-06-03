@@ -3,6 +3,7 @@ package com.example.web_console_handheld.controller;
 import com.example.web_console_handheld.dao.CartDao;
 import com.example.web_console_handheld.dao.VoucherDao;
 import com.example.web_console_handheld.model.*;
+import com.example.web_console_handheld.service.VoucherService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class PaymentServlet extends HttpServlet {
     private CartDao cartDao = new CartDao(); // Khai báo Dao để lấy dữ liệu chuẩn từ DB
     private VoucherDao voucherDao = new VoucherDao();
+    private VoucherService  voucherService = new VoucherService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -93,23 +95,7 @@ public class PaymentServlet extends HttpServlet {
         long discountAmount = 0;
 
         if (selectedVoucher != null) {
-
-            if ("PERCENT".equals(selectedVoucher.getDiscount_type())) {
-
-                discountAmount = (long)(totalAmount * selectedVoucher.getDiscount_value().doubleValue() / 100);
-
-                if (selectedVoucher.getMax_discount() != null) {
-                    discountAmount = Math.min(
-                            discountAmount,
-                            selectedVoucher.getMax_discount().longValue()
-                    );
-                }
-
-            } else {
-
-                discountAmount =
-                        selectedVoucher.getDiscount_value().longValue();
-            }
+            discountAmount = voucherService.calculateDiscount(selectedVoucher, totalAmount);
         }
 
         long finalAmount = Math.max(0, totalAmount - discountAmount);

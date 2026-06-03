@@ -26,6 +26,7 @@
             cursor: pointer;
             padding: 14px 16px;
             transition: 0.2s;
+            position: relative;
         }
         .voucher-card:hover {
             border-color: #e95211;
@@ -159,6 +160,20 @@
             }
         }
 
+        .best-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff4d4f, #ff7a45);
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 10;
+            white-space: nowrap;
+        }
     </style>
 
 </head>
@@ -177,6 +192,12 @@
         <c:forEach items="${vouchers}" var="v">
 
             <label class="voucher-card">
+
+                <c:if test="${bestVoucher != null && v.ID == bestVoucher.ID}">
+                    <div class="best-badge">
+                        Lựa chọn tốt nhất
+                    </div>
+                </c:if>
 
                 <div class="voucher-left">
                         ${v.code}
@@ -227,7 +248,8 @@
                 <div class="voucher-radio">
                     <input type="radio"
                            name="voucherId"
-                           value="${v.ID}">
+                           value="${v.ID}"
+                    id="voucher-${v.ID}">
 
                 </div>
 
@@ -244,5 +266,29 @@
 </div>
 </main>
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
+<%--Auto check voucher tốt nhất--%>
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+
+        const selectedVoucherId = "${selectedVoucher != null ? selectedVoucher.ID : ''}";
+        const bestVoucherId = "${bestVoucher != null ? bestVoucher.ID : ''}";
+
+        // ưu tiên voucher user đã chọn
+        let targetId = selectedVoucherId;
+
+        // nếu chưa có thì mới dùng best
+        if (!targetId) {
+            targetId = bestVoucherId;
+        }
+
+        if (targetId) {
+            const radio = document.getElementById("voucher-" + targetId);
+            if (radio) {
+                radio.checked = true;
+            }
+        }
+
+    });
+</script>
 </body>
 </html>
