@@ -20,7 +20,7 @@ public class VoucherDao {
             throw new RuntimeException(e);
         }
     }
-//lấy tất cả voucher hợp lệ
+    //lấy tất cả voucher hợp lệ
     public List<Voucher> getAvailableVouchers(int userId, double orderTotal) {
         List<Voucher> list = new ArrayList<>();
         String sql = """
@@ -69,7 +69,7 @@ public class VoucherDao {
     public Voucher getVoucherById(int voucherId) {
         String sql = "SELECT *  FROM vouchers WHERE ID = ?";
 
-        try  (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, voucherId);
             ResultSet rs = ps.executeQuery();
 
@@ -175,8 +175,10 @@ public class VoucherDao {
     // xóa lịch sử dùng voucher khi hủy đơn => hủy đơn có thể hoàn voucher dùng lại lần nữa
     public boolean removeUserVoucher(int userId, int voucherId) {
         String sql = """
-        DELETE FROM user_vouchers
-        WHERE user_id = ? AND voucher_id = ?
+        DELETE FROM
+        user_vouchers
+        WHERE user_id = ? AND
+                voucher_id = ?
     """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -190,6 +192,102 @@ public class VoucherDao {
             e.printStackTrace();
         }
 
+        return false;
+    }
+
+    //lấy danh sách vouchers hiển thị lên trang quản lý voucher của admin
+    public List<Voucher> getAllVouchers() {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT *  FROM vouchers ORDER BY created_at DESC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setID(rs.getInt("ID"));
+                v.setCode(rs.getString("code"));
+                v.setName(rs.getString("name"));
+                v.setDiscount_type(rs.getString("discount_type"));
+                v.setDiscount_value(rs.getBigDecimal("discount_value"));
+                v.setMin_order_amount(rs.getBigDecimal("min_order_amount"));
+                v.setMax_discount(rs.getBigDecimal("max_discount"));
+                v.setQuantity(rs.getInt("quantity"));
+                v.setStart_date(rs.getTimestamp("start_date"));
+                v.setEnd_date(rs.getTimestamp("end_date"));
+                v.setActive(rs.getBoolean("active"));
+                v.setCreated_at(rs.getTimestamp("created_at"));
+                vouchers.add(v);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vouchers;
+    }
+
+    //chức năng sửa (Khóa/Hoạt động) trạng thái voucher
+    public boolean toggleVoucherStatus(int voucherId) {
+        String sql = """
+            UPDATE vouchers
+            SET active = CASE
+                WHEN active = 1 THEN 0
+                ELSE 1
+            END
+            WHERE ID = ?
+            """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, voucherId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return  false;
+    }
+
+    //thêm voucher
+    public boolean insertVoucher(Voucher v) {
+        String sql = """
+                INSERT INTO vouchers
+                (
+                            code,
+                            name,
+                            discount_type,
+                            discount_value,
+                            min_order_amount,
+                            max_discount,
+                            quantity,
+                            start_date,
+                            end_date,
+                            active
+                        )
+                VALUES (?,?,?,?,?,?,?,?,?,?)
+                """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, v.getCode());
+            ps.setString(2, v.getName());
+            ps.setString(3, v.getDiscount_type());
+            ps.setBigDecimal(4, v.getDiscount_value());
+            ps.setBigDecimal(5, v.getMin_order_amount());
+
+            if(v.getMax_discount() == null){
+                ps.setNull(6, java.sql.Types.DECIMAL);
+            }else{
+                ps.setBigDecimal(6, v.getMax_discount());
+            }
+
+            ps.setInt(7, v.getQuantity());
+            ps.setTimestamp(8, v.getStart_date());
+            ps.setTimestamp(9, v.getEnd_date());
+            ps.setBoolean(10, v.isActive());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }
