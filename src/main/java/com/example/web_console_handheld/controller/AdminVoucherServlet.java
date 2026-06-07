@@ -17,7 +17,14 @@ public class AdminVoucherServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Voucher> vouchers = voucherDao.getAllVouchers();
+
+        String keyword = request.getParameter("keyword");
+        String status = request.getParameter("status");
+        String type = request.getParameter("type");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+
+        List<Voucher> vouchers = voucherDao.searchAndFilterVoucher(keyword, status, type, fromDate, toDate);
 
         request.setAttribute("activePage", "vouchers");
         request.setAttribute("vouchers", vouchers);

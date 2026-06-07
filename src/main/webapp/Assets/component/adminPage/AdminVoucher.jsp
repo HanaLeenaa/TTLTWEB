@@ -7,6 +7,7 @@
 
     <meta charset="UTF-8">
     <title>Quản lý Voucher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
 
@@ -109,6 +110,129 @@
             white-space: nowrap;
             min-width: 110px;
         }
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:24px;
+        }
+        .page-header h2{
+            margin:0;
+        }
+        .search-input{
+            width: 300px;
+            height:40px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:0 20px;
+            font-size:16px;
+        }
+        .filter-btn{
+            height:40px;
+            padding:0 28px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            background:#fff;
+            cursor:pointer;
+
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+        .voucher-toolbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:20px;
+        }
+        .search-form{
+            flex:1;
+        }
+        .filter-wrapper{
+            margin-left:20px;
+            position: relative;
+        }
+        .filter-panel{
+            display:none;
+            position:absolute;
+            top:55px;
+            right:0;
+
+            width:340px;
+            background:#fff;
+            border-radius:20px;
+            padding:20px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,0.12);
+            z-index:1000;
+        }
+        .filter-panel.show{
+            display:block;
+        }
+        .filter-title{
+            font-size:16px;
+            font-weight:700;
+            color:#333;
+            margin-bottom:18px;
+        }
+        .filter-group{
+            margin-bottom:15px;
+        }
+        .filter-group label{
+            display:block;
+            font-size:14px;
+            font-weight:600;
+            color:#555;
+            margin-bottom:6px;
+        }
+        .filter-group select,
+        .filter-group input{
+            width:100%;
+            height:40px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:0 12px;
+            font-size:14px;
+            background:#fff;
+            box-sizing:border-box;
+        }
+        .date-range{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .date-range input{
+            flex:1;
+        }
+        .date-arrow{
+            font-size:16px;
+            color:#666;
+        }
+        .filter-footer{
+            margin-top:18px;
+            padding-top:15px;
+            border-top:1px solid #eee;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .apply-filter-btn{
+            background:#4e7cf0;
+            color:white;
+            border:none;
+            border-radius:10px;
+            height:40px;
+            padding:0 22px;
+            font-size:14px;
+            cursor:pointer;
+        }
+        .reset-filter{
+            color:#888;
+            text-decoration:none;
+            font-size:14px;
+        }
+
     </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -122,18 +246,130 @@
 
     <div class="card">
 
+        <div class="page-header">
         <h2>Quản lý Voucher</h2>
 
-        <br>
+            <a class="btn-add"
+               href="${pageContext.request.contextPath}/admin/vouchers/add">
+                + Thêm Voucher
+            </a>
+        </div>
 
-        <a class="btn-add"
-           href="${pageContext.request.contextPath}/admin/vouchers/add">
-            + Thêm Voucher
-        </a>
+<div class="voucher-toolbar">
 
-        <br><br>
+    <form action="${pageContext.request.contextPath}/admin/vouchers"
+          method="get"
+          class="search-form">
 
-        <table>
+        <input type="text"
+               name="keyword"
+               placeholder="Tìm voucher theo tên hoặc mã..."
+               value="${param.keyword}"
+               class="search-input">
+
+        <input type="hidden" name="status" value="${param.status}">
+        <input type="hidden" name="type" value="${param.type}">
+        <input type="hidden" name="fromDate" value="${param.fromDate}">
+        <input type="hidden" name="toDate" value="${param.toDate}">
+
+    </form>
+
+    <div class="filter-wrapper">
+        <button type="button"
+                class="filter-btn"
+                id="filterBtn">
+            <i class="fa-solid fa-filter"></i>
+            Bộ lọc
+        </button>
+
+        <div id="filterPanel" class="filter-panel">
+
+            <form action="${pageContext.request.contextPath}/admin/vouchers" method="get">
+
+                <input type="hidden"
+                       name="keyword"
+                       value="${param.keyword}">
+
+                <div class="filter-title">
+                    Bộ lọc
+                </div>
+
+                <div class="filter-group">
+                    <label>Trạng thái</label>
+                    <select name="status">
+                        <option value=""
+                        ${empty param.status ? 'selected' : ''}>
+                            Tất cả
+                        </option>
+
+                        <option value="true"
+                        ${param.status == 'true' ? 'selected' : ''}>
+                            Hoạt động
+                        </option>
+
+                        <option value="false"
+                        ${param.status == 'false' ? 'selected' : ''}>
+                            Đã khóa
+                        </option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Loại voucher</label>
+                    <select name="type">
+                        <option value=""
+                        ${empty param.type ? 'selected' : ''}>
+                            Tất cả
+                        </option>
+
+                        <option value="PERCENT"
+                        ${param.type == 'PERCENT' ? 'selected' : ''}>
+                            Phần trăm
+                        </option>
+
+                        <option value="FIXED"
+                        ${param.type == 'FIXED' ? 'selected' : ''}>
+                            Tiền mặt
+                        </option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Khoảng ngày</label>
+
+                    <div class="date-range">
+
+                        <input type="date" name="fromDate" value="${param.fromDate}">
+
+                        <span class="date-arrow"><i class="fa-solid fa-arrow-right-long"></i></span>
+
+                        <input type="date" name="toDate" value="${param.toDate}">
+
+                    </div>
+                </div>
+
+                <div class="filter-footer">
+
+                    <button type="submit" class="apply-filter-btn">
+                        Áp dụng
+                    </button>
+
+                    <a href="${pageContext.request.contextPath}/admin/vouchers"
+                       class="reset-filter">
+                        Reset
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
+
+    <table>
 
             <tr>
                 <th>ID</th>
@@ -327,5 +563,49 @@
     </script>
 </c:if>
 
+<%--Popup thông báo cập nhật--%>
+<c:if test="${param.success == 'updated'}">
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: 'Cập nhật voucher thành công!',
+            confirmButtonColor: '#28a745'
+        });
+    </script>
+</c:if>
+
+<c:if test="${param.error == 'updateFail'}">
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại',
+            text: 'Không thể cập nhật voucher!',
+            confirmButtonColor: '#dc3545'
+        });
+    </script>
+</c:if>
+
+<%--Lọc voucher--%>
+<script>
+    const filterBtn = document.getElementById("filterBtn");
+    const filterPanel = document.getElementById("filterPanel");
+
+    filterBtn.addEventListener("click", function () {
+        filterPanel.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function(e){
+
+        if(
+            !filterBtn.contains(e.target)
+            && !filterPanel.contains(e.target)
+        ){
+            filterPanel.classList.remove("show");
+        }
+
+    });
+
+</script>
 </body>
 </html>

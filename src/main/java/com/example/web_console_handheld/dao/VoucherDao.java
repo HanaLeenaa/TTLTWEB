@@ -290,4 +290,120 @@ public class VoucherDao {
         }
         return false;
     }
+
+    //Sửa voucher
+    public boolean updateVoucher(Voucher v) {
+        String sql = """
+                UPDATE vouchers
+                SET code = ?,
+                    name = ?,
+                    discount_type = ?,
+                    discount_value = ?,
+                    min_order_amount = ?,
+                    max_discount = ?,
+                    quantity = ?,
+                    start_date = ?,
+                    end_date = ?,
+                    active = ?
+                WHERE ID = ?
+                """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, v.getCode());
+            ps.setString(2, v.getName());
+            ps.setString(3, v.getDiscount_type());
+            ps.setBigDecimal(4, v.getDiscount_value());
+            ps.setBigDecimal(5, v.getMin_order_amount());
+
+            if (v.getMax_discount() == null){
+                ps.setNull(6, java.sql.Types.DECIMAL);
+            } else{
+                ps.setBigDecimal(6, v.getMax_discount());
+            }
+
+            ps.setInt(7, v.getQuantity());
+            ps.setTimestamp(8, v.getStart_date());
+            ps.setTimestamp(9, v.getEnd_date());
+            ps.setBoolean(10, v.isActive());
+            ps.setInt(11, v.getID());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // tìm kiếm, lọc hoặc kết hợp cả 2
+    public List<Voucher> searchAndFilterVoucher(String keyword, String status, String type, String fromDate, String toDate) {
+        List<Voucher> vouchers = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM vouchers WHERE 1=1 ");
+
+        List<Object> params = new ArrayList<>();
+
+        //tìm kiếm
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (code LIKE ? OR name LIKE ?) ");
+
+            String search = "%" + keyword + "%";
+            params.add(search);
+            params.add(search);
+        }
+
+        //trạng thái
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND active = ? ");
+            params.add(Boolean.parseBoolean(status));
+        }
+
+        //loại voucher (PERCENT / FIXED)
+        if (type != null && !type.trim().isEmpty()) {
+            sql.append(" AND discount_type = ? ");
+            params.add(type);
+        }
+
+        // từ ngày
+        if (fromDate != null && !fromDate.trim().isEmpty()) {
+            sql.append(" AND start_date >= ? ");
+            params.add(fromDate);
+        }
+
+        //đến ngày
+        if (toDate != null && !toDate.trim().isEmpty()) {
+            sql.append(" AND start_date <= ? ");
+            params.add(toDate);
+        }
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Voucher voucher = new Voucher();
+
+                voucher.setID(rs.getInt("ID"));
+                voucher.setCode(rs.getString("code"));
+                voucher.setName(rs.getString("name"));
+                voucher.setDiscount_type(rs.getString("discount_type"));
+                voucher.setDiscount_value(rs.getBigDecimal("discount_value"));
+                voucher.setMin_order_amount(rs.getBigDecimal("min_order_amount"));
+                voucher.setMax_discount(rs.getBigDecimal("max_discount"));
+                voucher.setQuantity(rs.getInt("quantity"));
+                voucher.setStart_date(rs.getTimestamp("start_date"));
+                voucher.setEnd_date(rs.getTimestamp("end_date"));
+                voucher.setActive(rs.getBoolean("active"));
+                voucher.setCreated_at(rs.getTimestamp("created_at"));
+                vouchers.add(voucher);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vouchers;
+    }
 }
