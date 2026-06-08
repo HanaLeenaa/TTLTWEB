@@ -103,6 +103,13 @@ public class ConfirmOrderServlet extends HttpServlet {
         String note = request.getParameter("note");
         String paymentMethod = request.getParameter("payment_method");
 
+        User auth = (User) session.getAttribute("auth");
+
+        if (fullname == null || fullname.isBlank()) fullname = auth.getUsername();
+        if (phone == null || phone.isBlank()) phone = auth.getPhoneNum();
+        if (email == null || email.isBlank()) email = auth.getEmail();
+        if (address == null || address.isBlank()) address = auth.getLocation();
+
         Order order = new Order();
         order.setUser_Id(user.getId());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
