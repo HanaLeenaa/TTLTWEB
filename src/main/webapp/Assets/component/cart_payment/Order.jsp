@@ -121,9 +121,15 @@
 
         <p>
             <strong>Phí vận chuyển:</strong>
-            <span style="color: green; font-weight: bold;">
+            <c:if test="${shippingFee > 0}">
+        <span>
+            <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/> ₫
+        </span>
+            </c:if>
+
+            <c:if test="${shippingFee == 0}">
                 Miễn phí
-            </span>
+            </c:if>
         </p>
         <p>
             <strong>Tổng thanh toán:</strong>

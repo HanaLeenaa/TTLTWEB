@@ -6,6 +6,7 @@ import com.example.web_console_handheld.model.Order;
 import com.example.web_console_handheld.model.OrderItem;
 import com.example.web_console_handheld.model.User;
 import com.example.web_console_handheld.service.GHNService;
+import com.example.web_console_handheld.service.DeliveryTimeService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +20,6 @@ import java.util.List;
 @WebServlet("/confirm-order")
 public class ConfirmOrderServlet extends HttpServlet {
     private final CartDao cartDao = new CartDao();
-    private final GHNService ghnService = new GHNService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -125,35 +125,30 @@ public class ConfirmOrderServlet extends HttpServlet {
                 ? paymentMethod.trim().toUpperCase() : "COD");
 
         order.setPayment_status("UNPAID");
-
-        int fee = 0;
         long now = System.currentTimeMillis();
 
-        try {
-            int fromDistrict = 1454;
-            String fromWard = "21005";
+        GHNService ghn = new GHNService();
 
-            int toDistrict = 1452;
-            String toWard = "21810";
+        int weight = 1000;
 
-            fee = ghnService.calculateFee(fromDistrict, toDistrict, 1000);
+        int fromDistrict = 1454;
+        int toDistrict = 1452;
 
-            int leadTime = ghnService.calculateLeadTime(fromDistrict, fromWard, toDistrict, toWard);
+        // ===== GHN fee =====
+        int shippingFee = ghn.calculateFee(fromDistrict, toDistrict, weight);
 
-            order.setShippingFee(fee);
+        order.setShippingFee(shippingFee);
+        session.setAttribute("shippingFee", shippingFee);
 
-            order.setExpectedDeliveryFrom(new Timestamp(now + 2L * 24 * 60 * 60 * 1000));
+        // ===== delivery time =====
+        DeliveryTimeService dts = new DeliveryTimeService();
+        int days = dts.estimateDays(fromDistrict, toDistrict);
 
-            order.setExpectedDeliveryTo(new Timestamp(now + (leadTime > 0
-                            ? leadTime * 1000L : 4L * 24 * 60 * 60 * 1000)));
+        order.setExpectedDeliveryFrom(
+                new Timestamp(now + (days - 1) * 24L * 60 * 60 * 1000));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            order.setShippingFee(0);
-            order.setExpectedDeliveryFrom(null);
-            order.setExpectedDeliveryTo(null);
-        }
+        order.setExpectedDeliveryTo(
+                new Timestamp(now + days * 24L * 60 * 60 * 1000));
 
         session.setAttribute("pendingOrder", order);
         session.setAttribute("pendingOrderItems", cartItems);
@@ -161,7 +156,6 @@ public class ConfirmOrderServlet extends HttpServlet {
         request.setAttribute("confirmed", false);
         request.setAttribute("order", order);
         request.setAttribute("orderItems", cartItems);
-        request.setAttribute("shippingFee", fee);
 
         request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
     }
