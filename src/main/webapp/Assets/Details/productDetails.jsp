@@ -418,46 +418,59 @@
         <div class="overall-rating">
             <div class="score">
                 <h3>${avg}/5</h3>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>${quantity} đánh giá</p>
+                    <div class="stars">
+
+                        <!-- sao đầy -->
+                        <c:forEach begin="1" end="${fullStars}">
+                            <i class="fas fa-star" style="color:#ffc107;"></i>
+                        </c:forEach>
+
+                        <!-- sao nửa -->
+                        <c:if test="${hasHalf}">
+                            <i class="fas fa-star-half-alt" style="color:#ffc107;"></i>
+                        </c:if>
+
+                        <!-- sao rỗng -->
+                        <c:forEach begin="1" end="${5 - fullStars - (hasHalf ? 1 : 0)}">
+                            <i class="far fa-star" style="color:#ddd;"></i>
+                        </c:forEach>
+
+                    </div>
+
+                    <p>${quantity} đánh giá</p>
             </div>
+
             <div class="rating-bars">
                 <div class="rating-bar">
-                    5 <i class="fas fa-star"></i>
+                    5 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg5}%"></div>
                     </div>
                     <span>${fiveStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    4 <i class="fas fa-star"></i>
+                    4 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg4}%"></div>
                     </div>
                     <span>${fourStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    3 <i class="fas fa-star"></i>
+                    3 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg3}%"></div>
                     </div>
                     <span>${threeStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    2 <i class="fas fa-star"></i>
+                    2 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg2}%"></div>
                     </div>
                     <span>${twoStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    1 <i class="fas fa-star"></i>
+                    1 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg1}%"></div>
                     </div>
@@ -515,8 +528,10 @@
                     <h4>
                             ${c.username}
                         <span class="stars">
-                            <c:forEach begin="1" end="${c.rating != null ? c.rating : 0}" var="i">
-                                <i class="fas fa-star text-warning" style="font-size: 10px"></i>
+                            <c:set var="starCount" value="${empty c.rating ? 0 : c.rating}" />
+
+                            <c:forEach begin="1" end="${starCount}">
+                                <i class="fas fa-star" style="color:#ffc107; font-size:10px"></i>
                             </c:forEach>
                         </span>
                     </h4>
