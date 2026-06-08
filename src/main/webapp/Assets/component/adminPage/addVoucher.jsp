@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -103,6 +104,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -125,6 +127,7 @@
                     <label>Mã Voucher</label>
                     <input type="text"
                            name="code"
+                           value="${voucher.code}"
                            placeholder="Ví dụ: SALE10, GIAM50K..."
                            required>
                 </div>
@@ -133,6 +136,7 @@
                     <label>Tên Voucher</label>
                     <input type="text"
                            name="name"
+                           value="${voucher.name}"
                            placeholder="Ví dụ: Giảm 10% cho đơn từ 500.000đ"
                            required>
                 </div>
@@ -145,11 +149,13 @@
                         <select name="discountType"
                                 id="discountType">
 
-                            <option value="PERCENT">
+                            <option value="PERCENT"
+                            ${voucher.discount_type == 'PERCENT' ? 'selected' : ''}>
                                 Phần trăm (%)
                             </option>
 
-                            <option value="FIXED">
+                            <option value="FIXED"
+                            ${voucher.discount_type == 'FIXED' ? 'selected' : ''}>
                                 Tiền cố định (VNĐ)
                             </option>
 
@@ -165,6 +171,7 @@
                         <input type="number"
                                id="discountValue"
                                name="discountValue"
+                               value="${voucher.discount_value}"
                                min="1"
                                placeholder="Ví dụ: 10"
                                required>
@@ -184,7 +191,8 @@
                         <input type="number"
                                id="maxDiscount"
                                name="maxDiscount"
-                               min="0"
+                               value="${voucher.max_discount}"
+                               min="1"
                                placeholder="Ví dụ: 50000">
 
                     </div>
@@ -197,6 +205,7 @@
 
                         <input type="number"
                                name="minOrder"
+                               value="${voucher.min_order_amount}"
                                min="0"
                                placeholder="Ví dụ: 500000"
                                required>
@@ -215,6 +224,7 @@
 
                         <input type="number"
                                name="quantity"
+                               value="${voucher.quantity}"
                                min="1"
                                placeholder="Ví dụ: 100"
                                required>
@@ -229,11 +239,11 @@
 
                         <select name="active">
 
-                            <option value="true">
+                            <option value="true" ${voucher.active ? 'selected' : ''}>
                                 Hoạt động
                             </option>
 
-                            <option value="false">
+                            <option value="false" ${!voucher.active ? 'selected' : ''}>
                                 Khóa
                             </option>
 
@@ -251,8 +261,13 @@
                             Ngày bắt đầu
                         </label>
 
+                        <fmt:formatDate value="${voucher.start_date}"
+                                        pattern="yyyy-MM-dd'T'HH:mm"
+                                        var="startDateFormatted"/>
+
                         <input type="datetime-local"
                                name="startDate"
+                               value="${startDateFormatted}"
                                required>
 
                     </div>
@@ -263,8 +278,13 @@
                             Ngày kết thúc
                         </label>
 
+                        <fmt:formatDate value="${voucher.end_date}"
+                                        pattern="yyyy-MM-dd'T'HH:mm"
+                                        var="endDateFormatted"/>
+
                         <input type="datetime-local"
                                name="endDate"
+                               value="${endDateFormatted}"
                                required>
 
                     </div>
@@ -296,43 +316,29 @@
 
 <script>
 
-    const discountType =
-        document.getElementById("discountType");
-
-    const discountValue =
-        document.getElementById("discountValue");
-
-    const discountLabel =
-        document.getElementById("discountLabel");
-
-    const maxDiscount =
-        document.getElementById("maxDiscount");
-
-    const maxDiscountGroup =
-        document.getElementById("maxDiscountGroup");
+    const discountType = document.getElementById("discountType");
+    const discountValue = document.getElementById("discountValue");
+    const discountLabel = document.getElementById("discountLabel");
+    const maxDiscount = document.getElementById("maxDiscount");
+    const maxDiscountGroup = document.getElementById("maxDiscountGroup");
 
     function toggleFields(){
 
         if(discountType.value === "FIXED"){
 
-            discountLabel.innerText =
-                "Giá trị giảm (VNĐ)";
+            discountLabel.innerText = "Giá trị giảm (VNĐ)";
+            discountValue.placeholder = "Ví dụ: 50000";
 
-            discountValue.placeholder =
-                "Ví dụ: 50000";
-
-            maxDiscount.value = "";
             maxDiscountGroup.style.display = "none";
+            maxDiscount.removeAttribute("required");
 
         }else{
 
-            discountLabel.innerText =
-                "Giá trị giảm (%)";
-
-            discountValue.placeholder =
-                "Ví dụ: 10";
+            discountLabel.innerText = "Giá trị giảm (%)";
+            discountValue.placeholder = "Ví dụ: 10";
 
             maxDiscountGroup.style.display = "block";
+            maxDiscount.setAttribute("required", "required");
         }
     }
 
@@ -344,6 +350,17 @@
     toggleFields();
 
 </script>
+
+<c:if test="${not empty error}">
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: '${error}',
+            confirmButtonColor: '#dc3545'
+        });
+    </script>
+</c:if>
 
 </body>
 </html>

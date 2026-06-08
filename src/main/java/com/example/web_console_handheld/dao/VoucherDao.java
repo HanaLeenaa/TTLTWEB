@@ -375,6 +375,7 @@ public class VoucherDao {
             sql.append(" AND start_date <= ? ");
             params.add(toDate);
         }
+        sql.append(" ORDER BY created_at DESC");
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
@@ -405,5 +406,21 @@ public class VoucherDao {
             e.printStackTrace();
         }
         return vouchers;
+    }
+
+    public boolean existsByCode(String code) {
+        String sql = "SELECT COUNT(*) FROM vouchers WHERE code = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
