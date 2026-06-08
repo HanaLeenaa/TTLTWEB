@@ -23,12 +23,19 @@
 
 <div class="order-detail-container">
     <h2>CHI TIẾT ĐƠN HÀNG</h2>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <c:if test="${confirmed}">
-        <div class="order-success">
-            <i class="fa-solid fa-circle-check"></i>
-            Đặt hàng thành công!
-        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đặt hàng thành công!',
+                    text: 'Cảm ơn bạn đã mua hàng tại cửa hàng của chúng tôi!',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
     </c:if>
 
     <p><strong>Ngày đặt:</strong>
@@ -103,9 +110,28 @@
 
     <div class="order-summary">
         <p>
-            <strong>Tổng cộng:</strong>
+            <strong>Tạm tính:</strong>
+            <fmt:formatNumber value="${order.price}"
+                                type="number"
+                                groupingUsed="true"/> đ
+        </p>
+
+        <c:if test="${order.discount_amount > 0}">
+            <p style="color: green">
+                <strong>Giảm giá:</strong>
+                -
+                <fmt:formatNumber value="${order.discount_amount}"
+                                    type="number"
+                                    groupingUsed="true"/> đ
+            </p>
+        </c:if>
+
+        <p>
+            <strong>Thanh toán:</strong>
             <span class="total">
-                <fmt:formatNumber value="${order.price}" type="number" groupingUsed="true"/> ₫
+                <fmt:formatNumber value="${order.final_amount}"
+                                  type="number"
+                                  groupingUsed="true"/> đ
             </span>
         </p>
     </div>

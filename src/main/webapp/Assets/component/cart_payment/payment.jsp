@@ -105,6 +105,50 @@
                         </div>
                     </c:forEach>
 
+                    <%--======VOUCHER=====--%>
+                    <hr>
+                        <div class="voucher-row">
+                        <span>
+                            <i class="fa-solid fa-ticket"></i>
+                            Voucher
+                        </span>
+
+                            <a href="${pageContext.request.contextPath}/voucher-list">
+
+                                <c:choose>
+
+                                    <c:when test="${selectedVoucher != null}">
+                                        ${selectedVoucher.code}
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        Chọn Voucher
+                                    </c:otherwise>
+
+                                </c:choose>
+
+                                >
+                            </a>
+
+                        </div>
+                    <hr>
+                    <%--TÍNH TỔNG TIỀN KHI ÁP DỤNG VOUCHER--%>
+                    <div class="summary">
+                        <p><b>Tổng tiền:</b>
+                            <fmt:formatNumber value="${totalAmount}" type="number"/> đ
+                        </p>
+
+                        <p><b>Giảm giá:</b>
+                            <fmt:formatNumber value="${discountAmount}" type="number"/> đ
+                        </p>
+
+                        <p><b>Thanh toán:</b>
+                            <span id="finalAmount">
+                                <fmt:formatNumber value="${finalAmount}" type="number"/> đ
+                            </span>
+                        </p>
+                    </div>
+
                     <hr>
 
                     <div class="payment-main same">
