@@ -18,6 +18,13 @@ private long price;
     private String receiver_note;
     private String payment_status;
     private String transaction_no;
+
+    private String ghnOrderCode;
+    private long shippingFee;
+    private String shippingStatus;
+    private Timestamp expectedDeliveryFrom;
+    private Timestamp expectedDeliveryTo;
+
     public Order() {}
 
     public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no) {
@@ -137,5 +144,45 @@ private long price;
 
     public void setTransaction_no(String transaction_no) {
         this.transaction_no = transaction_no;
+    }
+
+    public String getGhnOrderCode() {
+        return ghnOrderCode;
+    }
+
+    public long getShippingFee() {
+        return shippingFee;
+    }
+
+    public String getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setGhnOrderCode(String ghnOrderCode) {
+        this.ghnOrderCode = ghnOrderCode;
+    }
+
+    public void setShippingFee(long shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public void setShippingStatus(String shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
+
+    public Timestamp getExpectedDeliveryFrom() {
+        return expectedDeliveryFrom;
+    }
+
+    public void setExpectedDeliveryFrom(Timestamp expectedDeliveryFrom) {
+        this.expectedDeliveryFrom = expectedDeliveryFrom;
+    }
+
+    public Timestamp getExpectedDeliveryTo() {
+        return expectedDeliveryTo;
+    }
+
+    public void setExpectedDeliveryTo(Timestamp expectedDeliveryTo) {
+        this.expectedDeliveryTo = expectedDeliveryTo;
     }
 }
