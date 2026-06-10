@@ -115,8 +115,8 @@
                                     <td>${o.receiver_address}</td>
                                     <td>
                                         <fmt:formatNumber
-                                                value="${o.price}"
-                                                type="number"/>đ
+                                                value="${o.final_amount}"
+                                                type="number"/> đ
                                     </td>
 
                                     <td>

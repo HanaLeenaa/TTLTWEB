@@ -18,6 +18,9 @@
 
         .sidebar {
             width: 230px;
+            min-width: 230px;
+            max-width: 230px;
+            flex-shrink: 0;
             background-color: #1e272e;
             color: white;
             padding: 20px;
@@ -111,6 +114,10 @@
                class="${activePage == 'orders' ? 'active' : ''}" >
             <i class="fa-solid fa-receipt"></i> Quản lý đơn hàng</a></li>
 
+        <li><a href="${pageContext.request.contextPath}/admin/vouchers"
+                class="${activePage == 'vouchers' ? 'active' : ''}">
+            <i class="fa-solid fa-ticket"></i> Quản lý voucher</a></li>
+
         <li><a href="${pageContext.request.contextPath}/admin/users"
             class="${activePage == 'users' ? 'active' : ''}">
             <i class="fa-solid fa-user"></i> Quản lý user</a></li>
@@ -155,7 +162,7 @@
         </li>
 
 
-        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-thin fa-door-closed"></i> Đăng xuất</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
     </ul>
 </div>
 <script>

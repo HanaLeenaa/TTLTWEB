@@ -2,10 +2,8 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.CartDao;
 import com.example.web_console_handheld.dao.OrderDao;
-import com.example.web_console_handheld.model.CartItem;
-import com.example.web_console_handheld.model.Order;
-import com.example.web_console_handheld.model.OrderItem;
-import com.example.web_console_handheld.model.User;
+import com.example.web_console_handheld.dao.VoucherDao;
+import com.example.web_console_handheld.model.*;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,6 +18,7 @@ import java.util.List;
 public class ConfirmOrderServlet extends HttpServlet {
 
     private CartDao cartDao = new CartDao();
+    private VoucherDao voucherDao = new VoucherDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,6 +47,8 @@ public class ConfirmOrderServlet extends HttpServlet {
         // 3. BỘ LỌC MẶT HÀNG ĐƯỢC CHỌN
         List<OrderItem> cartItems = new ArrayList<>();
         long totalAmount = 0;
+        long discountAmount = 0;
+        Voucher selectedVoucher = null;
 
         if (Boolean.TRUE.equals(buyNowMode)) {
             List<OrderItem> buyNowItems = (List<OrderItem>) session.getAttribute("pendingOrderItems");
@@ -103,11 +104,40 @@ public class ConfirmOrderServlet extends HttpServlet {
         String note = request.getParameter("note");
         String paymentMethod = request.getParameter("payment_method");
 
+        Integer voucherId = (Integer) session.getAttribute("selectedVoucherId");
+
+        if (voucherId != null) {
+
+            if (voucherDao.hasUsedVoucher(user.getId(), voucherId)) {
+                session.setAttribute("cartError",
+                        "Không thể sử dụng lại do bạn đã sử dụng voucher này trước đó!");
+
+                response.sendRedirect(request.getContextPath() + "/payment");
+                return;
+            }
+
+            selectedVoucher = voucherDao.getVoucherById(voucherId);
+
+            if (selectedVoucher != null) {
+                if ("PERCENT".equals(selectedVoucher.getDiscount_type())) {
+                    discountAmount = (long) (totalAmount * selectedVoucher.getDiscount_value().doubleValue() / 100);
+                }else {
+                    discountAmount = selectedVoucher.getDiscount_value().longValue();
+                }
+                if (selectedVoucher.getMax_discount() != null) {
+                    discountAmount = Math.min(discountAmount, selectedVoucher.getMax_discount().longValue());
+                }
+            }
+        }
         // 5. ĐÓNG GÓI ĐỐI TƯỢNG ORDER TẠM THỜI
         Order order = new Order();
         order.setUser_Id(user.getId());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
         order.setStatus("Chờ xác nhận");
+        order.setVoucher_id(selectedVoucher != null ? selectedVoucher.getID() : null);
+        order.setDiscount_amount(discountAmount);
+        long finalAmount = Math.max(0, totalAmount - discountAmount);
+        order.setFinal_amount(finalAmount);
         order.setPrice(totalAmount);
         order.setReceiver_name(fullname);
         order.setReceiver_phone(phone);
@@ -125,6 +155,10 @@ public class ConfirmOrderServlet extends HttpServlet {
         request.setAttribute("confirmed", false);
         request.setAttribute("order", order);
         request.setAttribute("orderItems", cartItems);
+        request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("discountAmount", discountAmount);
+        request.setAttribute("finalAmount", finalAmount);
+        request.setAttribute("selectedVoucher", selectedVoucher);
 
         request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
     }
