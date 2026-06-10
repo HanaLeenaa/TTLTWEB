@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -162,8 +162,10 @@
                 </c:choose>
             </td>
             <td>${p.name}</td>
-            <td>${p.price}</td>
-            <td>${p.stock_quantity}</td>
+            <td style="white-space: nowrap;">
+                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/> đ
+            </td>
+            <td>${p.stock}</td>
             <td>${p.active}</td>
             <td>${p.ispremium}</td>
             <td>
