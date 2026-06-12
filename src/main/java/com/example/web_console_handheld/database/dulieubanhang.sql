@@ -15,13 +15,18 @@ DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews,
     cart_items;
 
 -- 2. TẠO CÁC BẢNG
-
 CREATE TABLE admin (
                        ID INT AUTO_INCREMENT PRIMARY KEY,
                        username VARCHAR(50) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
                        fullname VARCHAR(100),
-                       status TINYINT DEFAULT 1
+                       status TINYINT DEFAULT 1,
+                       role TINYINT DEFAULT 2
+    -- Quy ước quyền:
+    -- 1: ADMIN (Toàn quyền)
+    -- 2: STAFF_WAREHOUSE (Nhân viên kho)
+    -- 3: STAFF_SALE (Nhân viên bán hàng)
+    -- 4: STAFF_SUPPORT (Nhân viên hỗ trợ/Liên hệ)
 );
 
 CREATE TABLE users (
@@ -220,9 +225,11 @@ CREATE TABLE cart_items (
 
 -- 3. THÊM DỮ LIỆU
 
-INSERT INTO admin(username, password, fullname)
-VALUES ('Admin', '$2a$10$EsoqYldgsgbopnxoOvxf7ujIcrjbb.BX5v86K9JCzC6s4PUtfC3hm', N'Administrator');
+INSERT INTO admin(username, password, fullname, role)
+VALUES ('Admin', '$2a$10$EsoqYldgsgbopnxoOvxf7ujIcrjbb.BX5v86K9JCzC6s4PUtfC3hm', N'Administrator', 1);
 
+INSERT INTO admin(username, password, fullname, status, role)
+VALUES ('staff_kho', '$2a$10$XLDMGWNE5y3nmhXq3eDAfunidOo5PLGvvAWEaJdNNtCqSsDiC5wZy', N'Nguyễn Văn Kho', 1, 2);
 
 INSERT INTO video VALUES
     (1, 1, 'Video giới thiệu');

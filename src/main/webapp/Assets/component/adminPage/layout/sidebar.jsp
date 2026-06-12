@@ -1,8 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Sidebar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <style>
         body {
@@ -11,16 +12,13 @@
             background-color: #f5f6fa;
         }
 
-        .admin-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
         .sidebar {
             width: 230px;
             background-color: #1e272e;
             color: white;
             padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .sidebar .logo {
@@ -32,6 +30,7 @@
         .menu {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .menu li {
@@ -72,14 +71,6 @@
             background-color: #ff6b35;
         }
 
-        .submenu li a.active-sub {
-            background-color: #e95211;
-        }
-
-        .menu li:has(.active-sub) > a.active {
-            background: transparent;
-        }
-
         .submenu.open {
             display: block;
         }
@@ -96,39 +87,54 @@
 
 <body>
 <div class="sidebar">
-    <h2 class="logo">${sessionScope.admin.username}</h2>
+    <h2 class="logo">
+        ${sessionScope.admin.username}
+        <br>
+        <span style="color: yellow; font-size: 14px;">Role: [${sessionScope.admin.role}]</span>
+    </h2>
 
     <ul class="menu">
-        <li><a href="${pageContext.request.contextPath}/admin/dashboard"
-            class="${activePage == 'dashboard' ? 'active' : ''}">
-            <i class="fa-solid fa-house"></i> Dashboard</a></li>
-
-        <li><a href="${pageContext.request.contextPath}/admin/products"
-               class="${activePage == 'products' ? 'active' : ''}">
-            <i class="fa-solid fa-box"></i> Quản lý sản phẩm</a></li>
-
-        <li><a href="${pageContext.request.contextPath}/admin/orders"
-               class="${activePage == 'orders' ? 'active' : ''}" >
-            <i class="fa-solid fa-receipt"></i> Quản lý đơn hàng</a></li>
-
-        <li><a href="${pageContext.request.contextPath}/admin/users"
-            class="${activePage == 'users' ? 'active' : ''}">
-            <i class="fa-solid fa-user"></i> Quản lý user</a></li>
-
         <li>
-
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/contact"
-               class="${activePage == 'contact' ? 'active' : ''}">
-                <i class="fa-solid fa-envelope"></i> Quản lý liên hệ
-
-                <!-- Badge NEW -->
-                <c:if test="${newCount > 0}">
-                    <span class="contact-badge">${newCount}</span>
-                </c:if>
+            <a href="${pageContext.request.contextPath}/admin/dashboard"
+               class="${activePage == 'dashboard' ? 'active' : ''}">
+                <i class="fa-solid fa-house"></i> Dashboard
             </a>
         </li>
 
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/products"
+               class="${activePage == 'products' ? 'active' : ''}">
+                <i class="fa-solid fa-box"></i> Quản lý sản phẩm
+            </a>
+        </li>
+
+        <c:if test="${sessionScope.admin.role == 1 || sessionScope.admin.role == '1'}">
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/orders"
+                   class="${activePage == 'orders' ? 'active' : ''}">
+                    <i class="fa-solid fa-receipt"></i> Quản lý đơn hàng
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/users"
+                   class="${activePage == 'users' ? 'active' : ''}">
+                    <i class="fa-solid fa-user"></i> Quản lý user
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/contact"
+                   class="${activePage == 'contact' ? 'active' : ''}">
+                    <i class="fa-solid fa-envelope"></i> Quản hệ liên hệ
+                    <c:if test="${newCount > 0}">
+                        <span class="contact-badge">${newCount}</span>
+                    </c:if>
+                </a>
+            </li>
+        </c:if>
+
+        <li>
             <a href="javascript:void(0)"
                onclick="toggleWarehouse()"
                class="${activePage == 'warehouse' ? 'active' : ''}">
@@ -136,7 +142,6 @@
                 Quản lý nhập kho
                 <i class="fa-solid fa-caret-down" style="float:right;"></i>
             </a>
-
 
             <ul id="warehouseMenu" class="submenu ${activePage == 'warehouse' ? 'open' : ''}">
                 <li>
@@ -154,10 +159,14 @@
             </ul>
         </li>
 
-
-        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-thin fa-door-closed"></i> Đăng xuất</a></li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin-logout">
+                <i class="fa-solid fa-door-closed"></i> Đăng xuất
+            </a>
+        </li>
     </ul>
 </div>
+
 <script>
     function toggleWarehouse() {
         var menu = document.getElementById("warehouseMenu");

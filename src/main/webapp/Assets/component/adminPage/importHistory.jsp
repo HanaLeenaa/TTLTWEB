@@ -45,7 +45,7 @@
 <div class="admin-wrapper">
 
     <!--SIDEBAR-->
-    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
 
     <div class="content">
         <h2><i class="fa-light fa-receipt"></i> Lịch sử nhập kho</h2>

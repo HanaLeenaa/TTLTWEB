@@ -351,7 +351,7 @@
 <body>
 
 <div class="admin-orders-wrapper ${not empty selectedOrder ? 'show-detail' : ''}">
-    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
     <!-- ================= DANH SÁCH ĐƠN ================= -->
     <div class="order-list">
         <h2><i class="fa-solid fa-box"></i> Quản lý đơn hàng</h2>

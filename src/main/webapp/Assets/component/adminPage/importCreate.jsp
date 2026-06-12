@@ -75,7 +75,7 @@
 <div class="admin-wrapper">
 
     <!--SIDEBAR-->
-    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
 
     <div class="content">
 <%-- Thông báo nhập hàng thành công--%>
