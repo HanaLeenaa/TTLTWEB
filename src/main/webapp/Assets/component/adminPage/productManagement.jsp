@@ -44,7 +44,8 @@
         }
 
         th {
-            background-color: #f5f5f5;
+            background-color: #f1f3f9;
+            color: #555555;
         }
 
         th, td {

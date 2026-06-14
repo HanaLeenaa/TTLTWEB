@@ -2,6 +2,7 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.CartDao;
 import com.example.web_console_handheld.dao.OrderDao;
+import com.example.web_console_handheld.dao.VoucherDao;
 import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Order;
 import com.example.web_console_handheld.model.OrderItem;
@@ -26,6 +27,7 @@ public class VNPayReturnServlet extends HttpServlet {
 
     private OrderDao orderDao = new OrderDao();
     private CartDao cartDao = new CartDao();
+    private VoucherDao voucherDao = new VoucherDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -89,7 +91,7 @@ public class VNPayReturnServlet extends HttpServlet {
             // Kiểm tra số tiền thanh toán khớp cấu trúc dữ liệu đơn hàng
             long vnpAmount = Long.parseLong(request.getParameter("vnp_Amount")) / 100;
 
-            if (vnpAmount != order.getPrice()) {
+            if (vnpAmount != order.getFinal_amount()) {
                 response.sendRedirect(request.getContextPath() + "/cart?error=amount-mismatch");
                 return;
             }
@@ -105,6 +107,15 @@ public class VNPayReturnServlet extends HttpServlet {
             if (orderId <= 0) {
                 response.sendRedirect(request.getContextPath() + "/cart?error=stock");
                 return;
+            }
+
+            if (order.getVoucher_id() != null) {
+                voucherDao.decreaseQuantity(order.getVoucher_id());
+
+                voucherDao.insertUserVoucher(
+                        user.getId(),
+                        order.getVoucher_id()
+                );
             }
 
             // DỌN DẸP GIỎ HÀNG SAU KHI THANH TOÁN THÀNH CÔNG

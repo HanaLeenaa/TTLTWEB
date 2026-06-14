@@ -34,8 +34,8 @@
         }
 
         th {
-            background: #ff6b35;
-            color: white;
+            background: #f1f3f9;
+            color: #555555;
         }
     </style>
 </head>

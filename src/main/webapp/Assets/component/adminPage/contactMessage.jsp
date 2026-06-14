@@ -45,8 +45,8 @@
         }
 
         th {
-            background: #e95211;
-            color: white;
+            background: #f1f3f9;
+            color: #555555;
         }
 
         tr:hover {
