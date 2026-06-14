@@ -20,16 +20,56 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
 
+    <!-- Pagination Style Override -->
+    <style>
+        .pagination {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .pagination a {
+            color: #333 !important;
+            text-decoration: none !important;
+            font-size: 16px !important;
+            padding: 2px 6px !important;
+
+            border: none !important;
+            outline: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .pagination a:hover {
+            color: #E95221 !important;
+        }
+
+        .pagination a:focus,
+        .pagination a:active,
+        .pagination a:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .pagination .active {
+            font-weight: bold !important;
+            color: #E95221 !important;
+
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+
 </head>
 <body>
-<!-- <div id="header"></div> -->
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 
 <main id="content">
-    <!--  lọc sản phẩm  -->
     <form id="filterForm" action="${pageContext.request.contextPath}/product" method="get">
-        <!-- GIỮ SEARCH -->
         <c:if test="${not empty param.q}">
             <input type="hidden" name="q" value="${fn:escapeXml(param.q)}" />
         </c:if>
@@ -41,18 +81,16 @@
                 <a href="${pageContext.request.contextPath}/product" style="font-size: 12px; color: #E95221; text-decoration: none;">Xóa tất cả</a>
             </div>
 
-            <!-- CATEGORY -->
             <div class="title">LOẠI SẢN PHẨM</div>
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
                     <input type="checkbox" name="categoryId" value="${cat.ID}"
-                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if> />
+                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if />
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>
 
 
-            <!-- PRICE -->
             <div class="title">CHỌN MỨC GIÁ</div>
             <c:set var="price" value="${param.priceRange}" />
             <c:forEach var="p" items="under500,500-1m,1-2m,2-3m,over3m" varStatus="st">
@@ -71,7 +109,6 @@
             </c:forEach>
 
 
-            <!-- BRAND -->
             <div class="title">THƯƠNG HIỆU</div>
             <c:forEach var="b" items="${brands}">
                 <div class="choice">
@@ -82,20 +119,18 @@
             </c:forEach>
 
 
-            <!-- BATTERY -->
             <div class="title">PIN</div>
-            <c:forEach var="e" items="${energy}">
+            <c:forEach var="timeValue" items="${energy}">
                 <div class="choice">
-                    <input type="checkbox" name="useTime" value="${e.useTime}"
-                        ${fn:contains(fn:join(paramValues.useTime, ','), e.useTime) ? 'checked' : ''} />
-                    <label>${e.useTime} giờ</label>
+                    <input type="checkbox" name="useTime" value="${timeValue}"
+                        ${fn:contains(fn:join(paramValues.useTime, ','), timeValue) ? 'checked' : ''} />
+                    <label>${timeValue} giờ</label>
                 </div>
             </c:forEach>
         </div>
     </form>
 
 
-    <!-- san pham           -->
     <div class="contain">
 
         <div class="contain-header">
@@ -105,18 +140,14 @@
                 <c:if test="${not empty keyword}">
                     <input type="hidden" name="q" value="${keyword}">
                 </c:if>
-                <!-- category -->
                 <input type="hidden" name="categoryId" value="${param.categoryId}">
 
-                <!-- price -->
                 <input type="hidden" name="priceRange" value="${param.priceRange}">
 
-                <!-- brand (multiple checkbox) -->
                 <c:forEach var="b" items="${paramValues.brandId}">
                     <input type="hidden" name="brandId" value="${b}">
                 </c:forEach>
 
-                <!-- useTime -->
                 <c:forEach var="u" items="${paramValues.useTime}">
                     <input type="hidden" name="useTime" value="${u}">
                 </c:forEach>
@@ -153,7 +184,6 @@
             <i class="fa-solid fa-sliders"></i> Bộ lọc
         </button>
 
-
         <!-- Card San Pham -->
         <div id="product-list">
 
@@ -176,7 +206,6 @@
                                 </c:if>
                         </div>
                         <div class="actions">
-                            <!-- Nút thêm vào giỏ hàng -->
                             <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">
                                 <input type="hidden" name="productId" value="${c.ID}">
                                 <input type="hidden" name="name" value="${c.name}">
@@ -189,17 +218,14 @@
                                 </button>
                             </form>
 
-                            <!-- Nút yêu thích -->
                             <c:choose>
                                 <c:when test="${fn:contains(wishlistIdString, c.ID)}">
-                                    <!-- Nếu sản phẩm đã nằm trong wishlist -->
                                     <button type="button" class="btn-fav active" data-id="${c.ID}"
                                             onclick="toggleWishlist(this, '${c.ID}')">
                                         <i class="fa fa-heart"></i>
                                     </button>
                                 </c:when>
                                 <c:otherwise>
-                                    <!-- Nếu sản phẩm chưa nằm trong wishlist -->
                                     <button type="button" class="btn-fav" data-id="${c.ID}"
                                             onclick="toggleWishlist(this, '${c.ID}')">
                                         <i class="fa fa-heart"></i>
@@ -218,19 +244,16 @@
 
         </div>
 
-        <!-- pagination-->
-        <div class="pagination">
-            <c:forEach begin="1" end="${totalPage}" var="i">
+        <!-- Pagination -->
+        <div class="pagination" style="margin-top: 20px; text-align: center;">
 
-                <c:url var="pageUrl" value="/product">
-                    <c:param name="page" value="${i}" />
+            <!-- Trang trước -->
+            <c:if test="${currentPage > 1}">
+                <c:url var="prevUrl" value="/product">
+                    <c:param name="page" value="${currentPage - 1}" />
 
                     <c:if test="${not empty keyword}">
                         <c:param name="q" value="${keyword}" />
-                    </c:if>
-
-                    <c:if test="${not empty param.categoryId}">
-                        <c:param name="categoryId" value="${param.categoryId}" />
                     </c:if>
 
                     <c:if test="${not empty param.priceRange}">
@@ -241,6 +264,10 @@
                         <c:param name="sort" value="${param.sort}" />
                     </c:if>
 
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
                     <c:forEach var="b" items="${paramValues.brandId}">
                         <c:param name="brandId" value="${b}" />
                     </c:forEach>
@@ -250,11 +277,80 @@
                     </c:forEach>
                 </c:url>
 
-                <a class="${i == currentPage ? 'active' : ''}" href="${pageUrl}">
+                <a href="${prevUrl}">◀ Trước</a>
+            </c:if>
+
+            <!-- Số trang -->
+            <c:forEach begin="1" end="${totalPage}" var="i">
+
+                <c:url var="pageUrl" value="/product">
+                    <c:param name="page" value="${i}" />
+
+                    <c:if test="${not empty keyword}">
+                        <c:param name="q" value="${keyword}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.priceRange}">
+                        <c:param name="priceRange" value="${param.priceRange}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.sort}">
+                        <c:param name="sort" value="${param.sort}" />
+                    </c:if>
+
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
+                    <c:forEach var="b" items="${paramValues.brandId}">
+                        <c:param name="brandId" value="${b}" />
+                    </c:forEach>
+
+                    <c:forEach var="u" items="${paramValues.useTime}">
+                        <c:param name="useTime" value="${u}" />
+                    </c:forEach>
+                </c:url>
+
+                <a href="${pageUrl}"
+                   class="${i == currentPage ? 'active' : ''}">
                         ${i}
                 </a>
 
             </c:forEach>
+
+            <!-- Trang sau -->
+            <c:if test="${currentPage < totalPage}">
+                <c:url var="nextUrl" value="/product">
+                    <c:param name="page" value="${currentPage + 1}" />
+
+                    <c:if test="${not empty keyword}">
+                        <c:param name="q" value="${keyword}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.priceRange}">
+                        <c:param name="priceRange" value="${param.priceRange}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.sort}">
+                        <c:param name="sort" value="${param.sort}" />
+                    </c:if>
+
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
+                    <c:forEach var="b" items="${paramValues.brandId}">
+                        <c:param name="brandId" value="${b}" />
+                    </c:forEach>
+
+                    <c:forEach var="u" items="${paramValues.useTime}">
+                        <c:param name="useTime" value="${u}" />
+                    </c:forEach>
+                </c:url>
+
+                <a href="${nextUrl}">Sau ▶</a>
+            </c:if>
+
         </div>
 
         <div id="no-products-message" style="display:none; text-align: center; margin-top: 20px;">
@@ -378,7 +474,6 @@ function toggleWishlist(btn, productId) {
     .catch(err => console.error("Fetch error:", err));
 }
 </script>
-
 
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>

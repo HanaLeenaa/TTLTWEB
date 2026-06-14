@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.web_console_handheld.model.Product" %>
 
@@ -24,17 +24,17 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
-    <!-- Font Awesome -->
     <script
             src="https://kit.fontawesome.com/a076d05399.js"
             crossorigin="anonymous"
     ></script>
 </head>
 <body>
-<!--
-  Header
--->
-<c:import url="/Assets/component/recycleFiles/header.jsp"/>
+<script>
+    const contextPath = "${pageContext.request.contextPath}";
+</script>
+
+<jsp:include page="/Assets/component/recycleFiles/header.jsp" />
 
 
 <div class="slider">
@@ -50,13 +50,11 @@
         </c:forEach>
     </div>
 
-    <!-- Mũi tên -->
     <div class="arrows">
         <span class="prev" title="previous">&#10094;</span>
         <span class="next" title="next">&#10095;</span>
     </div>
 
-    <!-- Dấu chấm -->
     <div class="dots">
         <c:forEach var="b" items="${banners}" varStatus="st">
             <span class="dot ${st.index == 0 ? 'active' : ''}"></span>
@@ -155,10 +153,6 @@
         </div>
     </div>
 </div>
-
-<!--hien thi san pham da xem gan day-->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:if test="${not empty recentProducts}">
     <div class="recent-header">
@@ -312,7 +306,7 @@
             <c:set var="countOrder" value="0" />
 
             <c:forEach var="c" items="${orderSuggestions}">
-                <c:set var="targetId" value="${c.parent_id > 0 ? p.parent_id : c.ID}" />
+                <c:set var="targetId" value="${c.parent_id > 0 ? c.parent_id : c.ID}" />
                 <c:set var="checkId" value=",${targetId}," />
 
                 <c:if test="${not fn:contains(renderedOrderIds, checkId) && countOrder < 7}">
@@ -370,7 +364,6 @@
     </div>
 </c:if>
 
-<!--products section-->
 <section class="product-section">
     <h2>Sản Phẩm Mới/Giá Ưu Đãi</h2>
     <div class="container">
@@ -406,26 +399,26 @@
     </div>
 </section>
 
-<!-- MACBOOK SECTION -->
-<section class="featured-product">
-    <div class="featured-content">
-        <div class="text">
-            <h1>${highest.name}</h1>
-            <div class="line"></div>
-            <p class="details">Weight: ${highest.weight}g &nbsp; | &nbsp; Use Time: ${highest.useTime}hours</p>
-            <div class="price-box">
-                <span class="new-price">${highest.price}đ</span>
-                <span class="old-price">${highest.priceOld}đ</span>
+<c:if test="${not empty highest}">
+    <section class="featured-product">
+        <div class="featured-content">
+            <div class="text">
+                <h1>${highest.name}</h1>
+                <div class="line"></div>
+                <p class="details">Weight: ${highest.weight}g &nbsp; | &nbsp; Use Time: ${highest.useTime}hours</p>
+                <div class="price-box">
+                    <span class="new-price">${highest.price}đ</span>
+                    <span class="old-price">${highest.priceOld}đ</span>
+                </div>
+            </div>
+
+            <div class="image">
+                <img src="${highest.image}" alt="" />
             </div>
         </div>
+    </section>
+</c:if>
 
-        <div class="image">
-            <img src="${highest.image}" alt="" />
-        </div>
-    </div>
-</section>
-
-<!-- CAMERA SECTION -->
 <section class="camera-section">
     <div class="camera-grid">
         <c:if test="${not empty smaller && fn:length(smaller) > 0}">
@@ -449,27 +442,27 @@
     </div>
 </section>
 
-<!--Laptop 2-->
-<section class="featured-product">
-    <div class="featured-content">
-        <div class="text">
-            <h1>${smallest.name}</h1>
-            <div class="line"></div>
-            <p class="details">Weight: ${smallest.weight}g &nbsp; | &nbsp; Use Time: ${smallest.useTime}hours</p>
+<c:if test="${not empty smallest}">
+    <section class="featured-product">
+        <div class="featured-content">
+            <div class="text">
+                <h1>${smallest.name}</h1>
+                <div class="line"></div>
+                <p class="details">Weight: ${smallest.weight}g &nbsp; | &nbsp; Use Time: ${smallest.useTime}hours</p>
 
-            <div class="price-box">
-                <span class="new-price">${smallest.price}đ</span>
-                <span class="old-price">${smallest.priceOld}đ</span>
+                <div class="price-box">
+                    <span class="new-price">${smallest.price}đ</span>
+                    <span class="old-price">${smallest.priceOld}đ</span>
+                </div>
+            </div>
+
+            <div class="image">
+                <img src="${smallest.image}" alt="Ps5" />
             </div>
         </div>
+    </section>
+</c:if>
 
-        <div class="image">
-            <img src="${smallest.image}" alt="Ps5" />
-        </div>
-    </div>
-</section>
-
-<!-- section blog -->
 <section class="blog-section">
     <h2>Tin Tức & Blog</h2>
 
@@ -490,16 +483,15 @@
         </c:forEach>
     </div>
 </section>
-<!--Footer-->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />
 
-<!-- Slide show + category click -->
 <script>
     const slides = document.querySelectorAll(".slides img");
     const dots = document.querySelectorAll(".dot");
     let index = 0;
 
     function showSlide(i) {
+        if(!slides || slides.length === 0) return;
         slides.forEach(s => s.classList.remove("active"));
         dots.forEach(d => d.classList.remove("active"));
 
@@ -507,15 +499,21 @@
         dots[i].classList.add("active");
     }
 
-    document.querySelector(".next").onclick = () => {
-        index = (index + 1) % slides.length;
-        showSlide(index);
-    };
+    if(document.querySelector(".next")) {
+        document.querySelector(".next").onclick = () => {
+            if(slides.length === 0) return;
+            index = (index + 1) % slides.length;
+            showSlide(index);
+        };
+    }
 
-    document.querySelector(".prev").onclick = () => {
-        index = (index - 1 + slides.length) % slides.length;
-        showSlide(index);
-    };
+    if(document.querySelector(".prev")) {
+        document.querySelector(".prev").onclick = () => {
+            if(slides.length === 0) return;
+            index = (index - 1 + slides.length) % slides.length;
+            showSlide(index);
+        };
+    }
 
     dots.forEach((dot, i) => {
         dot.onclick = () => {
@@ -524,10 +522,13 @@
         };
     });
 
-    setInterval(() => {
-        index = (index + 1) % slides.length;
-        showSlide(index);
-    }, 4000);
+    if(slides && slides.length > 0) {
+        setInterval(() => {
+            index = (index + 1) % slides.length;
+            showSlide(index);
+        }, 4000);
+    }
+
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('click', () => {
             window.location.href = item.dataset.url;
@@ -536,7 +537,6 @@
 </script>
 
 <script>
-
 // ===== Giỏ hàng =====
 document.querySelectorAll('.add-cart').forEach(btn => {
     btn.addEventListener('click', function (e) {
@@ -606,7 +606,14 @@ function toggleWishlist(btn, productId) {
 }
 </script>
 <script>
-    console.log("Recent products size = ${recentProducts.size()}");
+    <c:choose>
+        <c:when test="${not empty recentProducts}">
+            console.log("Recent products size = ${fn:length(recentProducts)}");
+        </c:when>
+        <c:otherwise>
+            console.log("Recent products size = 0");
+        </c:otherwise>
+    </c:choose>
 </script>
 
 </body>

@@ -20,7 +20,7 @@
     <div class="login-right">
         <form action="${pageContext.request.contextPath}/admin-login" method="post" class="login-form">
             <c:if test="${not empty ERROR}">
-                <p class="error-msg">${ERROR}</p>
+                <p class="error-msg" style="color: red; font-weight: bold; margin-bottom: 15px;">${ERROR}</p>
             </c:if>
 
             <h2 class="title">ĐĂNG NHẬP</h2>
@@ -29,13 +29,15 @@
                    type="text"
                    name="username"
                    id="username"
-                   placeholder="Tên đăng nhập/Email">
+                   placeholder="Tên đăng nhập/Email"
+                   required>
 
             <input class="input"
                    type="password"
                    name="password"
                    id="password"
-                   placeholder="Mật khẩu">
+                   placeholder="Mật khẩu"
+                   required>
 
             <button class="button" type="submit">Đăng nhập</button>
             <p id="message"></p>
@@ -43,5 +45,6 @@
     </div>
 </div>
 
+    ${DEVTOOLS_LOG}
 </body>
 </html>

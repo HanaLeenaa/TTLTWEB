@@ -85,10 +85,10 @@
     </c:if>
 
     <c:forEach var="c" items="${notifications}">
-        <div class="notify-card ${c.read == false ? 'unread' : ''}"
+        <div class="notify-card ${!c.read ? 'unread' : ''}"
              onclick="goDetail(${c.ID})">
 
-            <div class="title"><i class="fa-regular fa-envelope"></i>Bạn đã gửi:</div>
+            <div class="title"><i class="fa-regular fa-envelope"></i> Bạn đã gửi:</div>
             <div class="msg">${c.message}</div>
 
             <div class="title"><i class="fa-solid fa-reply"></i> Admin phản hồi:</div>

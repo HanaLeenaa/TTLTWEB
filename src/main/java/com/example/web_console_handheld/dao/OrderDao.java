@@ -75,9 +75,9 @@ public class OrderDao {
     public Order getOrderById(int orderId) {
         Order order = null;
         String sql = """
-            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
+            SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id  AS pay_transaction
             FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id 
+            LEFT JOIN payments p ON o.ID = p.orders_id
             WHERE o.ID = ?
         """;
 
@@ -99,10 +99,16 @@ public class OrderDao {
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
                     order.setReceiver_note(rs.getString("note"));
+                    order.setDiscount_amount(rs.getLong("discount_amount"));
+                    order.setFinal_amount(rs.getLong("final_amount"));
 
-                    order.setPayment_method(rs.getString("payment_method"));
-                    order.setPayment_status(rs.getString("payment_status"));
-                    order.setTransaction_no(rs.getString("transaction_id"));
+                    int voucherId = rs.getInt("voucher_id");
+                    if(!rs.wasNull()){
+                        order.setVoucher_id(voucherId);
+                    }
+                    order.setPayment_method(rs.getString("pay_method"));
+                    order.setPayment_status(rs.getString("pay_status"));
+                    order.setTransaction_no(rs.getString("pay_transaction"));
                 }
             }
         } catch (Exception e) {
@@ -115,9 +121,9 @@ public class OrderDao {
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> list = new ArrayList<>();
         String sql = """
-            SELECT o.*, p.payment_method, p.payment_status, p.transaction_id 
+            SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id AS pay_transaction
             FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id 
+            LEFT JOIN payments p ON o.ID = p.orders_id
             WHERE o.user_id = ?
             ORDER BY o.order_date DESC
         """;
@@ -139,10 +145,16 @@ public class OrderDao {
                     order.setReceiver_phone(rs.getString("phone_order"));
                     order.setReceiver_address(rs.getString("address_order"));
                     order.setReceiver_email(rs.getString("email_order"));
+                    order.setDiscount_amount(rs.getLong("discount_amount"));
+                    order.setFinal_amount(rs.getLong("final_amount"));
 
-                    order.setPayment_method(rs.getString("payment_method"));
-                    order.setPayment_status(rs.getString("payment_status"));
-                    order.setTransaction_no(rs.getString("transaction_id"));
+                    int voucherId = rs.getInt("voucher_id");
+                    if(!rs.wasNull()){
+                        order.setVoucher_id(voucherId);
+                    }
+                    order.setPayment_method(rs.getString("pay_method"));
+                    order.setPayment_status(rs.getString("pay_status"));
+                    order.setTransaction_no(rs.getString("pay_transaction"));
 
                     list.add(order);
                 }
@@ -175,6 +187,13 @@ public class OrderDao {
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
                 order.setPayment_method(rs.getString("payment_method"));
+                order.setDiscount_amount(rs.getLong("discount_amount"));
+                order.setFinal_amount(rs.getLong("final_amount"));
+
+                int voucherId = rs.getInt("voucher_id");
+                if(!rs.wasNull()){
+                    order.setVoucher_id(voucherId);
+                }
                 list.add(order);
             }
         } catch (Exception e) {
@@ -208,6 +227,13 @@ public class OrderDao {
                 order.setReceiver_address(rs.getString("address_order"));
                 order.setReceiver_email(rs.getString("email_order"));
                 order.setPayment_method(rs.getString("payment_method"));
+                order.setDiscount_amount(rs.getLong("discount_amount"));
+                order.setFinal_amount(rs.getLong("final_amount"));
+
+                int voucherId = rs.getInt("voucher_id");
+                if(!rs.wasNull()){
+                    order.setVoucher_id(voucherId);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -305,7 +331,7 @@ public class OrderDao {
 
     public double getTotalRevenue() {
         double total = 0;
-        String sql = "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE status = 'Đã giao'";
+        String sql = "SELECT COALESCE(SUM(final_amount),0) FROM orders WHERE status = 'Đã giao'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -410,6 +436,8 @@ public class OrderDao {
                 o.setReceiver_name(rs.getString("fullname_order"));
                 o.setReceiver_phone(rs.getString("phone_order"));
                 o.setPrice(rs.getLong("total_amount"));
+                o.setDiscount_amount(rs.getLong("discount_amount"));
+                o.setFinal_amount(rs.getLong("final_amount"));
                 o.setStatus(rs.getString("status"));
                 o.setCreateAt(rs.getTimestamp("order_date"));
                 list.add(o);
@@ -424,26 +452,31 @@ public class OrderDao {
     public int createOrderTransactionWithLog(Order order, List<OrderItem> items) throws Exception {
         String insertOrderSql = """
     INSERT INTO orders(
-        user_id, order_date, status, total_amount, fullname_order,
-        phone_order, address_order, email_order, note
+        user_id, order_date, status, total_amount, discount_amount, final_amount,
+        voucher_id, fullname_order, phone_order, address_order, email_order, note
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
         String insertPaymentSql = """
-    INSERT INTO payments(orders_id, payment_method, payment_status, transaction_id)
-    VALUES (?, ?, ?, ?)
+        INSERT INTO payments(orders_id, payment_method, payment_status, transaction_id)
+        VALUES (?, ?, ?, ?)
     """;
 
         String insertItemSql = """
-    INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase, product_image)
-    VALUES (?, ?, ?, ?, ?)
+        INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase, product_image)
+        VALUES (?, ?, ?, ?, ?)
     """;
 
         String updateStockSql = """
-    UPDATE products
-    SET stock = stock - ?, sales_count = sales_count + ?
-    WHERE ID = ? AND stock >= ?
+        UPDATE products
+        SET stock = stock - ?, sales_count = sales_count + ?
+        WHERE ID = ? AND stock >= ?
+    """;
+
+        String insertShipmentSql = """
+        INSERT INTO shipment(order_id, ghn_order_code, shipping_fee, shipping_status)
+        VALUES (?, ?, ?, ?)
     """;
 
         Connection conn = null;
@@ -456,72 +489,79 @@ public class OrderDao {
                 ps.setInt(1, order.getUser_Id());
                 ps.setTimestamp(2, order.getCreateAt());
                 ps.setString(3, order.getStatus());
-                ps.setLong(4, order.getPrice());
-                ps.setString(5, order.getReceiver_name());
-                ps.setString(6, order.getReceiver_phone());
-                ps.setString(7, order.getReceiver_address());
-                ps.setString(8, order.getReceiver_email());
-                ps.setString(9, order.getReceiver_note());
+                ps.setLong(4, order.getPrice());           // giá gốc
+                ps.setLong(5, order.getDiscount_amount()); // giảm giá
+                ps.setLong(6, order.getFinal_amount());    // giá cuối(sau khi áp dụng voucher)
 
-                int affectedRows = ps.executeUpdate();
-
-                if (affectedRows <= 0) {
-                    conn.rollback();
-                    return -1;
+                if (order.getVoucher_id() != null) {
+                    ps.setInt(7, order.getVoucher_id());
+                }else {
+                    ps.setNull(7, Types.INTEGER);
                 }
 
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        orderId = rs.getInt(1);
-                    } else {
-                        throw new SQLException("Database không tự sinh được ID đơn hàng.");
-                    }
+                ps.setString(8, order.getReceiver_name());
+                ps.setString(9, order.getReceiver_phone());
+                ps.setString(10, order.getReceiver_address());
+                ps.setString(11, order.getReceiver_email());
+                ps.setString(12, order.getReceiver_note());
+
+                ps.executeUpdate();
+
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    orderId = rs.getInt(1);
                 }
             }
 
-            try (PreparedStatement paymentPs = conn.prepareStatement(insertPaymentSql)) {
-                paymentPs.setInt(1, orderId);
-                paymentPs.setString(2, order.getPayment_method() != null ? order.getPayment_method() : "VNPAY");
-                paymentPs.setString(3, order.getPayment_status() != null ? order.getPayment_status() : "PAID");
-                paymentPs.setString(4, order.getTransaction_no());
-                paymentPs.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(insertPaymentSql)) {
+                ps.setInt(1, orderId);
+                ps.setString(2, order.getPayment_method());
+                ps.setString(3, order.getPayment_status());
+                ps.setString(4, order.getTransaction_no());
+                ps.executeUpdate();
             }
 
             for (OrderItem item : items) {
-                try (PreparedStatement stockPs = conn.prepareStatement(updateStockSql)) {
-                    stockPs.setInt(1, item.getQuantity());
-                    stockPs.setInt(2, item.getQuantity());
-                    stockPs.setInt(3, item.getProduct_id());
-                    stockPs.setInt(4, item.getQuantity());
 
-                    int updated = stockPs.executeUpdate();
-                    if (updated <= 0) {
-                        throw new SQLException("Sản phẩm ID " + item.getProduct_id() + " không đủ hàng tồn kho hoặc sai ID sản phẩm!");
+                try (PreparedStatement ps = conn.prepareStatement(updateStockSql)) {
+                    ps.setInt(1, item.getQuantity());
+                    ps.setInt(2, item.getQuantity());
+                    ps.setInt(3, item.getProduct_id());
+                    ps.setInt(4, item.getQuantity());
+
+                    if (ps.executeUpdate() <= 0) {
+                        throw new Exception("Out of stock product ID: " + item.getProduct_id());
                     }
                 }
 
-                try (PreparedStatement itemPs = conn.prepareStatement(insertItemSql)) {
-                    itemPs.setInt(1, orderId);
-                    itemPs.setInt(2, item.getProduct_id());
-                    itemPs.setInt(3, item.getQuantity());
-                    itemPs.setLong(4, item.getProduct_price());
-                    itemPs.setString(5, item.getProduct_image());
-                    itemPs.executeUpdate();
+                try (PreparedStatement ps = conn.prepareStatement(insertItemSql)) {
+                    ps.setInt(1, orderId);
+                    ps.setInt(2, item.getProduct_id());
+                    ps.setInt(3, item.getQuantity());
+                    ps.setLong(4, item.getProduct_price());
+                    ps.setString(5, item.getProduct_image());
+                    ps.executeUpdate();
                 }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(insertShipmentSql)) {
+                ps.setInt(1, orderId);
+                ps.setString(2, "GHN-" + System.currentTimeMillis());
+                ps.setDouble(3, 0);
+                ps.setString(4, "WAITING_PICKUP");
+
+                ps.executeUpdate();
             }
 
             conn.commit();
             return orderId;
 
         } catch (Exception e) {
-            if (conn != null) {
-                try { conn.rollback(); } catch (Exception ex) {}
-            }
-            throw new Exception("Lỗi hệ thống ngầm: " + e.getMessage(), e);
+            if (conn != null) conn.rollback();
+            throw e;
+
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); } catch (Exception ex) {}
-            }
+            if (conn != null) conn.close();
         }
     }
 
@@ -553,6 +593,20 @@ public class OrderDao {
         }
     }
 
+    //Cập nhật payment_status khi HUỶ ĐƠN
+    public void updatePaymentWhenCancel(Connection conn, int orderId) throws Exception {
+        String sql = """
+                UPDATE payments
+                SET payment_status = 'CANCELLED'
+                WHERE orders_id = ?
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+        }
+    }
+
     // HỦY trực tiếp (trạng thái chờ xác nhận và đã xác nhận)
     public boolean cancelOrder(int orderId) {
         Connection conn = null;
@@ -565,6 +619,17 @@ public class OrderDao {
                 return false;
             }
             restoreStock(conn, orderId);
+
+            //hoàn voucher
+            if (order.getVoucher_id() != null) {
+                VoucherDao voucherDao = new VoucherDao();
+
+                voucherDao.increaseQuantity(order.getVoucher_id());
+
+                voucherDao.removeUserVoucher(order.getUser_Id(), order.getVoucher_id());
+            }
+
+            updatePaymentWhenCancel(conn, orderId);
 
             String sql = "UPDATE orders SET status = 'Đã hủy' WHERE ID = ?";
 
@@ -604,5 +669,61 @@ public class OrderDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Order> getOrdersByUserIdPaging(int userId, int offset, int limit) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY order_date DESC
+        LIMIT ? OFFSET ?
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setID(rs.getInt("ID"));
+                order.setUser_Id(rs.getInt("user_id"));
+                order.setCreateAt(rs.getTimestamp("order_date"));
+                order.setStatus(rs.getString("status"));
+                order.setPrice(rs.getLong("total_amount"));
+                order.setReceiver_address(rs.getString("address_order"));
+
+                order.setPayment_method(rs.getString("payment_method"));
+
+                list.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public int countOrdersByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
