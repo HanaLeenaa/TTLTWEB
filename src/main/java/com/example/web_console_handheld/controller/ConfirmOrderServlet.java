@@ -197,7 +197,7 @@ public class ConfirmOrderServlet extends HttpServlet {
         request.setAttribute("discountAmount", discountAmount);
         request.setAttribute("finalAmount", finalAmount);
         request.setAttribute("selectedVoucher", selectedVoucher);
-        request.setAttribute("shippingFee", fee);
+        request.setAttribute("shippingFee", shippingFee);
 
         request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
     }

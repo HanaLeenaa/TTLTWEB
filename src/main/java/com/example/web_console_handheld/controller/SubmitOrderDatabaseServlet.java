@@ -50,58 +50,54 @@ public class SubmitOrderDatabaseServlet extends HttpServlet {
             int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
 
             if (orderId > 0) {
-                //Voucher
+                // Xử lý Voucher nếu có áp dụng
                 if (order.getVoucher_id() != null) {
                     voucherDao.decreaseQuantity(order.getVoucher_id());
-
                     voucherDao.insertUserVoucher(user.getId(), order.getVoucher_id());
-
                 }
+
+                // Dọn dẹp dữ liệu Session cũ
                 session.removeAttribute("selectedVoucherId");
                 session.removeAttribute("selectedItems");
-                session.removeAttribute("pendingOrderItems");
-                session.removeAttribute("pendingOrder");
                 session.removeAttribute("checkoutTotal");
+                session.removeAttribute("pendingOrder");
+                session.removeAttribute("pendingOrderItems");
 
-                // Xử lý dọn dẹp biến chế độ mua ngay
+                // Phân loại: Nếu mua ngay thì xóa biến mua ngay, nếu mua từ Giỏ hàng thì xóa sản phẩm trong Giỏ hàng
                 if (Boolean.TRUE.equals(buyNowMode)) {
                     session.removeAttribute("buyNowMode");
-                    session.removeAttribute("pendingOrderItems");
+                } else {
+                    for (OrderItem item : cartItems) {
+                        cartDao.removeItem(user.getId(), item.getProduct_id());
+                    }
                 }
 
-            if (Boolean.TRUE.equals(buyNowMode)) {
-                session.removeAttribute("buyNowMode");
-                session.removeAttribute("pendingOrderItems");
+                // Cập nhật lại số lượng (cartSize) hiển thị trên Header
+                List<CartItem> remainingCart = cartDao.getCartByUser(user.getId());
+                int totalQty = 0;
+                if (remainingCart != null) {
+                    for (CartItem c : remainingCart) {
+                        totalQty += c.getQuantity();
+                    }
+                }
+                session.setAttribute("cartSize", totalQty);
+
+                // Gửi dữ liệu sang trang hiển thị hóa đơn thành công
+                request.setAttribute("confirmed", true);
+                request.setAttribute("order", order);
+                request.setAttribute("orderItems", cartItems);
+                request.setAttribute("shippingFee", fee);
+
+                request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
             } else {
-                for (OrderItem item : cartItems) {
-                    cartDao.removeItem(user.getId(), item.getProduct_id());
-                }
+                // Trường hợp createOrderTransactionWithLog thất bại trả về <= 0
+                session.setAttribute("cartError", "Không thể tạo đơn hàng. Vui lòng thử lại!");
+                response.sendRedirect(request.getContextPath() + "/cart");
             }
-
-            List<CartItem> remainingCart =
-                    cartDao.getCartByUser(user.getId());
-
-            int totalQty = 0;
-
-            if (remainingCart != null) {
-                for (CartItem c : remainingCart) {
-                    totalQty += c.getQuantity();
-                }
-            }
-            session.setAttribute("cartSize", totalQty);
-
-            request.setAttribute("confirmed", true);
-            request.setAttribute("order", order);
-            request.setAttribute("orderItems", cartItems);
-            request.setAttribute("shippingFee", fee);
-
-            request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-
             session.setAttribute("cartError", "Lỗi hệ thống: " + e.getMessage());
-
             response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
