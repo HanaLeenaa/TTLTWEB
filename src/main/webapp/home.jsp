@@ -11,11 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>InfinityTech</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/same_style/style.css" />
-    <link rel="stylesheet" href="Assets/css/homeStyle/home.css">
-    <link rel="stylesheet" href="Assets/css/homeStyle/product.css">
-    <link rel="stylesheet" href="Assets/css/homeStyle/historyView.css">
-    <link rel="stylesheet" href="Assets/css/recycleFilecss/header.css" />
-    <link rel="stylesheet" href="Assets/css/recycleFilecss/footer.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/home.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/product.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/homeStyle/historyView.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/header.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css" />
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"

@@ -163,6 +163,7 @@ public class HomeServlet extends HttpServlet {
         // Luôn bảo toàn không null để thẻ <c:if test="${not empty orderSuggestions}"> hoạt động chuẩn xác
         request.setAttribute("orderSuggestions", orderSuggestions != null ? orderSuggestions : new ArrayList<>());
 
-        request.getRequestDispatcher("/index.jsp").forward(request, resp);
+        request.getRequestDispatcher("/home.jsp").forward(request, resp);
+
     }
 }
