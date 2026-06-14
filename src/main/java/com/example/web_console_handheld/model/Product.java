@@ -349,6 +349,16 @@ public class Product {
         return this.stock_quantity;
     }
 
+    public void setParentId(Integer parentId) {
+        this.parent_id = parentId;
+    }
 
+    public void setSalesCount(int salesCount) {
+        this.sales_count = salesCount;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stock_quantity = stockQuantity;
+    }
 
 }

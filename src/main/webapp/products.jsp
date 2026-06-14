@@ -22,14 +22,11 @@
 
 </head>
 <body>
-<!-- <div id="header"></div> -->
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 
 <main id="content">
-    <!--  lọc sản phẩm  -->
     <form id="filterForm" action="${pageContext.request.contextPath}/product" method="get">
-        <!-- GIỮ SEARCH -->
         <c:if test="${not empty param.q}">
             <input type="hidden" name="q" value="${fn:escapeXml(param.q)}" />
         </c:if>
@@ -41,18 +38,16 @@
                 <a href="${pageContext.request.contextPath}/product" style="font-size: 12px; color: #E95221; text-decoration: none;">Xóa tất cả</a>
             </div>
 
-            <!-- CATEGORY -->
             <div class="title">LOẠI SẢN PHẨM</div>
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
                     <input type="checkbox" name="categoryId" value="${cat.ID}"
-                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if> />
+                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if />
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>
 
 
-            <!-- PRICE -->
             <div class="title">CHỌN MỨC GIÁ</div>
             <c:set var="price" value="${param.priceRange}" />
             <c:forEach var="p" items="under500,500-1m,1-2m,2-3m,over3m" varStatus="st">
@@ -71,7 +66,6 @@
             </c:forEach>
 
 
-            <!-- BRAND -->
             <div class="title">THƯƠNG HIỆU</div>
             <c:forEach var="b" items="${brands}">
                 <div class="choice">
@@ -82,20 +76,18 @@
             </c:forEach>
 
 
-            <!-- BATTERY -->
             <div class="title">PIN</div>
-            <c:forEach var="e" items="${energy}">
+            <c:forEach var="timeValue" items="${energy}">
                 <div class="choice">
-                    <input type="checkbox" name="useTime" value="${e.useTime}"
-                        ${fn:contains(fn:join(paramValues.useTime, ','), e.useTime) ? 'checked' : ''} />
-                    <label>${e.useTime} giờ</label>
+                    <input type="checkbox" name="useTime" value="${timeValue}"
+                        ${fn:contains(fn:join(paramValues.useTime, ','), timeValue) ? 'checked' : ''} />
+                    <label>${timeValue} giờ</label>
                 </div>
             </c:forEach>
         </div>
     </form>
 
 
-    <!-- san pham           -->
     <div class="contain">
 
         <div class="contain-header">
@@ -105,18 +97,14 @@
                 <c:if test="${not empty keyword}">
                     <input type="hidden" name="q" value="${keyword}">
                 </c:if>
-                <!-- category -->
                 <input type="hidden" name="categoryId" value="${param.categoryId}">
 
-                <!-- price -->
                 <input type="hidden" name="priceRange" value="${param.priceRange}">
 
-                <!-- brand (multiple checkbox) -->
                 <c:forEach var="b" items="${paramValues.brandId}">
                     <input type="hidden" name="brandId" value="${b}">
                 </c:forEach>
 
-                <!-- useTime -->
                 <c:forEach var="u" items="${paramValues.useTime}">
                     <input type="hidden" name="useTime" value="${u}">
                 </c:forEach>
@@ -154,7 +142,6 @@
         </button>
 
 
-        <!-- Card San Pham -->
         <div id="product-list">
 
             <c:forEach var="c" items="${products}">
@@ -176,7 +163,6 @@
                                 </c:if>
                         </div>
                         <div class="actions">
-                            <!-- Nút thêm vào giỏ hàng -->
                             <form action="${pageContext.request.contextPath}/AddCart" method="post" class="add-cart-form">
                                 <input type="hidden" name="productId" value="${c.ID}">
                                 <input type="hidden" name="name" value="${c.name}">
@@ -189,17 +175,14 @@
                                 </button>
                             </form>
 
-                            <!-- Nút yêu thích -->
                             <c:choose>
                                 <c:when test="${fn:contains(wishlistIdString, c.ID)}">
-                                    <!-- Nếu sản phẩm đã nằm trong wishlist -->
                                     <button type="button" class="btn-fav active" data-id="${c.ID}"
                                             onclick="toggleWishlist(this, '${c.ID}')">
                                         <i class="fa fa-heart"></i>
                                     </button>
                                 </c:when>
                                 <c:otherwise>
-                                    <!-- Nếu sản phẩm chưa nằm trong wishlist -->
                                     <button type="button" class="btn-fav" data-id="${c.ID}"
                                             onclick="toggleWishlist(this, '${c.ID}')">
                                         <i class="fa fa-heart"></i>
@@ -218,7 +201,6 @@
 
         </div>
 
-        <!-- pagination-->
         <div class="pagination">
             <c:forEach begin="1" end="${totalPage}" var="i">
 
@@ -378,7 +360,6 @@ function toggleWishlist(btn, productId) {
     .catch(err => console.error("Fetch error:", err));
 }
 </script>
-
 
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>

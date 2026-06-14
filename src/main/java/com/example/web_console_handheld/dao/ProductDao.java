@@ -77,12 +77,12 @@ public class ProductDao extends BaseDao {
     }
 
 
-    public List<Product> getEnergyProductList() {
+    public List<Integer> getEnergyProductList() {
         return get().withHandle(handle ->
                 handle.createQuery(
-                                "SELECT DISTINCT useTime FROM products ORDER BY useTime ASC"
+                                "SELECT DISTINCT useTime FROM products WHERE useTime IS NOT NULL ORDER BY useTime ASC"
                         )
-                        .mapToBean(Product.class)
+                        .mapTo(Integer.class)
                         .list()
         );
     }
