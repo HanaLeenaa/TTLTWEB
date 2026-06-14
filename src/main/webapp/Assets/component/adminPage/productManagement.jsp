@@ -258,7 +258,7 @@
                         </td>
                         <td>${p.getStock()}</td>
                         <td>${p.active}</td>
-                        <td>${p.isIspremium()}</td>
+                        <td>${p.getIspremium()}</td>
                         <td>
                             <div class="action-buttons">
                                 <a class="btn-edit" href="${pageContext.request.contextPath}/admin/products/edit?id=${p.getId()}">
