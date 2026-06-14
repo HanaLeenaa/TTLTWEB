@@ -2,6 +2,7 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.CartDao;
 import com.example.web_console_handheld.dao.OrderDao;
+import com.example.web_console_handheld.dao.VoucherDao;
 import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Order;
 import com.example.web_console_handheld.model.OrderItem;
@@ -17,8 +18,9 @@ import java.util.List;
 @WebServlet("/submit-order-database")
 public class SubmitOrderDatabaseServlet extends HttpServlet {
 
-    private final OrderDao orderDao = new OrderDao();
-    private final CartDao cartDao = new CartDao();
+    private OrderDao orderDao = new OrderDao();
+    private CartDao cartDao = new CartDao();
+    private VoucherDao voucherDao = new VoucherDao();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -47,9 +49,25 @@ public class SubmitOrderDatabaseServlet extends HttpServlet {
 
             int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
 
-            if (orderId <= 0) {
-                throw new RuntimeException("Không thể tạo đơn hàng");
-            }
+            if (orderId > 0) {
+                //Voucher
+                if (order.getVoucher_id() != null) {
+                    voucherDao.decreaseQuantity(order.getVoucher_id());
+
+                    voucherDao.insertUserVoucher(user.getId(), order.getVoucher_id());
+
+                }
+                session.removeAttribute("selectedVoucherId");
+                session.removeAttribute("selectedItems");
+                session.removeAttribute("pendingOrderItems");
+                session.removeAttribute("pendingOrder");
+                session.removeAttribute("checkoutTotal");
+
+                // Xử lý dọn dẹp biến chế độ mua ngay
+                if (Boolean.TRUE.equals(buyNowMode)) {
+                    session.removeAttribute("buyNowMode");
+                    session.removeAttribute("pendingOrderItems");
+                }
 
             if (Boolean.TRUE.equals(buyNowMode)) {
                 session.removeAttribute("buyNowMode");

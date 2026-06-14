@@ -18,16 +18,12 @@ private long price;
     private String receiver_note;
     private String payment_status;
     private String transaction_no;
-
-    private String ghnOrderCode;
-    private long shippingFee;
-    private String shippingStatus;
-    private Timestamp expectedDeliveryFrom;
-    private Timestamp expectedDeliveryTo;
-
+    private Integer voucher_id;
+    private long discount_amount;
+    private long final_amount;
     public Order() {}
 
-    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no) {
+    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no, Integer voucher_id, long discount_amount, long final_amount) {
         this.ID = ID;
         this.user_Id = user_Id;
         this.createAt = createAt;
@@ -146,43 +142,25 @@ private long price;
         this.transaction_no = transaction_no;
     }
 
-    public String getGhnOrderCode() {
-        return ghnOrderCode;
+    public Integer getVoucher_id() {
+        return voucher_id;
     }
 
-    public long getShippingFee() {
-        return shippingFee;
+    public void setVoucher_id(Integer voucher_id) {
+        this.voucher_id = voucher_id;
     }
 
-    public String getShippingStatus() {
-        return shippingStatus;
+    public long getDiscount_amount() {
+        return discount_amount;
     }
 
-    public void setGhnOrderCode(String ghnOrderCode) {
-        this.ghnOrderCode = ghnOrderCode;
+    public void setDiscount_amount(long discount_amount) {
+        this.discount_amount = discount_amount;
     }
-
-    public void setShippingFee(long shippingFee) {
-        this.shippingFee = shippingFee;
+    public long getFinal_amount() {
+        return final_amount;
     }
-
-    public void setShippingStatus(String shippingStatus) {
-        this.shippingStatus = shippingStatus;
-    }
-
-    public Timestamp getExpectedDeliveryFrom() {
-        return expectedDeliveryFrom;
-    }
-
-    public void setExpectedDeliveryFrom(Timestamp expectedDeliveryFrom) {
-        this.expectedDeliveryFrom = expectedDeliveryFrom;
-    }
-
-    public Timestamp getExpectedDeliveryTo() {
-        return expectedDeliveryTo;
-    }
-
-    public void setExpectedDeliveryTo(Timestamp expectedDeliveryTo) {
-        this.expectedDeliveryTo = expectedDeliveryTo;
+    public void setFinal_amount(long final_amount) {
+        this.final_amount = final_amount;
     }
 }
