@@ -150,8 +150,12 @@
         <p><strong>Trạng thái:</strong> ${order.status}</p>
         <p><strong>Ghi chú đơn hàng:</strong> ${order.receiver_note}</p>
         <p>
+            <strong>Giảm giá:</strong>
+            <fmt:formatNumber value="${order.discount_amount}" type="number"/> đ
+        </p>
+        <p>
             <strong>Tổng tiền:</strong>
-            <fmt:formatNumber value="${order.price}" type="number"/>đ
+            <fmt:formatNumber value="${order.final_amount}" type="number"/> đ
         </p>
     </div>
 
@@ -187,7 +191,7 @@
     </table>
 
     <div class="total-box">
-        Tổng cộng: <fmt:formatNumber value="${order.price}" type="number"/>đ
+        Tổng cộng: <fmt:formatNumber value="${order.final_amount}" type="number"/>đ
     </div>
 
     <div class="action-buttons">
