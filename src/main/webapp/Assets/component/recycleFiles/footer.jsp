@@ -1,6 +1,23 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<html>
+<head>
+    <title>Footer</title>
+    <link rel="stylesheet" href="../../css/same_style/style.css">
+    <link rel="stylesheet" href="../../css/recycleFilecss/footer.css">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Font Awesome -->
+    <script
+            src="https://kit.fontawesome.com/a076d05399.js"
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
 <footer class="footer">
     <div class="footer-container">
         <!-- CONNECT WITH US -->

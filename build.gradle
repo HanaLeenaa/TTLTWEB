@@ -10,40 +10,43 @@ repositories {
     mavenLocal()
 }
 
+// CẤU HÌNH CỐT LÕI: Ép Gradle nén ra file lab.war thay vì Web_Console_HandHeld.war
+war {
+    archiveFileName = 'lab.war'
+}
+
 dependencies {
-    // 1. Jakarta Servlet
-    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    // 1. Đồng bộ Jakarta Servlet API chuẩn cho Tomcat 10.1 (Servlet 6.0)
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 
     // 2. JDBI & MySQL
     implementation 'org.jdbi:jdbi3-core:3.45.1'
-    implementation  'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.jdbi:jdbi3-sqlobject:3.45.1'
 
-    // 3. SỬA LỖI EMAIL: Thêm thư viện Jakarta Mail
+    // 3. Jakarta Mail
     implementation 'org.eclipse.angus:jakarta.mail:2.0.3'
 
-    // 4. Thêm JSTL (Nếu bạn dùng thẻ c trong file JSP)
-    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
-    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+    // 4. ĐỒNG BỘ JSTL TIÊU CHUẨN CHO TOMCAT 10
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
 
-    // 5. Thêm thư viện JSON (Nếu code có dùng Gson hoặc Jackson)
+    // 5. JSON Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // 6. SỬA LỖI BCRYPT: Thêm thư viện mã hóa mật khẩu
+    // 6. BCrypt Security
     implementation 'org.mindrot:jbcrypt:0.4'
 
-    // 7. Thêm thư viện Commons Codec (Nếu code có dùng mã hóa Base64/MD5)
+    // 7. Commons Codec
     implementation 'commons-codec:commons-codec:1.16.0'
 
-    // 8. SỬA LỖI GOOGLE LOGIN: Thêm thư viện Jackson JSON
+    // 8. Jackson JSON (Google Login)
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
 
-    // Thêm Apache Fluent HC (Nếu code Google Login của bạn có dùng để gọi API)
     implementation 'org.apache.httpcomponents:fluent-hc:4.5.14'
 }
-
 
 apply plugin: 'org.hidetake.ssh'
 
@@ -59,44 +62,36 @@ ssh.settings {
     knownHosts = allowAnyHosts
 }
 
-task docker_app_start {
-    doLast {
-        println '--- Restarting Tomcat Container ---'
-        // Thay đổi cách gọi ssh.run
-        project.ssh.run {
-            session(remotes.host) {
-                execute 'sudo docker stop tomcat10', ignoreError: true
-                execute 'sudo docker rm tomcat10', ignoreError: true
-                execute 'sudo docker run -d --name tomcat10 --network host -v /usr/deploy:/usr/local/tomcat/webapps tomcat:10.1'
-            }
-        }
-    }
-}
-
 task docker_upload_file_to_server {
-    def warFile = layout.projectDirectory.file("build/libs/Web_Console_HandHeld.war")
+    // Đã đổi sang đọc file lab.war mới tinh từ thư mục build
+    def warFile = layout.projectDirectory.file("build/libs/lab.war")
     doLast {
-        println '--- Uploading file ---'
-        // Thêm project. vào trước ssh.run
+        println '--- Uploading lab.war to Server ---'
         project.ssh.run {
             session(remotes.host) {
+                // 1. Tự động xóa file lab cũ và thư mục giải nén cũ trên Ubuntu trước khi up file mới
                 execute 'sudo rm -rf /usr/deploy/lab.war', ignoreError: true
                 execute 'sudo rm -rf /usr/deploy/lab/', ignoreError: true
+
+                // 2. Đẩy file WAR mới lên server
                 put from: warFile.asFile, into: "/usr/deploy/lab.war"
+
+                // 3. TỰ ĐỘNG XOÁ CACHE TRONG DOCKER TOMCAT (Thêm dòng này để diệt tận gốc lỗi 500 JasperException cũ)
+                println '--- Cleaning Tomcat Work Cache ---'
+                execute 'sudo docker exec tomcat10 rm -rf /usr/local/tomcat/work/Catalina/localhost/lab', ignoreError: true
+
+                // 4. Ra lệnh cho Docker Tomcat restart nhẹ nhàng để ăn code mới
+                println '--- Hot-restarting Tomcat Container ---'
+                execute 'sudo docker restart tomcat10'
             }
         }
     }
 }
 
-
+// Bỏ task docker_app_start cồng kềnh cũ, gom toàn bộ luồng chạy vào 2 bước tinh gọn
 task docker_deploy {
-    // Thứ tự chạy: build -> upload -> start
     dependsOn build
     dependsOn docker_upload_file_to_server
-    dependsOn docker_app_start
 }
 
-// Thiết lập thứ tự rõ ràng
 docker_upload_file_to_server.mustRunAfter build
-docker_app_start.mustRunAfter docker_upload_file_to_server
-

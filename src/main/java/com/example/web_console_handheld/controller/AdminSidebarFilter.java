@@ -21,28 +21,29 @@ public class AdminSidebarFilter implements Filter {
         }
 
         @Override
-        public void doFilter(ServletRequest request,
-                             ServletResponse response,
-                             FilterChain chain)
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                 throws IOException, ServletException {
 
             HttpServletRequest req = (HttpServletRequest) request;
+            jakarta.servlet.http.HttpSession session = req.getSession(false);
+
+            // Lấy thông tin admin từ session ra để check quyền
+            com.example.web_console_handheld.model.Admin admin =
+                    (session != null) ? (com.example.web_console_handheld.model.Admin) session.getAttribute("admin") : null;
 
             int newCount = 0;
 
-            try {
-
-                List<ContactMessage> list = dao.getAll();
-
-                for (ContactMessage c : list) {
-
-                    if ("NEW".equals(c.getStatus())) {
-                        newCount++;
+            if (admin != null && (admin.getRole() == 1 || "1".equals(String.valueOf(admin.getRole())))) {
+                try {
+                    List<ContactMessage> list = dao.getAll();
+                    for (ContactMessage c : list) {
+                        if ("NEW".equals(c.getStatus())) {
+                            newCount++;
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             req.setAttribute("newCount", newCount);
