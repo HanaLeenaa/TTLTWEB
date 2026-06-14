@@ -85,7 +85,7 @@
             <c:forEach var="cat" items="${categories}">
                 <div class="choice">
                     <input type="checkbox" name="categoryId" value="${cat.ID}"
-                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if />
+                        <c:if test="${selectedCategoryIds != null && selectedCategoryIds.contains(cat.ID)}">checked</c:if>
                     <label>${cat.name}</label>
                 </div>
             </c:forEach>

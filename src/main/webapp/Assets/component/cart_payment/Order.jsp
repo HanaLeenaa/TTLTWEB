@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -7,14 +7,9 @@
     <meta charset="UTF-8"/>
     <title>Chi tiết đơn hàng</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/Assets/css/cart_payment/OrderDetails.css"/>
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css"/>
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/cart_payment/OrderDetails.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Assets/css/recycleFilecss/footer.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 
 <body>
@@ -47,12 +42,6 @@
         <p><strong>Họ tên:</strong> ${order.receiver_name}</p>
         <p><strong>Số điện thoại:</strong> ${order.receiver_phone}</p>
         <p><strong>Địa chỉ:</strong> ${order.receiver_address}</p>
-        <c:if test="${not empty order.ghnOrderCode}">
-            <p>
-                <strong>Mã vận đơn GHN:</strong>
-                    ${order.ghnOrderCode}
-            </p>
-        </c:if>
 
         <p><strong>Phương thức thanh toán:</strong>
             <c:choose>
@@ -68,19 +57,13 @@
         <p><strong>Trạng thái thanh toán:</strong>
             <c:choose>
                 <c:when test="${order.payment_status == 'PAID' || order.payment_status == 'Paid'}">
-               <span style="color: green; font-weight: bold;">
-                    Đã thanh toán
-                </span>
+                    <span style="color: green; font-weight: bold;">Đã thanh toán</span>
                 </c:when>
                 <c:when test="${order.payment_status == 'UNPAID' || order.payment_status == 'Unpaid'}">
-                 <span style="color: orange; font-weight: bold;">
-                    Chưa thanh toán
-                </span>
+                    <span style="color: orange; font-weight: bold;">Chưa thanh toán</span>
                 </c:when>
                 <c:otherwise>
-                <span style="color: red; font-weight: bold;">
-                    Không xác định
-                </span>
+                    <span style="color: red; font-weight: bold;">Không xác định</span>
                 </c:otherwise>
             </c:choose>
         </p>
@@ -106,8 +89,7 @@
                         <fmt:formatNumber value="${item.product_price}" type="number" groupingUsed="true"/> ₫
                     </td>
                     <td>
-                        <fmt:formatNumber value="${item.product_price * item.quantity}" type="number"
-                                          groupingUsed="true"/> ₫
+                        <fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true"/> ₫
                     </td>
                 </tr>
             </c:forEach>
@@ -116,10 +98,10 @@
     </div>
 
     <div class="order-summary">
-        <c:if test="${order.expectedDeliveryFrom != null}">
+        <%-- ĐÃ SỬA: Kiểm tra an toàn tránh sập trang nếu ngày null --%>
+        <c:if test="${not empty order.expectedDeliveryFrom}">
             <p>
                 <strong>Dự kiến giao hàng:</strong><br/>
-
                 <fmt:formatDate value="${order.expectedDeliveryFrom}" pattern="dd/MM"/>
                 -
                 <fmt:formatDate value="${order.expectedDeliveryTo}" pattern="dd/MM/yyyy"/>
@@ -128,45 +110,44 @@
 
         <p>
             <strong>Phí vận chuyển:</strong>
-            <c:if test="${shippingFee > 0}">
-        <span>
-            <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/> ₫
-        </span>
-            </c:if>
+            <%-- ĐÃ SỬA: Đọc trực tiếp thuộc tính int từ đối tượng order --%>
+            <c:choose>
+                <c:when test="${order.shippingFee > 0}">
+                    <span>
+                        <fmt:formatNumber value="${order.shippingFee}" type="number" groupingUsed="true"/> ₫
+                    </span>
+                </c:when>
+                <c:otherwise>
+                    Miễn phí
+                </c:otherwise>
+            </c:choose>
+        </p>
 
-            <c:if test="${shippingFee == 0}">
-                Miễn phí
-            </c:if>
+        <p>
             <strong>Tạm tính:</strong>
-            <fmt:formatNumber value="${order.price}"
-                                type="number"
-                                groupingUsed="true"/> đ
+            <fmt:formatNumber value="${order.price}" type="number" groupingUsed="true"/> đ
         </p>
 
         <c:if test="${order.discount_amount > 0}">
             <p style="color: green">
                 <strong>Giảm giá:</strong>
-                -
-                <fmt:formatNumber value="${order.discount_amount}"
-                                    type="number"
-                                    groupingUsed="true"/> đ
+                - <fmt:formatNumber value="${order.discount_amount}" type="number" groupingUsed="true"/> đ
             </p>
         </c:if>
 
         <p>
-            <strong>Thanh toán:</strong>
+            <strong>Thanh toán (Tiền hàng sau giảm):</strong>
             <span class="total">
-                <fmt:formatNumber value="${order.final_amount}"
-                                  type="number"
-                                  groupingUsed="true"/> đ
+                <fmt:formatNumber value="${order.final_amount}" type="number" groupingUsed="true"/> đ
             </span>
         </p>
-        <p>
-            <strong>Tổng thanh toán:</strong>
-            <c:set var="ship" value="${empty shippingFee ? 0 : shippingFee}" />
-            <fmt:formatNumber value="${order.price + ship}" type="number" groupingUsed="true"/> ₫
-        </p>
 
+        <p>
+            <strong>Tổng thanh toán (Bao gồm ship):</strong>
+            <span class="total" style="color: #eb3b5a; font-size: 18px; font-weight: bold;">
+                <fmt:formatNumber value="${order.final_amount + order.shippingFee}" type="number" groupingUsed="true"/> ₫
+            </span>
+        </p>
     </div>
 
     <div class="order-actions" style="margin-bottom: 10px">
@@ -182,7 +163,6 @@
     <a href="${pageContext.request.contextPath}/product" class="back-btn">
         Tiếp tục mua hàng
     </a>
-
 </div>
 
 <c:if test="${confirmed}">
@@ -195,16 +175,13 @@
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
 
 <script>
-    // Chuẩn hóa chuỗi phương thức thanh toán từ JSTL EL sang JavaScript
     const method = "${order.payment_method}".toUpperCase().trim();
     const finalForm = document.getElementById("finalConfirmForm");
 
     if (finalForm) {
         if (method === "VNPAY") {
-            // Nếu chọn VNPay -> Gửi tới servlet tạo link thanh toán kết nối ngân hàng VNPay
             finalForm.action = "${pageContext.request.contextPath}/vnpay-payment";
         } else {
-            // Nếu chọn COD -> Gửi tới servlet mới tạo để thực thi lưu vào database chính thức
             finalForm.action = "${pageContext.request.contextPath}/submit-order-database";
         }
     }
