@@ -34,43 +34,41 @@
                 <div class="information1">
                     <p class="title title1">Thông tin nhận hàng</p>
 
-                    <div class="name_infor">
-                        <p class="p1 p-same">Họ và tên người nhận hàng</p>
-                        <input type="hidden" name="fullname" value="${sessionScope.auth.username}" />
-                        <p class="p2">${sessionScope.auth.username}</p>
-                    </div>
+                        <div class="name_infor">
+                            <p class="p1 p-same">Họ và tên người nhận hàng</p>
 
-                    <div class="name_infor">
-                        <p class="p1 p-same">Số điện thoại</p>
-                        <input type="hidden" name="phone" value="${sessionScope.auth.phoneNum}" />
-                        <p class="p2">${sessionScope.auth.phoneNum}</p>
-                    </div>
+                            <input type="text"
+                                   name="fullname"
+                                   class="input11"
+                                   value="${sessionScope.auth.username}" />
+                        </div>
 
-                    <c:choose>
-                        <c:when test="${sessionScope.auth.location == null || fn:trim(sessionScope.auth.location) == ''}">
-                            <div class="same-style">
-                                <div class="parent">
-                                    <input class="input11" type="text" id="address" name="address" placeholder="Nhập địa chỉ nhận hàng" required />
-                                    <div class="child">
-                                        <p class="p3 p-same">Địa chỉ</p>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="saveLocation()">Lưu</button>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="name_infor">
-                                <p class="p1 p-same">Địa chỉ</p>
-                                <input type="hidden" name="address" value="${sessionScope.auth.location}" />
-                                <p class="p2">${sessionScope.auth.location}</p>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                        <div class="name_infor">
+                            <p class="p1 p-same">Số điện thoại</p>
+
+                            <input type="text"
+                                   name="phone"
+                                   class="input11"
+                                   value="${sessionScope.auth.phoneNum}" />
+                        </div>
+
+
+                        <div class="name_infor">
+                            <p class="p1 p-same">Địa chỉ</p>
+
+                            <input type="text"
+                                   name="address"
+                                   class="input11"
+                                   value="${sessionScope.auth.location}" />
+                    </div>
 
                     <div class="name_infor">
                         <p class="p1 p-same">Email</p>
-                        <input type="hidden" name="email" value="${sessionScope.auth.email}" />
-                        <p class="p2">${sessionScope.auth.email}</p>
+
+                        <input type="text"
+                               name="email"
+                               class="input11"
+                               value="${sessionScope.auth.email}" />
                     </div>
 
                     <div class="same-style">
@@ -170,7 +168,10 @@
                     <div class="update_and_order same grid-same">
                         <div>
                             <button class="same-btn btn-green" type="button" style="cursor: pointer" onclick="location.href='${pageContext.request.contextPath}/cart'">Sửa giỏ hàng</button>
-                            <button class="same-btn btn-green" type="button" style="cursor: pointer" onclick="location.href='${pageContext.request.contextPath}/profile'">Sửa địa chỉ</button>
+                            <button type="button" class="same-btn btn-green"
+                                    onclick="location.href='${pageContext.request.contextPath}/profile?tab=edit&redirect=payment'">
+                                Sửa thông tin
+                            </button>
                         </div>
                         <button type="submit" class="same-btn btn-red" style="cursor:pointer">Đặt hàng</button>
                     </div>
@@ -209,5 +210,19 @@
         this.action = "${pageContext.request.contextPath}/confirm-order";
     });
 </script>
+
+<script>
+        editMode = !editMode;
+
+        document.querySelectorAll(".view-mode").forEach(e => {
+            e.style.display = editMode ? "none" : "block";
+        });
+
+        document.querySelectorAll(".edit-mode").forEach(e => {
+            e.style.display = editMode ? "block" : "none";
+        });
+
+</script>
+
 </body>
 </html>

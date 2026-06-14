@@ -123,6 +123,101 @@
         body.modal-open {
             overflow: hidden !important;
         }
+
+        .success-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+
+            animation: fadeIn .4s ease;
+        }
+
+        .success-popup {
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 20px;
+            text-align: center;
+            padding: 35px 25px;
+
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+
+            animation: popupShow .4s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            background: #e8fff0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-icon i {
+            font-size: 42px;
+            color: #28a745;
+        }
+
+        .success-popup h3 {
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .success-popup p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .success-popup small {
+            color: #999;
+        }
+
+        .fade-out {
+            animation: fadeOut .5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popupShow {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
     </style>
 
 </head>
@@ -469,22 +564,45 @@
     </div>
 </div>
 
-<%--POPUP UPDATE SUCCESS --%>
 <c:if test="${param.success == '1'}">
-    <div class="popup-overlay">
-        <div class="popup-box">
-            <p>Đã cập nhật thông tin</p>
+    <div id="successPopup" class="success-popup-overlay">
 
-            <button onclick="
-                    window.location.href=
-                    '${pageContext.request.contextPath}/profile?tab=edit'
-                    ">
+        <div class="success-popup">
 
-                OK
-            </button>
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h3>Cập nhật thành công</h3>
+
+            <p>
+                Thông tin của bạn đã được cập nhật thành công.
+            </p>
+
+            <small>
+                Hệ thống sẽ tự động đóng sau 2 giây...
+            </small>
+
         </div>
     </div>
 </c:if>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const popup = document.getElementById("successPopup");
+        if (!popup) return;
+        setTimeout(() => {
+            popup.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href =
+                    "${pageContext.request.contextPath}/profile?tab=edit";
+            }, 500);
+        }, 2000);
+    });
+
+</script>
 
 <script>
     function openEditModal(id, rating, text) {

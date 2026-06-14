@@ -7,7 +7,6 @@ import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Order;
 import com.example.web_console_handheld.model.OrderItem;
 import com.example.web_console_handheld.model.User;
-import com.example.web_console_handheld.service.GHNService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,31 +38,14 @@ public class SubmitOrderDatabaseServlet extends HttpServlet {
         }
 
         try {
-            int fromDistrict = 1454;
-            String fromWard = "21005";
-
-            int toDistrict = 1452;
-            String toWard = "21810";
-
-            int fee = 0;
-            int leadTime = 0;
-
-            try {
-                fee = ghnService.calculateFee(fromDistrict, toDistrict, 1000);
-                leadTime = ghnService.calculateLeadTime(fromDistrict, fromWard, toDistrict, toWard);
-
-            } catch (Exception ghnEx) {
-                ghnEx.printStackTrace();
-                fee = 0;
-                leadTime = 0;
-            }
-
             long now = System.currentTimeMillis();
-            order.setShippingFee(fee);
-            order.setExpectedDeliveryFrom(new java.sql.Timestamp(now + 2L * 24 * 60 * 60 * 1000));
 
-            order.setExpectedDeliveryTo(new java.sql.Timestamp(now + (leadTime > 0
-                            ? leadTime * 1000L : 4L * 24 * 60 * 60 * 1000)));
+            Integer fee = (Integer) session.getAttribute("shippingFee");
+            Integer leadTime = (Integer) session.getAttribute("leadTime");
+
+            if (leadTime == null || leadTime <= 0) {
+                leadTime = 3;
+            }
 
             int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
 

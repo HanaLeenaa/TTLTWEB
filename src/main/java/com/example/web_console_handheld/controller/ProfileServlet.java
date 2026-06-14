@@ -58,6 +58,13 @@ public class ProfileServlet extends HttpServlet {
             tab = "orders";
         }
 
+        String redirect = request.getParameter("redirect");
+        request.setAttribute("redirect", redirect);
+
+        if ("edit".equals(tab)) {
+            request.setAttribute("tab", "edit");
+        }
+
         List<Order> orders = Collections.emptyList();
         List<Review> reviews = new ArrayList<>();
 

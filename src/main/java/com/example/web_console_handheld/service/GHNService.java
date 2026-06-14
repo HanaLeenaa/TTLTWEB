@@ -1,111 +1,100 @@
 package com.example.web_console_handheld.service;
 
-import com.example.web_console_handheld.utils.GHNConfig;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import org.json.JSONObject;
+
 public class GHNService {
 
-    private final String TOKEN = GHNConfig.getToken();
-    private final String SHOP_ID = GHNConfig.getShopId();
-    private final String API = GHNConfig.getApi();
+    private static final String TOKEN = "4b07c206-5e4f-11f1-a973-aee5264794df";
+    private static final String SHOP_ID = "200530";
+    private static final String BASE_URL = "https://dev-online-gateway.ghn.vn";
 
-    public int calculateFee(int fromDistrictId, int toDistrictId, int weight) throws Exception {
-        String url = API + "/shiip/public-api/v2/shipping-order/fee";
+    // TÍNH PHÍ VẬN CHUYỂN GHN
+    public int calculateFee(int fromDistrictId, int toDistrictId, int weight) {
 
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Token", TOKEN);
-        conn.setRequestProperty("ShopId", SHOP_ID);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
+        HttpURLConnection conn = null;
 
-        String body = "{"
-                + "\"from_district_id\":" + fromDistrictId + ","
-                + "\"to_district_id\":" + toDistrictId + ","
-                + "\"service_type_id\":2,"
-                + "\"weight\":" + weight
-                + "}";
+        try {
+            URL url = new URL(BASE_URL + "/shiip/public-api/v2/shipping-order/fee");
+            conn = (HttpURLConnection) url.openConnection();
 
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(body.getBytes(StandardCharsets.UTF_8));
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+
+            conn.setRequestProperty("Token", TOKEN);
+            conn.setRequestProperty("ShopId", SHOP_ID);
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+            conn.setDoOutput(true);
+
+            JSONObject body = new JSONObject();
+            body.put("from_district_id", fromDistrictId);
+            body.put("to_district_id", toDistrictId);
+            body.put("weight", weight);
+
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(body.toString().getBytes(StandardCharsets.UTF_8));
+            }
+
+            int responseCode = conn.getResponseCode();
+
+            InputStream is = (responseCode >= 200 && responseCode < 300)
+                    ? conn.getInputStream()
+                    : conn.getErrorStream();
+
+            String response = readStream(is);
+
+            JSONObject json = new JSONObject(response);
+
+            // =========================
+            // GHN RESPONSE STRUCTURE:
+            // {
+            //   "code": 200,
+            //   "message": "Success",
+            //   "data": {
+            //       "total": 25000
+            //   }
+            // }
+            // =========================
+
+            if (json.has("code") && json.getInt("code") == 200) {
+                JSONObject data = json.optJSONObject("data");
+                if (data != null) {
+                    return data.optInt("total", 30000);
+                }
+            }
+
+            System.out.println("GHN error response: " + response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) conn.disconnect();
         }
 
-        int code = conn.getResponseCode();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                code >= 200 && code < 300 ? conn.getInputStream()
-                        : conn.getErrorStream(), StandardCharsets.UTF_8));
-
-        String result = br.lines().reduce("", String::concat);
-        JsonObject json = JsonParser.parseString(result).getAsJsonObject();
-        if (!json.has("data") || json.get("data").isJsonNull()) {
-            throw new Exception("GHN FEE ERROR: " + result);
-        }
-
-        JsonObject data = json.getAsJsonObject("data");
-        if (!data.has("total") || data.get("total").isJsonNull()) {
-            throw new Exception("GHN FEE missing total: " + result);
-        }
-
-        return data.get("total").getAsInt();
+        // fallback
+        return 30000;
     }
 
-    public int calculateLeadTime(
-            int fromDistrictId,
-            String fromWardCode,
-            int toDistrictId,
-            String toWardCode
-    ) throws Exception {
+    private String readStream(InputStream is) throws IOException {
+        if (is == null) return "";
 
-        String url = API + "/shiip/public-api/v2/shipping-order/leadtime";
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(is, StandardCharsets.UTF_8)
+        );
 
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Token", TOKEN);
-        conn.setRequestProperty("ShopId", SHOP_ID);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
+        StringBuilder sb = new StringBuilder();
+        String line;
 
-        String body = "{"
-                + "\"from_district_id\":" + fromDistrictId + ","
-                + "\"from_ward_code\":\"" + fromWardCode + "\","
-                + "\"to_district_id\":" + toDistrictId + ","
-                + "\"to_ward_code\":\"" + toWardCode + "\","
-                + "\"service_id\":2"
-                + "}";
-
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(body.getBytes(StandardCharsets.UTF_8));
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
         }
 
-        int code = conn.getResponseCode();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                code >= 200 && code < 300 ? conn.getInputStream()
-                        : conn.getErrorStream(), StandardCharsets.UTF_8));
-
-        String result = br.lines().reduce("", String::concat);
-
-        JsonObject json = JsonParser.parseString(result).getAsJsonObject();
-
-        if (!json.has("data") || json.get("data").isJsonNull()) {
-            throw new Exception("GHN LEADTIME ERROR: " + result);
-        }
-
-        JsonObject data = json.getAsJsonObject("data");
-
-        if (data == null || !data.has("leadtime") || data.get("leadtime").isJsonNull()) {
-            throw new Exception("GHN leadtime missing: " + result);
-        }
-
-        return data.get("leadtime").getAsInt();
+        return sb.toString();
     }
 }

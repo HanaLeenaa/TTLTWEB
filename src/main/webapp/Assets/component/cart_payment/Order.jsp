@@ -127,6 +127,16 @@
         </c:if>
 
         <p>
+            <strong>Phí vận chuyển:</strong>
+            <c:if test="${shippingFee > 0}">
+        <span>
+            <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/> ₫
+        </span>
+            </c:if>
+
+            <c:if test="${shippingFee == 0}">
+                Miễn phí
+            </c:if>
             <strong>Tạm tính:</strong>
             <fmt:formatNumber value="${order.price}"
                                 type="number"
