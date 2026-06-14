@@ -47,36 +47,42 @@
         <p><strong>Họ tên:</strong> ${order.receiver_name}</p>
         <p><strong>Số điện thoại:</strong> ${order.receiver_phone}</p>
         <p><strong>Địa chỉ:</strong> ${order.receiver_address}</p>
+        <c:if test="${not empty order.ghnOrderCode}">
+            <p>
+                <strong>Mã vận đơn GHN:</strong>
+                    ${order.ghnOrderCode}
+            </p>
+        </c:if>
 
         <p><strong>Phương thức thanh toán:</strong>
-        <c:choose>
-            <c:when test="${order.payment_method == 'VNPAY'}">
-                VNPay
-            </c:when>
-            <c:otherwise>
-                Thanh toán khi nhận hàng (COD)
-            </c:otherwise>
-        </c:choose>
+            <c:choose>
+                <c:when test="${order.payment_method == 'VNPAY'}">
+                    VNPay
+                </c:when>
+                <c:otherwise>
+                    Thanh toán khi nhận hàng (COD)
+                </c:otherwise>
+            </c:choose>
         </p>
 
         <p><strong>Trạng thái thanh toán:</strong>
-        <c:choose>
-            <c:when test="${order.payment_status == 'PAID' || order.payment_status == 'Paid'}">
+            <c:choose>
+                <c:when test="${order.payment_status == 'PAID' || order.payment_status == 'Paid'}">
                <span style="color: green; font-weight: bold;">
                     Đã thanh toán
                 </span>
-            </c:when>
-            <c:when test="${order.payment_status == 'UNPAID' || order.payment_status == 'Unpaid'}">
+                </c:when>
+                <c:when test="${order.payment_status == 'UNPAID' || order.payment_status == 'Unpaid'}">
                  <span style="color: orange; font-weight: bold;">
                     Chưa thanh toán
                 </span>
-            </c:when>
-            <c:otherwise>
+                </c:when>
+                <c:otherwise>
                 <span style="color: red; font-weight: bold;">
                     Không xác định
                 </span>
-            </c:otherwise>
-        </c:choose>
+                </c:otherwise>
+            </c:choose>
         </p>
     </div>
 
@@ -100,7 +106,8 @@
                         <fmt:formatNumber value="${item.product_price}" type="number" groupingUsed="true"/> ₫
                     </td>
                     <td>
-                        <fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true"/> ₫
+                        <fmt:formatNumber value="${item.product_price * item.quantity}" type="number"
+                                          groupingUsed="true"/> ₫
                     </td>
                 </tr>
             </c:forEach>
@@ -109,6 +116,16 @@
     </div>
 
     <div class="order-summary">
+        <c:if test="${order.expectedDeliveryFrom != null}">
+            <p>
+                <strong>Dự kiến giao hàng:</strong><br/>
+
+                <fmt:formatDate value="${order.expectedDeliveryFrom}" pattern="dd/MM"/>
+                -
+                <fmt:formatDate value="${order.expectedDeliveryTo}" pattern="dd/MM/yyyy"/>
+            </p>
+        </c:if>
+
         <p>
             <strong>Tạm tính:</strong>
             <fmt:formatNumber value="${order.price}"
@@ -134,6 +151,12 @@
                                   groupingUsed="true"/> đ
             </span>
         </p>
+        <p>
+            <strong>Tổng thanh toán:</strong>
+            <c:set var="ship" value="${empty shippingFee ? 0 : shippingFee}" />
+            <fmt:formatNumber value="${order.price + ship}" type="number" groupingUsed="true"/> ₫
+        </p>
+
     </div>
 
     <div class="order-actions" style="margin-bottom: 10px">
