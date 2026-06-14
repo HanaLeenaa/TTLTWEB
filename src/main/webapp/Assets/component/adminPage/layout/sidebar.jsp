@@ -14,6 +14,9 @@
 
         .sidebar {
             width: 230px;
+            min-width: 230px;
+            max-width: 230px;
+            flex-shrink: 0;
             background-color: #1e272e;
             color: white;
             padding: 20px;

@@ -290,6 +290,57 @@
     </c:if>
 </div>
 
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Hình ảnh</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Active</th>
+        <th>Premium</th>
+        <th>Hành động</th>
+    </tr>
+
+    <c:forEach items="${products}" var="p">
+        <tr>
+            <td>${p.ID}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${p.image.startsWith('http')}">
+                        <img src="${p.image}" width="80" alt="${p.name}">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${p.image}" width="80" alt="${p.name}">
+                    </c:otherwise>
+                </c:choose>
+            </td>
+            <td>${p.name}</td>
+            <td style="white-space: nowrap;">
+                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/> đ
+            </td>
+            <td>${p.stock}</td>
+            <td>${p.active}</td>
+            <td>${p.ispremium}</td>
+            <td>
+                <div class="action-buttons">
+                <a class="btn-edit"
+                   href="${pageContext.request.contextPath}/admin/products/edit?id=${p.ID}">
+                    <i class="fa-regular fa-pen-to-square"></i> Sửa
+                </a>
+
+                <a class="btn-delete openDeleteModal"
+                   href="#"
+                   data-url="${pageContext.request.contextPath}/admin/products/delete?id=${p.ID}">
+                    <i class="fa-regular fa-trash-can"></i> Xóa
+                </a>
+                </div>
+            </td>
+        </tr>
+    </c:forEach>
+</table>
+
+<%--Confirm xóa sản phẩm--%>
 <div id="deleteModal" class="modal-overlay">
     <div class="modal-box">
         <h3>Xác nhận xóa</h3>

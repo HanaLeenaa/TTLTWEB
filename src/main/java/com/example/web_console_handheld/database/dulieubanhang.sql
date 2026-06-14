@@ -2431,3 +2431,57 @@ ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
 
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ==================== NHƯ (02/06) ======================
+-- ============== Chức năng voucher ======================
+CREATE TABLE vouchers (
+                          ID INT PRIMARY KEY AUTO_INCREMENT,
+                          code VARCHAR(50) UNIQUE NOT NULL,
+                          name VARCHAR(255) NOT NULL,
+
+                          discount_type ENUM('PERCENT','FIXED') NOT NULL,
+                          discount_value DECIMAL(10,2) NOT NULL,
+
+                          min_order_amount DECIMAL(12,2) DEFAULT 0,
+                          max_discount DECIMAL(12,2) DEFAULT NULL,
+
+                          quantity INT DEFAULT 0,
+
+                          start_date DATETIME,
+                          end_date DATETIME,
+
+                          active BOOLEAN DEFAULT TRUE,
+
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_vouchers (
+                               ID INT PRIMARY KEY AUTO_INCREMENT,
+                               user_id INT NOT NULL,
+                               voucher_id INT NOT NULL,
+                               used_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                               FOREIGN KEY (user_id) REFERENCES users(ID),
+                               FOREIGN KEY (voucher_id) REFERENCES vouchers(ID)
+);
+
+ALTER TABLE orders
+    ADD voucher_id INT NULL,
+    ADD discount_amount DECIMAL(12,2) DEFAULT 0; -- Số tiền giảm của voucher
+    ADD final_amount DECIMAL(12,2) DEFAULT 0; -- Số tiền sau khi áp voucher
+-----------------Châu 1/6------------------
+ALTER TABLE users
+    ADD COLUMN forgot_password_first_attempt DATETIME NULL;
+
+--------------------------Châu 2/6 (test vận chuyển) ---------------------------
+CREATE TABLE shipment (shipment_id INT AUTO_INCREMENT PRIMARY KEY,
+                          order_id INT NOT NULL,
+                          ghn_order_code VARCHAR(100),
+                          shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
+                          shipping_status VARCHAR(50)DEFAULT 'WAITING_PICKUP',
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          CONSTRAINT fk_shipment_order
+                              FOREIGN KEY(order_id)
+                                  REFERENCES orders(ID)
+                                  ON DELETE CASCADE
+);
