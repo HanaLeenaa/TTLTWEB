@@ -46,6 +46,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
 
     implementation 'org.apache.httpcomponents:fluent-hc:4.5.14'
+
+    // 9. Thư viện org.json phục vụ API Giao Hàng Nhanh (GHN)
+    implementation 'org.json:json:20240303'
 }
 
 apply plugin: 'org.hidetake.ssh'
