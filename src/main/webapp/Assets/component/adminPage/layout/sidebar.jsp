@@ -162,7 +162,7 @@
         </li>
 
 
-        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-thin fa-door-closed"></i> Đăng xuất</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
     </ul>
 </div>
 <script>
