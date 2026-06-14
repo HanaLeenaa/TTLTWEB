@@ -18,9 +18,12 @@ private long price;
     private String receiver_note;
     private String payment_status;
     private String transaction_no;
+    private Integer voucher_id;
+    private long discount_amount;
+    private long final_amount;
     public Order() {}
 
-    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no) {
+    public Order(int ID, int user_Id, Timestamp createAt, String status, long price, String receiver_name, String receiver_phone, String receiver_address, String receiver_email, String payment_method,  String receiver_note, String payment_status, String transaction_no, Integer voucher_id, long discount_amount, long final_amount) {
         this.ID = ID;
         this.user_Id = user_Id;
         this.createAt = createAt;
@@ -137,5 +140,27 @@ private long price;
 
     public void setTransaction_no(String transaction_no) {
         this.transaction_no = transaction_no;
+    }
+
+    public Integer getVoucher_id() {
+        return voucher_id;
+    }
+
+    public void setVoucher_id(Integer voucher_id) {
+        this.voucher_id = voucher_id;
+    }
+
+    public long getDiscount_amount() {
+        return discount_amount;
+    }
+
+    public void setDiscount_amount(long discount_amount) {
+        this.discount_amount = discount_amount;
+    }
+    public long getFinal_amount() {
+        return final_amount;
+    }
+    public void setFinal_amount(long final_amount) {
+        this.final_amount = final_amount;
     }
 }
