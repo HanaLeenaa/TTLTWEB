@@ -217,7 +217,13 @@
                                     <td>${o.createAt}</td>
                                     <td>${o.receiver_address}</td>
                                     <td>
-                                        <fmt:formatNumber value="${o.price}" type="number"/>đ
+                                        <fmt:formatNumber
+                                                value="${o.final_amount}"
+                                                type="number"/> đ
+                                    </td>
+
+                                    <td>
+                                        ${o.payment_method}
                                     </td>
                                     <td>${o.payment_method}</td>
                                     <td>${o.status}</td>

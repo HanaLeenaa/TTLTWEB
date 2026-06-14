@@ -127,9 +127,28 @@
         </c:if>
 
         <p>
-            <strong>Phí vận chuyển:</strong>
-            <span style="color: green; font-weight: bold;">
-                Miễn phí
+            <strong>Tạm tính:</strong>
+            <fmt:formatNumber value="${order.price}"
+                                type="number"
+                                groupingUsed="true"/> đ
+        </p>
+
+        <c:if test="${order.discount_amount > 0}">
+            <p style="color: green">
+                <strong>Giảm giá:</strong>
+                -
+                <fmt:formatNumber value="${order.discount_amount}"
+                                    type="number"
+                                    groupingUsed="true"/> đ
+            </p>
+        </c:if>
+
+        <p>
+            <strong>Thanh toán:</strong>
+            <span class="total">
+                <fmt:formatNumber value="${order.final_amount}"
+                                  type="number"
+                                  groupingUsed="true"/> đ
             </span>
         </p>
         <p>
