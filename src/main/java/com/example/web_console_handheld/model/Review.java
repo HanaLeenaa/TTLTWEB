@@ -1,6 +1,7 @@
 package com.example.web_console_handheld.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Review {
     private int ID;
@@ -13,8 +14,9 @@ public class Review {
     private boolean status;
     private String username;
     private int order_id;
+    private String productName;
 
-    public Review(int ID, int products_id, int users_id, int rating, String review_text, String imgReviews, LocalDateTime reviewDate, boolean status, String username, int order_id) {
+    public Review(int ID, int products_id, int users_id, int rating, String review_text, String imgReviews, LocalDateTime reviewDate, boolean status, String username, int order_id, String productName) {
         this.ID = ID;
         this.products_id = products_id;
         this.users_id = users_id;
@@ -25,6 +27,7 @@ public class Review {
         this.status = status;
         this.username = username;
         this.order_id = order_id;
+        this.productName = productName;
     }
     public Review() {}
 
@@ -106,5 +109,26 @@ public class Review {
 
     public void setOrder_id(int order_id) {
         this.order_id = order_id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+
+    public String getReviewDateOnly() {
+        return reviewDate != null
+                ? reviewDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                : "";
+    }
+
+    public String getReviewTimeOnly() {
+        return reviewDate != null
+                ? reviewDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+                : "";
     }
 }

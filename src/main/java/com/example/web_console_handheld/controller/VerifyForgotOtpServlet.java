@@ -17,6 +17,22 @@ public class VerifyForgotOtpServlet extends HttpServlet {
     private final UserDao userDao = new UserDao();
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("forgotUser");
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        req.getRequestDispatcher("/Assets/component/login_logout/VerifyForgotOtp.jsp")
+                .forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -68,7 +84,7 @@ public class VerifyForgotOtpServlet extends HttpServlet {
 
             session.setAttribute("resetUserId", user.getId());
 
-            resp.sendRedirect(req.getContextPath() + "/ResetPassword");
+            resp.sendRedirect(req.getContextPath() + "/reset-password");
 
         } catch (Exception e) {
             throw new ServletException(e);
