@@ -266,10 +266,6 @@ public class Product {
         this.metatitle = metatitle;
     }
 
-    public boolean isIspremium() {
-        return ispremium;
-    }
-
     public void setIspremium(boolean ispremium) {
         this.ispremium = ispremium;
     }
@@ -337,7 +333,21 @@ public class Product {
     public int getCategoriesId() { return categories_id; }
     public void setCategoriesId(int categoriesId) { this.categories_id = categoriesId; }
 
+    public boolean getIspremium() {
+        return this.ispremium;
+    }
 
+    public Integer getParentId() {
+        return this.parent_id;
+    }
+
+    public int getSalesCount() {
+        return this.sales_count;
+    }
+
+    public int getStockQuantity() {
+        return this.stock_quantity;
+    }
 
 
 

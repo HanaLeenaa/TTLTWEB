@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!DOCTYPE html>
 <html lang="vi">
@@ -257,7 +257,7 @@
 
 <div class="admin-wrapper">
 
-<jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
 
     <div class="content">
 
@@ -283,7 +283,7 @@
                 <div class="icon bg-green">🧾</div>
             </div>
 
-            <c:if test="${sessionScope.admin.role == 1}">
+            <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
                 <div class="stat-card">
                     <div>
                         <h3>Người dùng</h3>
@@ -302,7 +302,7 @@
             </c:if>
         </div>
 
-        <c:if test="${sessionScope.admin.role == 1}">
+        <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
             <%--THỐNG KÊ DOANH THU THEO THÁNG/QUÝ/NĂM--%>
             <div class="statistics-header">
                 <h2 class="statistics-title"><i class="fa-solid fa-chart-line"></i> Thống kê doanh thu</h2>
@@ -356,7 +356,7 @@
                 <tr>
                     <th>Sản phẩm</th>
                     <th>Đã bán</th>
-                    <c:if test="${sessionScope.admin.role == 1}">
+                    <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
                         <th>Doanh thu</th>
                     </c:if>
                 </tr>
@@ -366,7 +366,7 @@
                     <tr>
                         <td>${p.productName}</td>
                         <td>${p.totalSold}</td>
-                        <c:if test="${sessionScope.admin.role == 1}">
+                        <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
                             <td>
                                 <fmt:formatNumber value="${p.revenue}" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
                             </td>
@@ -420,7 +420,7 @@
                 <a href="${pageContext.request.contextPath}/admin/products">➕ Thêm sản phẩm</a>
                 <a href="${pageContext.request.contextPath}/admin/orders">📦 Xem đơn hàng</a>
 
-                <c:if test="${sessionScope.admin.role == 1}">
+                <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
                     <a href="${pageContext.request.contextPath}/admin/users">👤 Quản lý user</a>
                 </c:if>
 
@@ -452,7 +452,10 @@
             </div>
         </div>
 
-    </div> </div> <c:if test="${sessionScope.admin.role == 1}">
+    </div>
+</div>
+
+<c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
     <script>
         const labels = [
             <c:forEach items="${statistics}" var="s">

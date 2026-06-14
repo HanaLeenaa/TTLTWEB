@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
@@ -9,7 +9,6 @@
     <title>Quản lý đơn hàng | Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- CSS -->
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/admin-orders.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -351,8 +350,9 @@
 <body>
 
 <div class="admin-orders-wrapper ${not empty selectedOrder ? 'show-detail' : ''}">
-    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
-    <!-- ================= DANH SÁCH ĐƠN ================= -->
+
+    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+
     <div class="order-list">
         <h2><i class="fa-solid fa-box"></i> Quản lý đơn hàng</h2>
 
@@ -454,14 +454,12 @@
         <form method="get" action="${pageContext.request.contextPath}/admin/orders">
             <div class="toolbar">
 
-                <!-- SEARCH -->
                 <div class="search-box">
                     <input type="text" name="keyword"
                            placeholder="Tìm ID, tên, SĐT..."
                            value="${param.keyword}">
                 </div>
 
-                <!-- STATUS -->
                 <select name="status" class="status-filter" onchange="this.form.submit()">
                     <option value="">Tất cả trạng thái</option>
                     <option value="Chờ xác nhận" ${param.status=='Chờ xác nhận'?'selected':''}>Chờ xác nhận</option>
@@ -473,7 +471,6 @@
 
                 </select>
 
-                <!-- FILTER BUTTON -->
                 <div class="filter-wrapper">
                     <button type="button" class="btn-filter" onclick="toggleFilter()">
                         <i class="fa-solid fa-filter"></i> Bộ lọc
@@ -483,7 +480,6 @@
 
                         <h4>Bộ lọc nâng cao</h4>
 
-                        <!-- DATE -->
                         <label>Ngày tạo</label>
                         <div class="range">
                             <input type="date" name="fromDate" value="${param.fromDate}">
@@ -491,7 +487,6 @@
                             <input type="date" name="toDate" value="${param.toDate}">
                         </div>
 
-                        <!-- PRICE -->
                         <label>Khoảng giá</label>
                         <div class="range">
                             <input type="number" name="minPrice" placeholder="Từ" value="${param.minPrice}">
@@ -553,7 +548,6 @@
         </table>
     </div>
 
-    <!-- ================= CHI TIẾT ĐƠN ================= -->
     <div class="order-detail">
 
         <c:if test="${not empty selectedOrder}">
@@ -583,7 +577,6 @@
                 </c:choose>
             </p>
 
-            <!-- UPDATE STATUS -->
             <form action="${pageContext.request.contextPath}/admin/order-update" method="post">
                 <input type="hidden" name="id" value="${selectedOrder.ID}">
 

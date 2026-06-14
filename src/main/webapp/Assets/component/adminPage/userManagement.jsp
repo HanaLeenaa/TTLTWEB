@@ -212,7 +212,7 @@
 <div class="admin-wrapper">
 
     <!-- SIDEBAR (GIỮ NGUYÊN) -->
-    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
 
     <!-- CONTENT -->
     <div class="content">

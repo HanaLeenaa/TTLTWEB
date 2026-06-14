@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Sidebar</title>
@@ -108,7 +108,8 @@
             </a>
         </li>
 
-        <c:if test="${sessionScope.admin.role == 1 || sessionScope.admin.role == '1'}">
+        <%-- Kiểm tra logic loại trừ Staff Kho (role = 2) một cách chặt chẽ --%>
+        <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
             <li>
                 <a href="${pageContext.request.contextPath}/admin/orders"
                    class="${activePage == 'orders' ? 'active' : ''}">

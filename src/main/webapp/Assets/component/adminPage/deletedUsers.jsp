@@ -162,7 +162,7 @@
 
 <div class="admin-wrapper">
 
-    <jsp:include page="/Assets/component/adminPage/sidebar.jsp"/>
+    <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
 
     <div class="content">
         <div class="box">
