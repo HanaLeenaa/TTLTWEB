@@ -20,6 +20,49 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
 
+    <!-- Pagination Style Override -->
+    <style>
+        .pagination {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .pagination a {
+            color: #333 !important;
+            text-decoration: none !important;
+            font-size: 16px !important;
+            padding: 2px 6px !important;
+
+            border: none !important;
+            outline: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .pagination a:hover {
+            color: #E95221 !important;
+        }
+
+        .pagination a:focus,
+        .pagination a:active,
+        .pagination a:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .pagination .active {
+            font-weight: bold !important;
+            color: #E95221 !important;
+
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+
 </head>
 <body>
 <!-- <div id="header"></div> -->
@@ -153,7 +196,6 @@
             <i class="fa-solid fa-sliders"></i> Bộ lọc
         </button>
 
-
         <!-- Card San Pham -->
         <div id="product-list">
 
@@ -218,19 +260,16 @@
 
         </div>
 
-        <!-- pagination-->
-        <div class="pagination">
-            <c:forEach begin="1" end="${totalPage}" var="i">
+        <!-- Pagination -->
+        <div class="pagination" style="margin-top: 20px; text-align: center;">
 
-                <c:url var="pageUrl" value="/product">
-                    <c:param name="page" value="${i}" />
+            <!-- Trang trước -->
+            <c:if test="${currentPage > 1}">
+                <c:url var="prevUrl" value="/product">
+                    <c:param name="page" value="${currentPage - 1}" />
 
                     <c:if test="${not empty keyword}">
                         <c:param name="q" value="${keyword}" />
-                    </c:if>
-
-                    <c:if test="${not empty param.categoryId}">
-                        <c:param name="categoryId" value="${param.categoryId}" />
                     </c:if>
 
                     <c:if test="${not empty param.priceRange}">
@@ -241,6 +280,10 @@
                         <c:param name="sort" value="${param.sort}" />
                     </c:if>
 
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
                     <c:forEach var="b" items="${paramValues.brandId}">
                         <c:param name="brandId" value="${b}" />
                     </c:forEach>
@@ -250,11 +293,80 @@
                     </c:forEach>
                 </c:url>
 
-                <a class="${i == currentPage ? 'active' : ''}" href="${pageUrl}">
+                <a href="${prevUrl}">◀ Trước</a>
+            </c:if>
+
+            <!-- Số trang -->
+            <c:forEach begin="1" end="${totalPage}" var="i">
+
+                <c:url var="pageUrl" value="/product">
+                    <c:param name="page" value="${i}" />
+
+                    <c:if test="${not empty keyword}">
+                        <c:param name="q" value="${keyword}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.priceRange}">
+                        <c:param name="priceRange" value="${param.priceRange}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.sort}">
+                        <c:param name="sort" value="${param.sort}" />
+                    </c:if>
+
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
+                    <c:forEach var="b" items="${paramValues.brandId}">
+                        <c:param name="brandId" value="${b}" />
+                    </c:forEach>
+
+                    <c:forEach var="u" items="${paramValues.useTime}">
+                        <c:param name="useTime" value="${u}" />
+                    </c:forEach>
+                </c:url>
+
+                <a href="${pageUrl}"
+                   class="${i == currentPage ? 'active' : ''}">
                         ${i}
                 </a>
 
             </c:forEach>
+
+            <!-- Trang sau -->
+            <c:if test="${currentPage < totalPage}">
+                <c:url var="nextUrl" value="/product">
+                    <c:param name="page" value="${currentPage + 1}" />
+
+                    <c:if test="${not empty keyword}">
+                        <c:param name="q" value="${keyword}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.priceRange}">
+                        <c:param name="priceRange" value="${param.priceRange}" />
+                    </c:if>
+
+                    <c:if test="${not empty param.sort}">
+                        <c:param name="sort" value="${param.sort}" />
+                    </c:if>
+
+                    <c:forEach var="c" items="${paramValues.categoryId}">
+                        <c:param name="categoryId" value="${c}" />
+                    </c:forEach>
+
+                    <c:forEach var="b" items="${paramValues.brandId}">
+                        <c:param name="brandId" value="${b}" />
+                    </c:forEach>
+
+                    <c:forEach var="u" items="${paramValues.useTime}">
+                        <c:param name="useTime" value="${u}" />
+                    </c:forEach>
+                </c:url>
+
+                <a href="${nextUrl}">Sau ▶</a>
+            </c:if>
+
         </div>
 
         <div id="no-products-message" style="display:none; text-align: center; margin-top: 20px;">
