@@ -218,6 +218,18 @@
             }
         }
 
+        .error-msg {
+            color: #d8000c;
+            background: #ffe5e5;
+            border-radius: 6px;
+
+            text-align: center;
+            margin: 6px 0 10px 0;
+            padding: 6px 8px;
+
+            font-size: 12px;
+        }
+
     </style>
 
 </head>
@@ -451,14 +463,38 @@
                         <label>Tên người dùng</label>
                         <input class="input" name="username" value="${user.username}" />
 
+                        <c:if test="${not empty sessionScope.profileErrors.username}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.username}
+                            </div>
+                        </c:if>
+
                         <label>Email</label>
                         <input class="input" name="email" value="${user.email}" />
+
+                        <c:if test="${not empty sessionScope.profileErrors.email}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.email}
+                            </div>
+                        </c:if>
 
                         <label>Số điện thoại</label>
                         <input class="input" name="phoneNum" value="${user.phoneNum}" />
 
+                        <c:if test="${not empty sessionScope.profileErrors.phone}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.phone}
+                            </div>
+                        </c:if>
+
                         <label>Địa chỉ</label>
                         <input class="input" name="location" value="${user.location}" />
+
+                        <c:if test="${not empty sessionScope.profileErrors.location}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.location}
+                            </div>
+                        </c:if>
 
                         <div class="btn-box">
                             <button class="btn1" type="submit">Lưu thay đổi</button>
@@ -471,6 +507,8 @@
                         </div>
 
                     </form>
+
+                    <c:remove var="profileErrors" scope="session"/>
                 </div>
             </c:when>
 
