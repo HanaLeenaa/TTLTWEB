@@ -61,6 +61,21 @@ public class ConfirmOrderServlet extends HttpServlet {
                 return;
             }
 
+            // Đọc các thông số gửi lên từ Form nhập liệu
+            String fullname = request.getParameter("fullname");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String email = request.getParameter("email");
+            String note = request.getParameter("note");
+            String paymentMethod = request.getParameter("payment_method");
+
+            // LOGIC KHỐI 1 (feature/editDeliveryInformation): Tự động điền thông tin mặc định nếu người dùng để trống
+            if (fullname == null || fullname.isBlank()) fullname = user.getUsername();
+            if (phone == null || phone.isBlank()) phone = user.getPhoneNum();
+            if (email == null || email.isBlank()) email = user.getEmail();
+            if (address == null || address.isBlank()) address = user.getLocation();
+
+            // LOGIC KHỐI 2 (develop): Kiểm tra luồng Mua Ngay (Buy Now) hay đặt hàng từ Giỏ hàng thường
             Boolean buyNowMode = (Boolean) session.getAttribute("buyNowMode");
 
             if (Boolean.TRUE.equals(buyNowMode)) {
@@ -107,23 +122,8 @@ public class ConfirmOrderServlet extends HttpServlet {
                 }
             }
 
-            String fullname = request.getParameter("fullname");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String email = request.getParameter("email");
-            String note = request.getParameter("note");
-            String paymentMethod = request.getParameter("payment_method");
-
-            User auth = (User) session.getAttribute("auth");
-            if (auth != null) {
-                if (fullname == null || fullname.isBlank()) fullname = auth.getUsername();
-                if (phone == null || phone.isBlank()) phone = auth.getPhoneNum();
-                if (email == null || email.isBlank()) email = auth.getEmail();
-                if (address == null || address.isBlank()) address = auth.getLocation();
-            }
-
+            // Xử lý áp dụng Voucher giảm giá nếu có
             Integer voucherId = (Integer) session.getAttribute("selectedVoucherId");
-
             if (voucherId != null) {
                 if (voucherDao.hasUsedVoucher(user.getId(), voucherId)) {
                     session.setAttribute("cartError", "Không thể sử dụng lại do bạn đã sử dụng voucher này trước đó!");
@@ -132,7 +132,6 @@ public class ConfirmOrderServlet extends HttpServlet {
                 }
 
                 selectedVoucher = voucherDao.getVoucherById(voucherId);
-                // BẢO VỆ CHỐNG NULL VOUCHER: Đảm bảo kiểm tra thực thể voucher tránh sập
                 if (selectedVoucher != null && selectedVoucher.getDiscount_value() != null) {
                     if ("PERCENT".equals(selectedVoucher.getDiscount_type())) {
                         discountAmount = (long) (totalAmount * selectedVoucher.getDiscount_value().doubleValue() / 100);
@@ -145,7 +144,7 @@ public class ConfirmOrderServlet extends HttpServlet {
                 }
             }
 
-            // Đóng gói đối tượng Order
+            // Đóng gói đối tượng Order hoàn chỉnh
             order.setUser_Id(user.getId());
             order.setCreateAt(new Timestamp(System.currentTimeMillis()));
             order.setStatus("Chờ xác nhận");
@@ -162,7 +161,7 @@ public class ConfirmOrderServlet extends HttpServlet {
             order.setPayment_method(paymentMethod != null && !paymentMethod.trim().isEmpty() ? paymentMethod.trim().toUpperCase() : "COD");
             order.setPayment_status("UNPAID");
 
-            // Gọi các dịch vụ API thứ 3
+            // Gọi các dịch vụ kết nối API Vận chuyển thứ 3 (Giao Hàng Nhanh)
             try {
                 System.out.println("===> ĐANG GỌI API GHN...");
                 GHNService ghn = new GHNService();
@@ -182,7 +181,6 @@ public class ConfirmOrderServlet extends HttpServlet {
             }
 
         } catch (Exception masterEx) {
-            // KHỐI LỆNH TOÀN NĂNG: Nếu tầng Java dính bất kỳ lỗi logic nào, bắt tại đây và ghi nhận log ngay
             System.err.println("❌❌❌ PHÁT HIỆN LỖI LOGIC NGHIÊM TRỌNG TRONG ĐOẠN JAVA SERVLET:");
             masterEx.printStackTrace();
             System.err.println("-----------------------------------------------------------------");
@@ -213,4 +211,4 @@ public class ConfirmOrderServlet extends HttpServlet {
         System.out.println("===> TIẾN HÀNH FORWARD SANG FILE ORDER.JSP...");
         request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
     }
-}
+} 
