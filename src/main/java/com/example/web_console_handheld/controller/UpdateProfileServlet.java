@@ -2,6 +2,7 @@ package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.UserDao;
 import com.example.web_console_handheld.model.User;
+import com.example.web_console_handheld.utils.ValidationUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,59 +10,80 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/update-profile")
 public class UpdateProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-
-        // Lấy session
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("auth") == null) {
-            System.err.println("Session null hoặc user chưa đăng nhập.");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         User user = (User) session.getAttribute("auth");
-        System.out.println("[DEBUG] User trước update: ID=" + user.getId() + ", email=" + user.getEmail()
-                + ", phone=" + user.getPhoneNum() + ", location=" + user.getLocation());
 
-        // Lấy dữ liệu từ form
+        String username = request.getParameter("username");
         String email = request.getParameter("email");
         String phone = request.getParameter("phoneNum");
         String location = request.getParameter("location");
-        String username = request.getParameter("username");
 
-        System.out.println("Dữ liệu form nhận được: email=" + email + ", phone=" + phone + ", location=" + location);
+        Map<String, String> errors = new HashMap<>();
 
-        if (username == null || username.trim().isEmpty() ||
-                email == null || email.trim().isEmpty() ||
-                phone == null || phone.trim().isEmpty() ||
-                location == null || location.trim().isEmpty()) {
+        UserDao userDao = new UserDao();
 
+        // VALIDATION
+        if (!ValidationUtil.isValidName(username)) {
+            errors.put("username", "Tên không hợp lệ (chỉ chứa chữ và khoảng trắng)");
+        }
+
+        if (!ValidationUtil.isValidEmail(email)) {
+            errors.put("email", "Email không đúng định dạng");
+        }
+
+        if (!ValidationUtil.isValidPhone(phone)) {
+            errors.put("phone", "Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)");
+        }
+
+        if (location == null || location.trim().isEmpty()) {
+            errors.put("location", "Địa chỉ không được để trống");
+        }
+
+        // Kiểm tra trùng
+        if (email != null && !email.equals(user.getEmail()) && userDao.existsEmail(email)) {
+            errors.put("email", "Email đã tồn tại");
+        }
+
+        if (phone != null && !phone.equals(user.getPhoneNum()) && userDao.existsPhoneNum(phone)) {
+            errors.put("phone", "Số điện thoại đã tồn tại");
+        }
+
+        if (username != null && !username.equals(user.getUsername()) && userDao.existsUsername(username)) {
+            errors.put("username", "Tên người dùng đã tồn tại");
+        }
+
+        // lỗi
+        if (!errors.isEmpty()) {
+            session.setAttribute("profileErrors", errors);
             response.sendRedirect(request.getContextPath() + "/profile?tab=edit&error=1");
             return;
         }
 
-        // Cập nhật thông tin user
+        // Cập nhật
         user.setUsername(username.trim());
         user.setEmail(email.trim());
         user.setPhoneNum(phone.trim());
         user.setLocation(location.trim());
 
-        // Gọi DAO để update DB
-        UserDao userDao = new UserDao();
         boolean updated = userDao.updateProfile(user);
 
         if (updated) {
-            // Update session
             session.setAttribute("auth", user);
-            System.out.println("Cập nhật user ID=" + user.getId() + " thành công và session đã cập nhật.");
             response.sendRedirect(request.getContextPath() + "/profile?tab=edit&success=1");
         } else {
-            System.err.println("Lỗi update user ID=" + user.getId());
             response.sendRedirect(request.getContextPath() + "/profile?tab=edit&error=1");
         }
     }

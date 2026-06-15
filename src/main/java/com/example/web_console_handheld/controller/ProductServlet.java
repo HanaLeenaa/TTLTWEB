@@ -99,6 +99,14 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPage", totalPage);
 
+        request.setAttribute("totalProduct", totalProduct);
+
+        int startProduct = totalProduct == 0 ? 0 : offset + 1;
+        int endProduct = Math.min(offset + PAGE_SIZE, totalProduct);
+
+        request.setAttribute("startProduct", startProduct);
+        request.setAttribute("endProduct", endProduct);
+
         // giữ trạng thái filter
         request.setAttribute("selectedCategoryIds", categoryIds);
         request.setAttribute("selectedBrandIds", brandIds);

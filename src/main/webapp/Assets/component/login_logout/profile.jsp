@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -123,6 +123,113 @@
         body.modal-open {
             overflow: hidden !important;
         }
+
+        .success-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+
+            animation: fadeIn .4s ease;
+        }
+
+        .success-popup {
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 20px;
+            text-align: center;
+            padding: 35px 25px;
+
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+
+            animation: popupShow .4s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            background: #e8fff0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-icon i {
+            font-size: 42px;
+            color: #28a745;
+        }
+
+        .success-popup h3 {
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .success-popup p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .success-popup small {
+            color: #999;
+        }
+
+        .fade-out {
+            animation: fadeOut .5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popupShow {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .error-msg {
+            color: #d8000c;
+            background: #ffe5e5;
+            border-radius: 6px;
+
+            text-align: center;
+            margin: 6px 0 10px 0;
+            padding: 6px 8px;
+
+            font-size: 12px;
+        }
+
     </style>
 
 </head>
@@ -356,14 +463,38 @@
                         <label>Tên người dùng</label>
                         <input class="input" name="username" value="${user.username}" />
 
+                        <c:if test="${not empty sessionScope.profileErrors.username}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.username}
+                            </div>
+                        </c:if>
+
                         <label>Email</label>
                         <input class="input" name="email" value="${user.email}" />
+
+                        <c:if test="${not empty sessionScope.profileErrors.email}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.email}
+                            </div>
+                        </c:if>
 
                         <label>Số điện thoại</label>
                         <input class="input" name="phoneNum" value="${user.phoneNum}" />
 
+                        <c:if test="${not empty sessionScope.profileErrors.phone}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.phone}
+                            </div>
+                        </c:if>
+
                         <label>Địa chỉ</label>
                         <input class="input" name="location" value="${user.location}" />
+
+                        <c:if test="${not empty sessionScope.profileErrors.location}">
+                            <div class="error-msg">
+                                    ${sessionScope.profileErrors.location}
+                            </div>
+                        </c:if>
 
                         <div class="btn-box">
                             <button class="btn1" type="submit">Lưu thay đổi</button>
@@ -376,6 +507,8 @@
                         </div>
 
                     </form>
+
+                    <c:remove var="profileErrors" scope="session"/>
                 </div>
             </c:when>
 
@@ -469,22 +602,45 @@
     </div>
 </div>
 
-<%--POPUP UPDATE SUCCESS --%>
 <c:if test="${param.success == '1'}">
-    <div class="popup-overlay">
-        <div class="popup-box">
-            <p>Đã cập nhật thông tin</p>
+    <div id="successPopup" class="success-popup-overlay">
 
-            <button onclick="
-                    window.location.href=
-                    '${pageContext.request.contextPath}/profile?tab=edit'
-                    ">
+        <div class="success-popup">
 
-                OK
-            </button>
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h3>Cập nhật thành công</h3>
+
+            <p>
+                Thông tin của bạn đã được cập nhật thành công.
+            </p>
+
+            <small>
+                Hệ thống sẽ tự động đóng sau 2 giây...
+            </small>
+
         </div>
     </div>
 </c:if>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const popup = document.getElementById("successPopup");
+        if (!popup) return;
+        setTimeout(() => {
+            popup.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href =
+                    "${pageContext.request.contextPath}/profile?tab=edit";
+            }, 500);
+        }, 2000);
+    });
+
+</script>
 
 <script>
     function openEditModal(id, rating, text) {

@@ -7,7 +7,6 @@ import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.Order;
 import com.example.web_console_handheld.model.OrderItem;
 import com.example.web_console_handheld.model.User;
-import com.example.web_console_handheld.service.GHNService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,87 +38,66 @@ public class SubmitOrderDatabaseServlet extends HttpServlet {
         }
 
         try {
-            int fromDistrict = 1454;
-            String fromWard = "21005";
-
-            int toDistrict = 1452;
-            String toWard = "21810";
-
-            int fee = 0;
-            int leadTime = 0;
-
-            try {
-                fee = ghnService.calculateFee(fromDistrict, toDistrict, 1000);
-                leadTime = ghnService.calculateLeadTime(fromDistrict, fromWard, toDistrict, toWard);
-
-            } catch (Exception ghnEx) {
-                ghnEx.printStackTrace();
-                fee = 0;
-                leadTime = 0;
-            }
-
             long now = System.currentTimeMillis();
-            order.setShippingFee(fee);
-            order.setExpectedDeliveryFrom(new java.sql.Timestamp(now + 2L * 24 * 60 * 60 * 1000));
 
-            order.setExpectedDeliveryTo(new java.sql.Timestamp(now + (leadTime > 0
-                            ? leadTime * 1000L : 4L * 24 * 60 * 60 * 1000)));
+            Integer fee = (Integer) session.getAttribute("shippingFee");
+            Integer leadTime = (Integer) session.getAttribute("leadTime");
+
+            if (leadTime == null || leadTime <= 0) {
+                leadTime = 3;
+            }
 
             int orderId = orderDao.createOrderTransactionWithLog(order, cartItems);
 
             if (orderId > 0) {
-                //Voucher
+                // Xử lý Voucher nếu có áp dụng
                 if (order.getVoucher_id() != null) {
                     voucherDao.decreaseQuantity(order.getVoucher_id());
-
                     voucherDao.insertUserVoucher(user.getId(), order.getVoucher_id());
-
                 }
+
+                // Dọn dẹp dữ liệu Session cũ
                 session.removeAttribute("selectedVoucherId");
                 session.removeAttribute("selectedItems");
-                session.removeAttribute("pendingOrderItems");
-                session.removeAttribute("pendingOrder");
                 session.removeAttribute("checkoutTotal");
+                session.removeAttribute("pendingOrder");
+                session.removeAttribute("pendingOrderItems");
 
-                // Xử lý dọn dẹp biến chế độ mua ngay
+                // Phân loại: Nếu mua ngay thì xóa biến mua ngay, nếu mua từ Giỏ hàng thì xóa sản phẩm trong Giỏ hàng
                 if (Boolean.TRUE.equals(buyNowMode)) {
                     session.removeAttribute("buyNowMode");
-                    session.removeAttribute("pendingOrderItems");
+                } else {
+                    for (OrderItem item : cartItems) {
+                        cartDao.removeItem(user.getId(), item.getProduct_id());
+                    }
                 }
 
-            if (Boolean.TRUE.equals(buyNowMode)) {
-                session.removeAttribute("buyNowMode");
-                session.removeAttribute("pendingOrderItems");
+                // Cập nhật lại số lượng (cartSize) hiển thị trên Header
+                List<CartItem> remainingCart = cartDao.getCartByUser(user.getId());
+                int totalQty = 0;
+                if (remainingCart != null) {
+                    for (CartItem c : remainingCart) {
+                        totalQty += c.getQuantity();
+                    }
+                }
+                session.setAttribute("cartSize", totalQty);
+
+                // Gửi dữ liệu sang trang hiển thị hóa đơn thành công
+                request.setAttribute("confirmed", true);
+                request.setAttribute("order", order);
+                request.setAttribute("orderItems", cartItems);
+                request.setAttribute("shippingFee", fee);
+
+                request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
             } else {
-                for (OrderItem item : cartItems) {
-                    cartDao.removeItem(user.getId(), item.getProduct_id());
-                }
+                // Trường hợp createOrderTransactionWithLog thất bại trả về <= 0
+                session.setAttribute("cartError", "Không thể tạo đơn hàng. Vui lòng thử lại!");
+                response.sendRedirect(request.getContextPath() + "/cart");
             }
-
-            List<CartItem> remainingCart =
-                    cartDao.getCartByUser(user.getId());
-
-            int totalQty = 0;
-
-            if (remainingCart != null) {
-                for (CartItem c : remainingCart) {
-                    totalQty += c.getQuantity();
-                }
-            }
-            session.setAttribute("cartSize", totalQty);
-
-            request.setAttribute("confirmed", true);
-            request.setAttribute("order", order);
-            request.setAttribute("orderItems", cartItems);
-            request.setAttribute("shippingFee", fee);
-
-            request.getRequestDispatcher("/Assets/component/cart_payment/Order.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-
             session.setAttribute("cartError", "Lỗi hệ thống: " + e.getMessage());
-
             response.sendRedirect(request.getContextPath() + "/cart");
         }
     }

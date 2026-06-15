@@ -70,6 +70,14 @@ public class ProductDetailServlet extends HttpServlet {
 
         double avgRating = reviewDao.getAverageRating(productId);
 
+        double avg = avgRating;
+
+        int fullStars = (int) avg;
+        boolean hasHalf = (avg - fullStars) >= 0.5;
+
+        request.setAttribute("fullStars", fullStars);
+        request.setAttribute("hasHalf", hasHalf);
+
         // count stars
         int fiveStars = reviewDao.countByStar(productId, 5);
         int fourStars = reviewDao.countByStar(productId, 4);
