@@ -24,8 +24,8 @@
 <main>
     <form id="paymentForm" action="${pageContext.request.contextPath}/confirm-order" method="post">
 
-        <c:forEach items="${paramValues.selectedItems}" var="productId">
-            <input type="hidden" name="selectedItems" value="${productId}" />
+        <c:forEach items="${orderItems}" var="item">
+            <input type="hidden" name="selectedItems" value="${item.product_id}" />
         </c:forEach>
 
         <div class="container1">
@@ -34,37 +34,33 @@
                 <div class="information1">
                     <p class="title title1">Thông tin nhận hàng</p>
 
-                        <div class="name_infor">
-                            <p class="p1 p-same">Họ và tên người nhận hàng</p>
+                    <div class="name_infor">
+                        <p class="p1 p-same">Họ và tên người nhận hàng</p>
+                        <input type="text"
+                               name="fullname"
+                               class="input11"
+                               value="${sessionScope.auth.username}" />
+                    </div>
 
-                            <input type="text"
-                                   name="fullname"
-                                   class="input11"
-                                   value="${sessionScope.auth.username}" />
-                        </div>
+                    <div class="name_infor">
+                        <p class="p1 p-same">Số điện thoại</p>
+                        <input type="text"
+                               name="phone"
+                               class="input11"
+                               value="${sessionScope.auth.phoneNum}" />
+                    </div>
 
-                        <div class="name_infor">
-                            <p class="p1 p-same">Số điện thoại</p>
-
-                            <input type="text"
-                                   name="phone"
-                                   class="input11"
-                                   value="${sessionScope.auth.phoneNum}" />
-                        </div>
-
-
-                        <div class="name_infor">
-                            <p class="p1 p-same">Địa chỉ</p>
-
-                            <input type="text"
-                                   name="address"
-                                   class="input11"
-                                   value="${sessionScope.auth.location}" />
+                    <div class="name_infor">
+                        <p class="p1 p-same">Địa chỉ</p>
+                        <input type="text"
+                               id="address"
+                               name="address"
+                               class="input11"
+                               value="${sessionScope.auth.location}" />
                     </div>
 
                     <div class="name_infor">
                         <p class="p1 p-same">Email</p>
-
                         <input type="text"
                                name="email"
                                class="input11"
@@ -82,7 +78,7 @@
                 </div>
 
                 <div class="product1">
-                    <p class="title title3">Đơn hàng (${quantity} sản phẩm)</p>
+                    <p class="title title3">Đơn hàng (${not empty quantity ? quantity : fn:length(orderItems)} sản phẩm)</p>
 
                     <c:forEach var="item" items="${orderItems}">
                         <div class="flex_infor_product padding-same same">
@@ -98,51 +94,46 @@
                                 <p class="title-item">${item.product_name}</p>
                             </div>
                             <div class="part3">
-                                <p><fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true"/>đ</p>
+                                <p><fmt:formatNumber value="${item.product_price * item.quantity}" type="number" groupingUsed="true"/> đ</p>
                             </div>
                         </div>
                     </c:forEach>
 
-                    <%--======VOUCHER=====--%>
+                    <%--====== VOUCHER =====--%>
                     <hr>
-                        <div class="voucher-row">
+                    <div class="voucher-row">
                         <span>
                             <i class="fa-solid fa-ticket"></i>
                             Voucher
                         </span>
 
-                            <a href="${pageContext.request.contextPath}/voucher-list">
-
-                                <c:choose>
-
-                                    <c:when test="${selectedVoucher != null}">
-                                        ${selectedVoucher.code}
-                                    </c:when>
-
-                                    <c:otherwise>
-                                        Chọn Voucher
-                                    </c:otherwise>
-
-                                </c:choose>
-
-                                >
-                            </a>
-
-                        </div>
+                        <a href="${pageContext.request.contextPath}/voucher-list">
+                            <c:choose>
+                                <c:when test="${selectedVoucher != null}">
+                                    ${selectedVoucher.code}
+                                </c:when>
+                                <c:otherwise>
+                                    Chọn Voucher
+                                </c:otherwise>
+                            </c:choose>
+                            &gt;
+                        </a>
+                    </div>
                     <hr>
-                    <%--TÍNH TỔNG TIỀN KHI ÁP DỤNG VOUCHER--%>
+
+                    <%-- TÍNH TỔNG TIỀN KHI ÁP DỤNG VOUCHER --%>
                     <div class="summary">
                         <p><b>Tổng tiền:</b>
-                            <fmt:formatNumber value="${totalAmount}" type="number"/> đ
+                            <fmt:formatNumber value="${totalAmount}" type="number" groupingUsed="true"/> đ
                         </p>
 
                         <p><b>Giảm giá:</b>
-                            <fmt:formatNumber value="${discountAmount}" type="number"/> đ
+                            <fmt:formatNumber value="${discountAmount}" type="number" groupingUsed="true"/> đ
                         </p>
 
                         <p><b>Thanh toán:</b>
-                            <span id="finalAmount">
-                                <fmt:formatNumber value="${finalAmount}" type="number"/> đ
+                            <span id="finalAmount" style="font-weight: bold; color: #e95221;">
+                                <fmt:formatNumber value="${finalAmount}" type="number" groupingUsed="true"/> đ
                             </span>
                         </p>
                     </div>
@@ -167,7 +158,21 @@
 
                     <div class="update_and_order same grid-same">
                         <div>
-                            <button class="same-btn btn-green" type="button" style="cursor: pointer" onclick="location.href='${pageContext.request.contextPath}/cart'">Sửa giỏ hàng</button>
+                            <c:choose>
+                                <c:when test="${sessionScope.buyNowMode == true}">
+                                    <button class="same-btn btn-green" type="button" style="cursor: pointer"
+                                            onclick="location.href='${pageContext.request.contextPath}/product-detail?id=${orderItems[0].product_id}'">
+                                        Quay lại sản phẩm
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="same-btn btn-green" type="button" style="cursor: pointer"
+                                            onclick="location.href='${pageContext.request.contextPath}/cart'">
+                                        Sửa giỏ hàng
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+
                             <button type="button" class="same-btn btn-green"
                                     onclick="location.href='${pageContext.request.contextPath}/profile?tab=edit&redirect=payment'">
                                 Sửa thông tin
@@ -204,24 +209,6 @@
             body: "address=" + encodeURIComponent(address)
         }).then(res => res.text()).then(() => { location.reload(); });
     }
-
-    document.getElementById("paymentForm").addEventListener("submit", function(event) {
-        // Cả 2 phương thức đều chuyển hướng về servlet trung gian để hiển thị trang Order.jsp (chế độ chưa confirm)
-        this.action = "${pageContext.request.contextPath}/confirm-order";
-    });
-</script>
-
-<script>
-        editMode = !editMode;
-
-        document.querySelectorAll(".view-mode").forEach(e => {
-            e.style.display = editMode ? "none" : "block";
-        });
-
-        document.querySelectorAll(".edit-mode").forEach(e => {
-            e.style.display = editMode ? "block" : "none";
-        });
-
 </script>
 
 </body>
