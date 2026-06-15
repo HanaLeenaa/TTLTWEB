@@ -10,14 +10,14 @@ repositories {
     mavenLocal()
 }
 
-// CẤU HÌNH CỐT LÕI: Ép Gradle nén ra file lab.war thay vì Web_Console_HandHeld.war
+// CẤU HÌNH CỐT LÕI: Ép Gradle nén ra file ROOT.war để chạy trực tiếp từ domain gốc
 war {
-    archiveFileName = 'lab.war'
+    archiveFileName = 'ROOT.war'
 }
 
 dependencies {
-    // 1. Đồng bộ Jakarta Servlet API chuẩn cho Tomcat 10.1 (Servlet 6.0)
-    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    // 1. Đồng bộ Jakarta Servlet API chuẩn cho Tomcat 10.1 (Khớp với web.xml 6.0 của bạn)
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     // 2. JDBI & MySQL
     implementation 'org.jdbi:jdbi3-core:3.45.1'
@@ -66,24 +66,31 @@ ssh.settings {
 }
 
 task docker_upload_file_to_server {
-    // Đã đổi sang đọc file lab.war mới tinh từ thư mục build
-    def warFile = layout.projectDirectory.file("build/libs/lab.war")
+    // Đọc file ROOT.war mới tinh từ thư mục build
+    def warFile = layout.projectDirectory.file("build/libs/ROOT.war")
     doLast {
-        println '--- Uploading lab.war to Server ---'
+        println '--- Uploading ROOT.war to Server ---'
         project.ssh.run {
             session(remotes.host) {
-                // 1. Tự động xóa file lab cũ và thư mục giải nén cũ trên Ubuntu trước khi up file mới
+                // 1. Dọn dẹp triệt để tàn dư của 'lab' cũ trên Ubuntu để tránh chiếm cache
                 execute 'sudo rm -rf /usr/deploy/lab.war', ignoreError: true
                 execute 'sudo rm -rf /usr/deploy/lab/', ignoreError: true
 
-                // 2. Đẩy file WAR mới lên server
-                put from: warFile.asFile, into: "/usr/deploy/lab.war"
+                // 2. Xóa file ROOT cũ trước khi ghi đè bản mới
+                execute 'sudo rm -rf /usr/deploy/ROOT.war', ignoreError: true
+                execute 'sudo rm -rf /usr/deploy/ROOT/', ignoreError: true
 
-                // 3. TỰ ĐỘNG XOÁ CACHE TRONG DOCKER TOMCAT (Thêm dòng này để diệt tận gốc lỗi 500 JasperException cũ)
-                println '--- Cleaning Tomcat Work Cache ---'
+                // 3. Đẩy file ROOT.war mới lên đúng vị trí deploy
+                put from: warFile.asFile, into: "/usr/deploy/ROOT.war"
+
+                // 4. ÉP TOMCAT TRONG DOCKER XOÁ SẠCH CACHE CŨ (Diệt tận gốc 404/500 ngầm)
+                println '--- Cleaning Tomcat Root and Lab Cache ---'
+                execute 'sudo docker exec tomcat10 rm -rf /usr/local/tomcat/webapps/lab', ignoreError: true
+                execute 'sudo docker exec tomcat10 rm -rf /usr/local/tomcat/webapps/ROOT', ignoreError: true
                 execute 'sudo docker exec tomcat10 rm -rf /usr/local/tomcat/work/Catalina/localhost/lab', ignoreError: true
+                execute 'sudo docker exec tomcat10 rm -rf /usr/local/tomcat/work/Catalina/localhost/ROOT', ignoreError: true
 
-                // 4. Ra lệnh cho Docker Tomcat restart nhẹ nhàng để ăn code mới
+                // 5. Ra lệnh cho Docker Tomcat restart để bung file ROOT.war mới ra chạy
                 println '--- Hot-restarting Tomcat Container ---'
                 execute 'sudo docker restart tomcat10'
             }
@@ -91,7 +98,6 @@ task docker_upload_file_to_server {
     }
 }
 
-// Bỏ task docker_app_start cồng kềnh cũ, gom toàn bộ luồng chạy vào 2 bước tinh gọn
 task docker_deploy {
     dependsOn build
     dependsOn docker_upload_file_to_server
