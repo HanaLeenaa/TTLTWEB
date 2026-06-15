@@ -2,9 +2,9 @@ package com.example.web_console_handheld.dao;
 
 import com.example.web_console_handheld.model.Review;
 import java.util.List;
-import java.util.ArrayList;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Map;
+import java.util.HashMap;
+import java.sql.Timestamp;
 
 public class ReviewDao extends BaseDao {
 
@@ -12,24 +12,54 @@ public class ReviewDao extends BaseDao {
     public List<Review> getReviewByID(int productID) {
         return get().withHandle(handle ->
                 handle.createQuery("""
-                                    SELECT 
-                                        r.ID,
-                                        r.products_id,
-                                        r.users_id,
-                                        r.rating,
-                                        r.review_text,
-                                        r.imgReviews,
-                                        r.reviewDate,
-                                        r.status,
-                                        u.username
-                                    FROM reviews r
-                                    JOIN users u ON r.users_id = u.ID
-                                    WHERE r.products_id = :productID 
-                                      AND r.status = 1
-                                    ORDER BY r.reviewDate DESC""")
+                SELECT
+                    r.ID,
+                    r.products_id,
+                    r.users_id,
+                    r.rating,
+                    r.review_text,
+                    r.imgReviews,
+                    r.reviewDate,
+                    r.status,
+                    r.admin_reply,
+                    r.reply_date,
+                    u.username
+                FROM reviews r
+                JOIN users u ON r.users_id = u.ID
+                WHERE r.products_id = :productID
+                  AND r.status = 1
+                ORDER BY r.reviewDate DESC
+            """)
                         .bind("productID", productID)
-                        .mapToBean(Review.class)
-                        .list());
+                        .map((rs, ctx) -> {
+
+                            Review r = new Review();
+
+                            r.setID(rs.getInt("ID"));
+                            r.setProducts_id(rs.getInt("products_id"));
+                            r.setUsers_id(rs.getInt("users_id"));
+                            r.setRating(rs.getInt("rating"));
+                            r.setReview_text(rs.getString("review_text"));
+                            r.setImgReviews(rs.getString("imgReviews"));
+                            r.setStatus(rs.getBoolean("status"));
+                            r.setUsername(rs.getString("username"));
+
+                            Timestamp reviewTs = rs.getTimestamp("reviewDate");
+                            if(reviewTs != null){
+                                r.setReviewDate(reviewTs.toLocalDateTime());
+                            }
+
+                            r.setAdmin_reply(rs.getString("admin_reply"));
+
+                            Timestamp replyTs = rs.getTimestamp("reply_date");
+                            if(replyTs != null){
+                                r.setReply_date(replyTs.toLocalDateTime());
+                            }
+
+                            return r;
+                        })
+                        .list()
+        );
     }
 
     // Tính tổng rating (trả về double)
@@ -193,15 +223,54 @@ public class ReviewDao extends BaseDao {
         return get().withHandle(handle ->
                 handle.createQuery("""
                 SELECT
-                    r.*,
+                    r.ID,
+                    r.products_id,
+                    r.users_id,
+                    r.order_id,
+                    r.rating,
+                    r.review_text,
+                    r.imgReviews,
+                    r.reviewDate,
+                    r.status,
+                    r.admin_reply,
+                    r.reply_date,
                     u.username,
                     p.name AS productName
                 FROM reviews r
-                JOIN users u ON r.users_id = u.ID
-                JOIN products p ON r.products_id = p.ID
+                LEFT JOIN users u ON r.users_id = u.ID
+                LEFT JOIN products p ON r.products_id = p.ID
                 ORDER BY r.reviewDate DESC
             """)
-                        .mapToBean(Review.class)
+                        .map((rs, ctx) -> {
+                            Review r = new Review();
+
+                            r.setID(rs.getInt("ID"));
+                            r.setProducts_id(rs.getInt("products_id"));
+                            r.setUsers_id(rs.getInt("users_id"));
+                            r.setOrder_id(rs.getInt("order_id"));
+                            r.setRating(rs.getInt("rating"));
+                            r.setReview_text(rs.getString("review_text"));
+                            r.setImgReviews(rs.getString("imgReviews"));
+
+                            // reviewDate (null-safe)
+                            Timestamp reviewTs = rs.getTimestamp("reviewDate");
+                            if (reviewTs != null) {
+                                r.setReviewDate(reviewTs.toLocalDateTime());
+                            }
+
+                            // reply_date (null-safe)
+                            Timestamp replyTs = rs.getTimestamp("reply_date");
+                            if (replyTs != null) {
+                                r.setReply_date(replyTs.toLocalDateTime());
+                            }
+
+                            r.setStatus(rs.getBoolean("status"));
+                            r.setUsername(rs.getString("username"));
+                            r.setProductName(rs.getString("productName"));
+                            r.setAdmin_reply(rs.getString("admin_reply"));
+
+                            return r;
+                        })
                         .list()
         );
     }
@@ -274,4 +343,80 @@ public class ReviewDao extends BaseDao {
         );
     }
 
+    public void deleteReview(int reviewId) {
+        get().withHandle(handle ->
+                handle.createUpdate("""
+            DELETE FROM reviews
+            WHERE ID = :id
+        """)
+                        .bind("id", reviewId)
+                        .execute()
+        );
+    }
+
+    public void replyReview(int reviewId, String reply) {
+        get().withHandle(handle ->
+                handle.createUpdate("""
+            UPDATE reviews
+            SET admin_reply = :reply,
+                reply_date = NOW()
+            WHERE ID = :id
+        """)
+                        .bind("id", reviewId)
+                        .bind("reply", reply)
+                        .execute()
+        );
+    }
+
+    public int countAllReviews() {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT COUNT(*)
+                FROM reviews
+                WHERE status = 1
+            """)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public Map<String, Integer> getReviewRatingStatistics() {
+
+        Map<String, Integer> result = new HashMap<>();
+
+        for (int i = 1; i <= 5; i++) {
+            result.put(String.valueOf(i), 0);
+        }
+
+        get().withHandle(handle ->
+                handle.createQuery("""
+            SELECT rating, COUNT(*) AS total
+            FROM reviews
+            WHERE status = 1
+            GROUP BY rating
+        """)
+                        .map((rs, ctx) -> {
+                            String rating = String.valueOf(rs.getInt("rating"));
+                            int total = rs.getInt("total");
+
+                            result.put(rating, total);
+                            return null;
+                        })
+                        .list()
+        );
+
+        return result;
+    }
+
+    public double getAverageRatingAllProducts() {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT COALESCE(AVG(rating),0)
+                FROM reviews
+                WHERE status = 1
+            """)
+                        .mapTo(Double.class)
+                        .one()
+        );
+    }
 }

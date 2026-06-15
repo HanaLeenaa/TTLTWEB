@@ -2441,3 +2441,10 @@ CREATE TABLE shipment (shipment_id INT AUTO_INCREMENT PRIMARY KEY,
                                   REFERENCES orders(ID)
                                   ON DELETE CASCADE
 );
+
+------------------------15/6 Châu -----------------------
+ALTER TABLE reviews
+    ADD admin_reply TEXT,
+ADD reply_date DATETIME;
+
+------------------------------------------------------
