@@ -129,6 +129,13 @@
             </a>
         </li>
 
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/reviews"
+               class="${activePage == 'reviews' ? 'active' : ''}">
+                <i class="fa-solid fa-star"></i> Quản lý đánh giá
+            </a>
+        </li>
+
             <a href="javascript:void(0)"
                onclick="toggleWarehouse()"
                class="${activePage == 'warehouse' ? 'active' : ''}">
