@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <html>
 <head>
     <title>Footer</title>
@@ -8,10 +10,6 @@
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
     <!-- Font Awesome -->
     <script
@@ -28,7 +26,7 @@
             <form action="${pageContext.request.contextPath}/contact" method="post">
                 <div class="subscribe">
 
-                    <textarea name="message" placeholder="Nhập nội dung liên hệ của bạn" required></textarea>
+                    <textarea name="message" placeholder="Nhập nội dung liên hệ" required></textarea>
 
                     <button type="submit">
                         <i class="fa-solid fa-paper-plane"></i> Gửi
@@ -37,7 +35,7 @@
             </form>
             <div class="social-icons">
                 <c:forEach var="c" items="${icon}">
-                    <a src="#">${c.link_icon}</a>
+                    <a href="#">${c.link_icon}</a>
                 </c:forEach>
             </div>
         </div>
@@ -46,7 +44,7 @@
         <div class="footer-section">
             <h3>Truy cập nhanh</h3>
             <ul>
-                <li><a href="#">Liên Hệ</a></li>
+                <li><a href="${pageContext.request.contextPath}/contact">Liên Hệ</a></li>
                 <li><a href="#">Điều khoản và điều kiện</a></li>
                 <li><a href="#">Phương thức thanh toán</a></li>
                 <li><a href="#">Giao hàng và trả hàng</a></li>
@@ -81,5 +79,3 @@
         </div>
     </div>
 </footer>
-</body>
-</html>

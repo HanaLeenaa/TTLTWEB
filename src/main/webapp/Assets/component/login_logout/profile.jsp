@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -324,7 +324,13 @@
                                     <td>${o.createAt}</td>
                                     <td>${o.receiver_address}</td>
                                     <td>
-                                        <fmt:formatNumber value="${o.price}" type="number"/>đ
+                                        <fmt:formatNumber
+                                                value="${o.final_amount}"
+                                                type="number"/> đ
+                                    </td>
+
+                                    <td>
+                                        ${o.payment_method}
                                     </td>
                                     <td>${o.payment_method}</td>
                                     <td>${o.status}</td>

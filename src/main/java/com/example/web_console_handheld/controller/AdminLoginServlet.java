@@ -21,17 +21,17 @@ public class AdminLoginServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("admin") == null) {
-            // Chưa đăng nhập -> hiện form admin login
             request.getRequestDispatcher("/Assets/component/adminPage/adminLogin.jsp")
                     .forward(request, response);
         } else {
-            // Đã đăng nhập -> vào dashboard
-            response.sendRedirect("/Assets/component/adminPage/adminDashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         }
     }
 
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -39,21 +39,26 @@ public class AdminLoginServlet extends HttpServlet {
         Admin admin = dao.login(username, password);
 
         if (admin != null) {
-            //login thành công
             HttpSession session = request.getSession();
             session.setAttribute("admin", admin);
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+        } else {
+            // 🌟 ĐÃ CHỈNH SỬA TẠI ĐÂY: Tự sinh chuỗi băm "chính chủ" của chữ staff trên máy bạn
+            String chuoiBamCuaStaff = org.mindrot.jbcrypt.BCrypt.hashpw("staff", org.mindrot.jbcrypt.BCrypt.gensalt());
 
-            response.sendRedirect(request.getContextPath() +"/admin/dashboard");
+            // Ép sinh đoạn mã JavaScript để khi trang load lại, nó tự in thẳng vào DevTools (F12)
+            String scriptInDevTools = "<script>"
+                    + "console.error('--- LOG TỰ SINH CHUỖI BĂM CHÍNH CHỦ ---');"
+                    + "console.log('Chuoi bam XIN cua chu [staff] tren may ban la:');"
+                    + "console.warn('" + chuoiBamCuaStaff + "');"
+                    + "</script>";
 
-        }else {
+            // Đẩy cả thông báo lỗi và đoạn script in DevTools về file JSP
             request.setAttribute("ERROR", "Tên đăng nhập hoặc mật khẩu không đúng");
-            request.getRequestDispatcher("/Assets/component/adminPage/adminLogin.jsp").forward(request, response);
+            request.setAttribute("DEVTOOLS_LOG", scriptInDevTools);
 
+            request.getRequestDispatcher("/Assets/component/adminPage/adminLogin.jsp")
+                    .forward(request, response);
         }
-
-
-
     }
-
-
 }

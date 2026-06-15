@@ -1,8 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -51,6 +50,11 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 25px;
+        }
+
+        /* Tự động thu về 2 cột cân đối nếu người đăng nhập là Staff */
+        .stats.staff-cols {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .stat-card {
@@ -253,20 +257,16 @@
 
 <div class="admin-wrapper">
 
-    <!-- SIDEBAR (GIỮ NGUYÊN) -->
     <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
 
-    <!-- CONTENT -->
     <div class="content">
 
-        <!-- HEADER -->
         <div class="header">
             <h1>Xin chào ${sessionScope.admin.username} 👋</h1>
             <p>Chào mừng bạn quay lại trang quản trị</p>
         </div>
 
-        <!-- STATS -->
-        <div class="stats">
+        <div class="stats ${sessionScope.admin.role == 2 ? 'staff-cols' : ''}">
             <div class="stat-card">
                 <div>
                     <h3>Sản phẩm</h3>
@@ -283,148 +283,104 @@
                 <div class="icon bg-green">🧾</div>
             </div>
 
-            <div class="stat-card">
-                <div>
-                    <h3>Người dùng</h3>
-                    <p>${totalUsers}</p>
+            <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
+                <div class="stat-card">
+                    <div>
+                        <h3>Người dùng</h3>
+                        <p>${totalUsers}</p>
+                    </div>
+                    <div class="icon bg-orange">👤</div>
                 </div>
-                <div class="icon bg-orange">👤</div>
-            </div>
 
-            <div class="stat-card">
-                <div>
-                    <h3>Doanh thu</h3>
-                    <p><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true"/>đ</p>
+                <div class="stat-card">
+                    <div>
+                        <h3>Doanh thu</h3>
+                        <p><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true"/>đ</p>
+                    </div>
+                    <div class="icon bg-red">💰</div>
                 </div>
-                <div class="icon bg-red">💰</div>
-            </div>
+            </c:if>
         </div>
 
+        <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
             <%--THỐNG KÊ DOANH THU THEO THÁNG/QUÝ/NĂM--%>
-        <div class="statistics-header">
+            <div class="statistics-header">
+                <h2 class="statistics-title"><i class="fa-solid fa-chart-line"></i> Thống kê doanh thu</h2>
+                <form method="get" action="${pageContext.request.contextPath}/admin/dashboard">
+                    <select name="type">
+                        <option value="month" ${type=='month'?'selected':''}>Theo tháng</option>
+                        <option value="quarter" ${type=='quarter'?'selected':''}>Theo quý</option>
+                        <option value="year" ${type=='year'?'selected':''}>Theo năm</option>
+                    </select>
+                    <button type="submit">Xem thống kê</button>
+                </form>
+            </div>
 
-            <h2 class="statistics-title"><i class="fa-solid fa-chart-line"></i>
-                Thống kê doanh thu</h2>
-
-            <form method="get"
-                  action="${pageContext.request.contextPath}/admin/dashboard">
-
-                <select name="type">
-
-                    <option value="month"
-                    ${type=='month'?'selected':''}>
-                        Theo tháng
-                    </option>
-
-                    <option value="quarter"
-                    ${type=='quarter'?'selected':''}>
-                        Theo quý
-                    </option>
-
-                    <option value="year"
-                    ${type=='year'?'selected':''}>
-                        Theo năm
-                    </option>
-
-                </select>
-
-                <button type="submit">
-                    Xem thống kê
-                </button>
-
-            </form>
-
-        </div>
-
-                <%--BẢNG THỐNG KÊ--%>
-        <table class="statistics-table">
-            <thead>
-            <tr>
-                <th>Thời gian</th>
-                <th>Đơn hàng</th>
-                <th>Sản phẩm bán</th>
-                <th>Doanh thu</th>
-            </tr>
-            </thead>
-
-            <tbody>
-
-            <c:forEach items="${statistics}" var="s">
-
+            <%--BẢNG THỐNG KÊ--%>
+            <table class="statistics-table">
+                <thead>
                 <tr>
-                    <td>${s.label}</td>
-                    <td>${s.totalOrders}</td>
-                    <td>${s.totalProducts}</td>
-                    <td>
-                        <fmt:formatNumber
-                                value="${s.revenue}"
-                                type="number"
-                                groupingUsed="true"
-                                maxFractionDigits="0"
-                        />đ
-                    </td>
+                    <th>Thời gian</th>
+                    <th>Đơn hàng</th>
+                    <th>Sản phẩm bán</th>
+                    <th>Doanh thu</th>
                 </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${statistics}" var="s">
+                    <tr>
+                        <td>${s.label}</td>
+                        <td>${s.totalOrders}</td>
+                        <td>${s.totalProducts}</td>
+                        <td>
+                            <fmt:formatNumber value="${s.revenue}" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
 
-            </c:forEach>
+            <div class="chart-box">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </c:if>
 
-            </tbody>
-
-        </table>
-
-        <div class="chart-box">
-            <canvas id="revenueChart"></canvas>
-        </div>
-
-        <%--Thống kê top sản phẩm bán chạy theo tháng, quý, năm --%>
+        <%--Thống kê top sản phẩm bán chạy (Cả 2 đều xem được, nhưng ẩn cột doanh thu với Staff Kho) --%>
         <div class="box top-product-box">
-
             <h3>
                 <i class="fa-solid fa-fire"></i>
                 Top sản phẩm bán chạy
             </h3>
-
             <table class="statistics-table">
-
                 <thead>
                 <tr>
                     <th>Sản phẩm</th>
                     <th>Đã bán</th>
-                    <th>Doanh thu</th>
+                    <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
+                        <th>Doanh thu</th>
+                    </c:if>
                 </tr>
                 </thead>
-
                 <tbody>
-
                 <c:forEach items="${topProducts}" var="p">
-
                     <tr>
-                        <td>
-                                ${p.productName}
-                        </td>
-                        <td>
-                                ${p.totalSold}
-                        </td>
-                        <td>
-                            <fmt:formatNumber
-                                    value="${p.revenue}"
-                                    type="number"
-                                    groupingUsed="true"
-                                    maxFractionDigits="0"
-                            />đ
-                        </td>
+                        <td>${p.productName}</td>
+                        <td>${p.totalSold}</td>
+                        <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
+                            <td>
+                                <fmt:formatNumber value="${p.revenue}" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
         </div>
 
-        <!-- GRID -->
         <div class="dashboard-grid">
 
-            <!-- RECENT ORDERS -->
             <div class="box">
                 <h3>🕒 Đơn hàng gần đây</h3>
-
                 <table>
                     <thead>
                     <tr>
@@ -433,43 +389,41 @@
                         <th>Trạng thái</th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <c:forEach var="o" items="${recentOrders}">
                         <tr>
                             <td>#${o.ID}</td>
                             <td>${o.receiver_name}</td>
                             <td>
-                    <span class="status
-                        ${o.status == 'Chờ xác nhận' ? 'Chờ xác nhận' :
-                          o.status == 'Đã xác nhận' ? 'Đã xác nhận' :
-                          o.status == 'Đang giao' ? 'Đang giao' :
-                          o.status == 'Đã giao' ? 'Đã giao' :
-                          o.status == 'Đã huỷ' ? 'Đã huỷ' : ''}">
-                            ${o.status}
-                    </span>
+                                <span class="status
+                                    ${o.status == 'Chờ xác nhận' ? 'Chờ xác nhận' :
+                                      o.status == 'Đã xác nhận' ? 'Đã xác nhận' :
+                                      o.status == 'Đang giao' ? 'Đang giao' :
+                                      o.status == 'Đã giao' ? 'Đã giao' :
+                                      o.status == 'Đã huỷ' ? 'Đã huỷ' : ''}">
+                                        ${o.status}
+                                </span>
                             </td>
                         </tr>
                     </c:forEach>
-
                     <c:if test="${empty recentOrders}">
                         <tr>
-                            <td colspan="3" style="text-align:center;color:#999;">
-                                Không có đơn hàng nào
-                            </td>
+                            <td colspan="3" style="text-align:center;color:#999;">Không có đơn hàng nào</td>
                         </tr>
                     </c:if>
                     </tbody>
                 </table>
             </div>
 
-
-            <!-- QUICK ACTION -->
             <div class="box quick-actions">
                 <h3>⚡ Thao tác nhanh</h3>
                 <a href="${pageContext.request.contextPath}/admin/products">➕ Thêm sản phẩm</a>
                 <a href="${pageContext.request.contextPath}/admin/orders">📦 Xem đơn hàng</a>
-                <a href="${pageContext.request.contextPath}/admin/users">👤 Quản lý user</a>
+
+                <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
+                    <a href="${pageContext.request.contextPath}/admin/users">👤 Quản lý user</a>
+                </c:if>
+
                 <a href="${pageContext.request.contextPath}/admin-logout">🚪 Đăng xuất</a>
             </div>
 
@@ -477,91 +431,68 @@
 
         <%--THỐNG KÊ ĐƠN HÀNG THEO STATUS--%>
         <div class="extra-dashboard">
-
-            <!-- ORDER STATUS -->
             <div class="box">
-
                 <h3>📦 Trạng thái đơn hàng</h3>
-
                 <table class="statistics-table">
-
                     <thead>
                     <tr>
                         <th>Trạng thái</th>
                         <th>Số lượng</th>
                     </tr>
                     </thead>
-
                     <tbody>
-
                     <c:forEach items="${orderStatusStats}" var="entry">
-
                         <tr>
                             <td>${entry.key}</td>
                             <td>${entry.value}</td>
                         </tr>
-
                     </c:forEach>
                     </tbody>
                 </table>
             </div>
-
         </div>
+
+    </div>
 </div>
 
-<script>
+<c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
+    <script>
+        const labels = [
+            <c:forEach items="${statistics}" var="s">
+            '${s.label}',
+            </c:forEach>
+        ];
 
-    const labels = [
+        const revenues = [
+            <c:forEach items="${statistics}" var="s">
+            ${s.revenue},
+            </c:forEach>
+        ];
 
-        <c:forEach items="${statistics}"
-                   var="s">
-
-        '${s.label}',
-
-        </c:forEach>
-
-    ];
-
-    const revenues = [
-
-        <c:forEach items="${statistics}"
-                   var="s">
-
-        ${s.revenue},
-
-        </c:forEach>
-
-    ];
-
-    new Chart(
-        document.getElementById(
-            'revenueChart'
-        ),
-
-        {
-
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Doanh thu',
-                    data: revenues,
-                    borderWidth: 2
-
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
+        new Chart(
+            document.getElementById('revenueChart'),
+            {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: revenues,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
                     }
                 }
             }
-        }
-    );
-
-</script>
+        );
+    </script>
+</c:if>
 
 </body>
 </html>

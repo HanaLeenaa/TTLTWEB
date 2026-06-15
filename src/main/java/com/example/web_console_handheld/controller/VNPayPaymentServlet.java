@@ -25,7 +25,7 @@ public class VNPayPaymentServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }
-        long amount = order.getPrice() * 100L;
+        long amount = order.getFinal_amount() * 100L;
         String txnRef = String.valueOf(System.currentTimeMillis());
         String ipAddr = request.getRemoteAddr();
         String paymentUrl = VNPayUtil.createPaymentUrl(amount, txnRef, ipAddr);

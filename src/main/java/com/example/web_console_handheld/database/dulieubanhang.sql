@@ -3,8 +3,6 @@ CREATE DATABASE dulieubanhang
   COLLATE utf8mb4_unicode_ci;
 USE dulieubanhang;
 
-
-
 -- 1. XÓA BẢNG CŨ
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -12,16 +10,21 @@ DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews,
     gallary, products, otp_tokens, brands, categories, users, admin, about,
     discount, video, blog, banner, contact, icon, logo, wishlist, import_receipts,
     import_receipt_items, stock_movements, product_view_history, search_history,
-    cart_items;
+    cart_items, shipment, vouchers, user_vouchers;
 
 -- 2. TẠO CÁC BẢNG
-
 CREATE TABLE admin (
                        ID INT AUTO_INCREMENT PRIMARY KEY,
                        username VARCHAR(50) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
                        fullname VARCHAR(100),
-                       status TINYINT DEFAULT 1
+                       status TINYINT DEFAULT 1,
+                       role TINYINT DEFAULT 2
+    -- Quy ước quyền:
+    -- 1: ADMIN (Toàn quyền)
+    -- 2: STAFF_WAREHOUSE (Nhân viên kho)
+    -- 3: STAFF_SALE (Nhân viên bán hàng)
+    -- 4: STAFF_SUPPORT (Nhân viên hỗ trợ/Liên hệ)
 );
 
 CREATE TABLE users (
@@ -220,9 +223,11 @@ CREATE TABLE cart_items (
 
 -- 3. THÊM DỮ LIỆU
 
-INSERT INTO admin(username, password, fullname)
-VALUES ('Admin', '$2a$10$EsoqYldgsgbopnxoOvxf7ujIcrjbb.BX5v86K9JCzC6s4PUtfC3hm', N'Administrator');
+INSERT INTO admin(username, password, fullname, role)
+VALUES ('Admin', '$2a$10$EsoqYldgsgbopnxoOvxf7ujIcrjbb.BX5v86K9JCzC6s4PUtfC3hm', N'Administrator', 1);
 
+INSERT INTO admin(username, password, fullname, status, role)
+VALUES ('staff_kho', '$2a$10$XLDMGWNE5y3nmhXq3eDAfunidOo5PLGvvAWEaJdNNtCqSsDiC5wZy', N'Nguyễn Văn Kho', 1, 2);
 
 INSERT INTO video VALUES
     (1, 1, 'Video giới thiệu');
@@ -2372,12 +2377,11 @@ CREATE TABLE IF NOT EXISTS contact_message (
     email VARCHAR(255),
     phone VARCHAR(50),
     message TEXT,
+    reply TEXT,
+    is_read TINYINT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'NEW'
     );
-
-ALTER TABLE contact_message ADD COLUMN reply TEXT;
-ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
 
 
 -- ===================== CHÂU (16/05) =====================
@@ -2415,29 +2419,60 @@ ALTER TABLE orders ADD COLUMN payment_method VARCHAR(50);
 ALTER TABLE orders ADD COLUMN payment_status VARCHAR(20);
 ALTER TABLE orders ADD COLUMN transaction_no VARCHAR(100);
 
+-- ==================== NHƯ (02/06) ======================
+-- ============== Chức năng voucher ======================
+CREATE TABLE vouchers (
+                          ID INT PRIMARY KEY AUTO_INCREMENT,
+                          code VARCHAR(50) UNIQUE NOT NULL,
+                          name VARCHAR(255) NOT NULL,
 
--- ===================== HÂN (30/05) =====================
-ALTER TABLE products ADD COLUMN parent_id INT DEFAULT NULL;
-ALTER TABLE products ADD COLUMN color_name VARCHAR(50) DEFAULT NULL;
-ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
+                          discount_type ENUM('PERCENT','FIXED') NOT NULL,
+                          discount_value DECIMAL(10,2) NOT NULL,
 
+                          min_order_amount DECIMAL(12,2) DEFAULT 0,
+                          max_discount DECIMAL(12,2) DEFAULT NULL,
 
+                          quantity INT DEFAULT 0,
 
-SET FOREIGN_KEY_CHECKS = 1;
+                          start_date DATETIME,
+                          end_date DATETIME,
 
------------------Châu 1/6------------------
+                          active BOOLEAN DEFAULT TRUE,
+
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_vouchers (
+                               ID INT PRIMARY KEY AUTO_INCREMENT,
+                               user_id INT NOT NULL,
+                               voucher_id INT NOT NULL,
+                               used_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                               FOREIGN KEY (user_id) REFERENCES users(ID),
+                               FOREIGN KEY (voucher_id) REFERENCES vouchers(ID)
+);
+
+ALTER TABLE orders
+    ADD voucher_id INT NULL,
+    ADD discount_amount DECIMAL(12,2) DEFAULT 0, -- Số tiền giảm của voucher
+    ADD final_amount DECIMAL(12,2) DEFAULT 0; -- Số tiền sau khi áp voucher
+-- ------ Châu 1/6------------------
 ALTER TABLE users
     ADD COLUMN forgot_password_first_attempt DATETIME NULL;
 
---------------------------Châu 2/6 (test vận chuyển) ---------------------------
-CREATE TABLE shipment (shipment_id INT AUTO_INCREMENT PRIMARY KEY,
-                          order_id INT NOT NULL,
-                          ghn_order_code VARCHAR(100),
-                          shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
-                          shipping_status VARCHAR(50)DEFAULT 'WAITING_PICKUP',
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                          CONSTRAINT fk_shipment_order
-                              FOREIGN KEY(order_id)
-                                  REFERENCES orders(ID)
-                                  ON DELETE CASCADE
-);
+-- - Châu 2/6 (test vận chuyển) ---------------------------
+CREATE TABLE IF NOT EXISTS shipment (
+                                        shipment_id INT AUTO_INCREMENT PRIMARY KEY,
+                                        order_id INT NOT NULL,
+                                        ghn_order_code VARCHAR(100),
+    shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
+    shipping_status VARCHAR(50) DEFAULT 'WAITING_PICKUP',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shipment_order
+    FOREIGN KEY(order_id)
+    REFERENCES orders(ID)
+    ON DELETE CASCADE
+    );
+
+
+SET FOREIGN_KEY_CHECKS = 1;
