@@ -15,6 +15,22 @@ public class ResetPasswordServlet extends HttpServlet {
     private final UserDao userDao = new UserDao();
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        HttpSession session = req.getSession();
+        Integer userId = (Integer) session.getAttribute("resetUserId");
+
+        if (userId == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        req.getRequestDispatcher("/Assets/component/login_logout/ResetPassword.jsp")
+                .forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 

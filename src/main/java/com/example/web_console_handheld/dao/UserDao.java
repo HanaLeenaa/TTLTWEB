@@ -614,6 +614,78 @@ public class UserDao extends BaseDao{
         }
         return false;
     }
+
+    public void resetForgotPasswordWindow(int userId) {
+
+        String sql = """
+        UPDATE users 
+        SET forgot_password_attempts = 0,
+            forgot_password_first_attempt = NULL
+        WHERE id = ?
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFirstForgotAttempt(int userId) {
+
+        String sql = """
+        UPDATE users
+        SET forgot_password_first_attempt = NOW()
+        WHERE id = ? 
+        AND forgot_password_first_attempt IS NULL
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isForgotPasswordWindowExpired(int userId) {
+
+        String sql = """
+        SELECT forgot_password_first_attempt
+        FROM users
+        WHERE id = ?
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                Timestamp ts = rs.getTimestamp("forgot_password_first_attempt");
+
+                if (ts == null) return false;
+
+                LocalDateTime first = ts.toLocalDateTime();
+
+                return first.plusMinutes(30).isBefore(LocalDateTime.now());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
 
 

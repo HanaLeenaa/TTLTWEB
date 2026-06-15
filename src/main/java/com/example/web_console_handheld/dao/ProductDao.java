@@ -77,12 +77,12 @@ public class ProductDao extends BaseDao {
     }
 
 
-    public List<Product> getEnergyProductList() {
+    public List<Integer> getEnergyProductList() {
         return get().withHandle(handle ->
                 handle.createQuery(
-                                "SELECT DISTINCT useTime FROM products ORDER BY useTime ASC"
+                                "SELECT DISTINCT useTime FROM products WHERE useTime IS NOT NULL ORDER BY useTime ASC"
                         )
-                        .mapToBean(Product.class)
+                        .mapTo(Integer.class)
                         .list()
         );
     }
@@ -508,17 +508,6 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    public List<Product> getAll() {
-        return get().withHandle(handle ->
-                handle.createQuery("""
-                SELECT *
-                FROM products
-                ORDER BY ID 
-            """)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
 
     public int insert(Product p) {
         return get().withHandle(handle ->
@@ -581,7 +570,7 @@ public class ProductDao extends BaseDao {
                         .bind("weight", p.getWeight())
                         .bind("active", p.isActive())
                         .bind("metatitle", p.getMetatitle())
-                        .bind("ispremium", p.isIspremium())
+                        .bind("ispremium", p.getIspremium())
                         .bind("suports", p.getSuports())
                         .bind("connect", p.getConnect())
                         .bind("endow", p.getEndow())
@@ -652,7 +641,7 @@ public class ProductDao extends BaseDao {
                         .bind("weight", p.getWeight())
                         .bind("active", p.isActive())
                         .bind("metatitle", p.getMetatitle())
-                        .bind("ispremium", p.isIspremium())
+                        .bind("ispremium", p.getIspremium())
                         .bind("suports", p.getSuports())
                         .bind("connect", p.getConnect())
                         .bind("endow", p.getEndow())
@@ -868,16 +857,43 @@ public class ProductDao extends BaseDao {
 
 
 
-    public List<Product> adminSearchByName(String keyword) {
-        return get().withHandle(handle ->
-                handle.createQuery("""
-                SELECT * FROM products 
-                WHERE name LIKE :kw
-                ORDER BY ID ASC 
-            """).bind("kw", "%" + keyword + "%")
-                        .mapToBean(Product.class)
-                        .list()
-        );
+    // 🛠️ THAY THẾ: Hàm lấy sản phẩm phân trang (Dùng chung cho cả xem tất cả lẫn tìm kiếm)
+    public List<Product> getProductsForAdmin(String keyword, int offset, int limit) {
+        return get().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT * FROM products ");
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                sql.append(" WHERE name LIKE :kw ");
+            }
+
+            sql.append(" ORDER BY ID DESC LIMIT :limit OFFSET :offset ");
+
+            var q = handle.createQuery(sql.toString())
+                    .bind("limit", limit)
+                    .bind("offset", offset);
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                q.bind("kw", "%" + keyword.trim() + "%");
+            }
+
+            return q.mapToBean(Product.class).list();
+        });
+    }
+
+    // 🛠️ BỔ SUNG: Hàm đếm tổng số bản ghi để tính toán số trang hiển thị trên giao diện
+    public int countProductsForAdmin(String keyword) {
+        return get().withHandle(handle -> {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products ");
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                sql.append(" WHERE name LIKE :kw ");
+            }
+
+            var q = handle.createQuery(sql.toString());
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                q.bind("kw", "%" + keyword.trim() + "%");
+            }
+            return q.mapTo(Integer.class).one();
+        });
     }
 
     public List<Product> getTopProducts(int limit) {
@@ -1001,6 +1017,14 @@ public class ProductDao extends BaseDao {
                         .bind("limit", limit)
                         .mapToBean(Product.class)
                         .list());
+    }
+
+    public int countAll() {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM products")
+                        .mapTo(Integer.class)
+                        .one()
+        );
     }
 
     /**

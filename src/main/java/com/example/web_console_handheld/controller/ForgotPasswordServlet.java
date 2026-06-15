@@ -57,14 +57,23 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         try {
 
-            // tăng số lần yêu cầu quên mật khẩu
             userDao.increaseForgotPasswordAttempts(user.getId());
 
-            // nếu quá 5 lần
-            if (userDao.getForgotPasswordAttempts(user.getId()) >= 5) {
+            if (userDao.isForgotPasswordWindowExpired(user.getId())) {
+                userDao.resetForgotPasswordWindow(user.getId());
+            }
+
+            userDao.setFirstForgotAttempt(user.getId());
+
+            userDao.increaseForgotPasswordAttempts(user.getId());
+            int attempts = userDao.getForgotPasswordAttempts(user.getId());
+
+            if (attempts >= 10) {
+
                 userDao.lockForgotPassword(user.getId());
 
-                req.setAttribute("error", "Bạn đã yêu cầu OTP quá 5 lần hãy thử lại sau 15 phút.");
+                req.setAttribute("error",
+                        "Bạn đã yêu cầu OTP quá 10 lần trong 30 phút. Tài khoản bị khóa 15 phút.");
 
                 req.getRequestDispatcher("/Assets/component/login_logout/ForgotPassword.jsp").forward(req, resp);
                 return;

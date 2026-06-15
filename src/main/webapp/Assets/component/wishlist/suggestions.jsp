@@ -34,7 +34,7 @@
 
 <c:if test="${not empty auth}">
     <div class="suggestions-page">
-        <h2>Sản phẩm gợi ý cho bạn</h2>
+        <h2>Sản phẩm gợi ý cho bạn nè</h2>
 
         <div class="suggestions-grid">
             <c:forEach var="c" items="${suggestions}">

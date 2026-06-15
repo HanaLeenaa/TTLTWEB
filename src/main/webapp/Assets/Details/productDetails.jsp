@@ -23,34 +23,155 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-        /* CSS bổ sung cho phần chọn biến thể màu sắc */
         .color-selection-section {
-            margin: 20px 0;
-            padding: 10px 0;
-            border-top: 1px dashed #eee;
-            border-bottom: 1px dashed #eee;
+            margin: 24px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fafafa;
+            border: 1px solid #eee;
         }
+
+        .color-selection-section p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
         .color-swatches {
             display: flex;
             gap: 12px;
             align-items: center;
-            margin-top: 8px;
+            flex-wrap: wrap;
         }
+
         .swatch-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
             position: relative;
-            box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
+
         .swatch-btn:hover {
-            transform: scale(1.15);
+            transform: translateY(-2px) scale(1.08);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
         }
+
         .swatch-btn.active {
+            border: 2px solid #ff5722;
             transform: scale(1.1);
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+        }
+
+        .review-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+
+        .review-modal.show {
+            display: flex;
+        }
+
+        .review-modal-box {
+            width: 420px;
+            max-width: 92%;
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            animation: popIn 0.25s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .review-modal-box h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .review-modal-box label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .review-modal-box select,
+        .review-modal-box textarea,
+        .review-modal-box input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .review-modal-box select:focus,
+        .review-modal-box textarea:focus,
+        .review-modal-box input:focus {
+            border-color: #ff5722;
+            box-shadow: 0 0 0 3px rgba(255,87,34,0.15);
+        }
+
+        .review-modal-box textarea {
+            min-height: 90px;
+            resize: none;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .review-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .review-actions button[type="submit"] {
+            background: #ff5722;
+            color: white;
+        }
+
+        .review-actions button[type="submit"]:hover {
+            background: #e64a19;
+        }
+
+        .review-actions button[type="button"] {
+            background: #f1f1f1;
+        }
+
+        .review-actions button[type="button"]:hover {
+            background: #ddd;
         }
     </style>
 </head>
@@ -297,46 +418,59 @@
         <div class="overall-rating">
             <div class="score">
                 <h3>${avg}/5</h3>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>${quantity} đánh giá</p>
+                    <div class="stars">
+
+                        <!-- sao đầy -->
+                        <c:forEach begin="1" end="${fullStars}">
+                            <i class="fas fa-star" style="color:#ffc107;"></i>
+                        </c:forEach>
+
+                        <!-- sao nửa -->
+                        <c:if test="${hasHalf}">
+                            <i class="fas fa-star-half-alt" style="color:#ffc107;"></i>
+                        </c:if>
+
+                        <!-- sao rỗng -->
+                        <c:forEach begin="1" end="${5 - fullStars - (hasHalf ? 1 : 0)}">
+                            <i class="far fa-star" style="color:#ddd;"></i>
+                        </c:forEach>
+
+                    </div>
+
+                    <p>${quantity} đánh giá</p>
             </div>
+
             <div class="rating-bars">
                 <div class="rating-bar">
-                    5 <i class="fas fa-star"></i>
+                    5 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg5}%"></div>
                     </div>
                     <span>${fiveStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    4 <i class="fas fa-star"></i>
+                    4 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg4}%"></div>
                     </div>
                     <span>${fourStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    3 <i class="fas fa-star"></i>
+                    3 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg3}%"></div>
                     </div>
                     <span>${threeStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    2 <i class="fas fa-star"></i>
+                    2 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg2}%"></div>
                     </div>
                     <span>${twoStars} đánh giá</span>
                 </div>
                 <div class="rating-bar">
-                    1 <i class="fas fa-star"></i>
+                    1 <i class="fas fa-star" style="color:#ffc107;"></i>
                     <div class="bar-container">
                         <div class="bar" style="width: ${avg1}%"></div>
                     </div>
@@ -358,7 +492,8 @@
             </c:otherwise>
         </c:choose>
 
-        <div id="reviewModal" style="display:none;">
+        <div id="reviewModal" class="review-modal">
+            <div class="review-modal-box">
             <form action="${pageContext.request.contextPath}/add-review"
                   method="post"
                   enctype="multipart/form-data">
@@ -385,6 +520,7 @@
                 <button type="button" onclick="closeReviewModal()">Hủy</button>
             </form>
         </div>
+    </div>
 
         <c:if test="${not empty reviews}">
             <c:forEach var="c" items="${reviews}">
@@ -392,8 +528,10 @@
                     <h4>
                             ${c.username}
                         <span class="stars">
-                            <c:forEach begin="1" end="${c.rating != null ? c.rating : 0}" var="i">
-                                <i class="fas fa-star text-warning" style="font-size: 10px"></i>
+                            <c:set var="starCount" value="${empty c.rating ? 0 : c.rating}" />
+
+                            <c:forEach begin="1" end="${starCount}">
+                                <i class="fas fa-star" style="color:#ffc107; font-size:10px"></i>
                             </c:forEach>
                         </span>
                     </h4>
@@ -429,11 +567,11 @@
 
 <script>
     function openReviewModal() {
-        document.getElementById("reviewModal").style.display = "block";
+        document.getElementById("reviewModal").classList.add("show");
     }
 
     function closeReviewModal() {
-        document.getElementById("reviewModal").style.display = "none";
+        document.getElementById("reviewModal").classList.remove("show");
     }
 </script>
 

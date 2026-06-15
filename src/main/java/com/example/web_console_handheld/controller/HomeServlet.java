@@ -88,7 +88,7 @@ public class HomeServlet extends HttpServlet {
         if (user != null) {
             try {
                 List<Product> recentProducts = historyDao.getRecentViews(user.getId());
-                request.setAttribute("recentProducts", recentProducts);
+                request.setAttribute("recentProducts", recentProducts != null ? recentProducts : new ArrayList<>());
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("recentProducts", new ArrayList<>());
@@ -106,17 +106,17 @@ public class HomeServlet extends HttpServlet {
                 List<Product> wishlist = new ArrayList<>();
                 Object wlObj = session.getAttribute("wishlist");
 
-                if (wlObj instanceof List<?>) {
-                    try {
-                        wishlist = (List<Product>) wlObj;
-                    } catch (ClassCastException cce) {
-                        cce.printStackTrace();
-                        wishlist = new ArrayList<>();
-                    }
+                // Check an toàn kiểm tra danh sách có thực sự chứa Object Product không
+                if (wlObj instanceof List<?> && !((List<?>) wlObj).isEmpty() && ((List<?>) wlObj).get(0) instanceof Product) {
+                    wishlist = (List<Product>) wlObj;
                 } else {
-                    for (int pid : wishlistDao.getWishlistByUser(user.getId())) {
-                        Product p = productDao.getProductDetailByID(pid);
-                        if (p != null) wishlist.add(p);
+                    // Nếu session chưa có hoặc bị lưu sai kiểu dữ liệu, chủ động query lại từ DB
+                    List<Integer> pids = wishlistDao.getWishlistByUser(user.getId());
+                    if (pids != null) {
+                        for (int pid : pids) {
+                            Product p = productDao.getProductDetailByID(pid);
+                            if (p != null) wishlist.add(p);
+                        }
                     }
                     session.setAttribute("wishlist", wishlist);
                 }
@@ -143,15 +143,15 @@ public class HomeServlet extends HttpServlet {
             }
         }
 
+        // Đảm bảo dữ liệu đẩy đi luôn là một chuỗi / list cụ thể không bao giờ null
         request.setAttribute("wishlistIdString", wishlistIdString);
-        request.setAttribute("suggestions", suggestions);
+        request.setAttribute("suggestions", suggestions != null ? suggestions : new ArrayList<>());
 
 
         // ====== LOGIC 2: GỢI Ý THEO SẢN PHẨM ĐÃ ĐẶT MUA (MỚI THÊM VÀO) ======
         List<Product> orderSuggestions = new ArrayList<>();
         if (user != null) {
             try {
-                // Gọi hàm lấy tối đa 5 sản phẩm gợi ý dựa vào lịch sử đơn hàng thành công
                 orderSuggestions = productDao.getSuggestionsByOrders(user.getId(), 5);
                 System.out.println(">>> orderSuggestions size=" + (orderSuggestions != null ? orderSuggestions.size() : 0));
             } catch (Exception e) {
@@ -160,9 +160,8 @@ public class HomeServlet extends HttpServlet {
             }
         }
 
-        // Đẩy danh sách gợi ý theo đơn hàng sang JSP
-        request.setAttribute("orderSuggestions", orderSuggestions);
-
+        // Luôn bảo toàn không null để thẻ <c:if test="${not empty orderSuggestions}"> hoạt động chuẩn xác
+        request.setAttribute("orderSuggestions", orderSuggestions != null ? orderSuggestions : new ArrayList<>());
 
         request.getRequestDispatcher("/index.jsp").forward(request, resp);
     }

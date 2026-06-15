@@ -34,8 +34,8 @@
         }
 
         th {
-            background: #ff6b35;
-            color: white;
+            background: #f1f3f9;
+            color: #555555;
         }
     </style>
 </head>
@@ -46,6 +46,7 @@
 
     <!--SIDEBAR-->
     <jsp:include page="/Assets/component/adminPage/layout/sidebar.jsp"/>
+
 
     <div class="content">
         <h2><i class="fa-light fa-receipt"></i> Lịch sử nhập kho</h2>
