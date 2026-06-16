@@ -173,6 +173,16 @@
         .review-actions button[type="button"]:hover {
             background: #ddd;
         }
+
+        .admin-reply{
+            margin-top:10px;
+            margin-left:20px;
+            padding:10px;
+            background:#f1f8ff;
+            border-left:4px solid #3498db;
+            border-radius:6px;
+            font-size:14px;
+        }
     </style>
 </head>
 <body>
@@ -540,6 +550,19 @@
                     <c:if test="${not empty c.imgReviews}">
                         <img src="${pageContext.request.contextPath}/uploads/${c.imgReviews}"
                              style="width:100px; margin-top:10px;">
+                    </c:if>
+
+                    <c:if test="${not empty c.admin_reply}">
+                        <div class="admin-reply">
+                            <strong>Phản hồi từ Shop:</strong><br>
+                                ${c.admin_reply}
+
+                            <c:if test="${not empty c.reply_date}">
+                                <div style="font-size:12px;color:gray;margin-top:5px;">
+                                        ${c.reply_date}
+                                </div>
+                            </c:if>
+                        </div>
                     </c:if>
 
                     <div class="review-date">
