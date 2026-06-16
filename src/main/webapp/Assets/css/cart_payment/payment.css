@@ -194,3 +194,22 @@ svg{
         width: 100%;
     }
 }
+.voucher-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px;
+
+    border:1px solid #eee;
+
+    border-radius:8px;
+
+    background:#fff;
+}
+
+.voucher-row a{
+    color:#ee4d2d;
+    font-weight:600;
+    text-decoration:none;
+}

@@ -43,10 +43,9 @@ body {
 
 .subscribe {
     display: flex;
-    margin-bottom: 40px;
     align-items: center;
     gap: 10px;
-
+    flex-wrap: nowrap;
 }
 
 .subscribe input {
@@ -61,12 +60,14 @@ body {
     background-color: lightgray;
     color: #545759;
     border: none;
-    padding: 10px 15px;
-    border-radius: 0 5px 5px 0;
+    padding: 0 15px;
+    border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
+    height: 45px;
 }
 
 .subscribe button:hover {
@@ -125,31 +126,13 @@ body {
 }
 
 .subscribe textarea {
-    width: 260px !important;
-    min-width: 260px !important;
-    max-width: 260px !important;
+    flex: 1;
+    min-width: 180px;
 
-    height: 45px !important;
-    min-height: 45px !important;
-    max-height: 45px !important;
-
-    padding: 8px 10px;
-
+    height: 45px;
+    padding: 10px;
     border: 1px solid #545759;
     border-radius: 6px;
-
-    background-color: white;
-    color: #545759;
-
-    resize: none !important;
-    overflow: hidden !important;
-
-    outline: none;
-
-    font-size: 15px;
-    font-family: inherit;
-
+    resize: none;
     box-sizing: border-box;
-
-    display: block;
 }
