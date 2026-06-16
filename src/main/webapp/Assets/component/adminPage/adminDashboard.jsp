@@ -47,7 +47,7 @@
         /* STATS */
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -299,7 +299,16 @@
                     </div>
                     <div class="icon bg-red">💰</div>
                 </div>
-            </c:if>
+                <div class="icon bg-red">💰</div>
+            </div>
+
+            <div class="stat-card">
+                <div>
+                    <h3>Đánh giá</h3>
+                    <p>${totalReviews}</p>
+                </div>
+                <div class="icon bg-orange">⭐</div>
+            </div>
         </div>
 
         <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
@@ -450,6 +459,64 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="box">
+
+                <h3>⭐ Thống kê đánh giá</h3>
+
+                <table class="statistics-table">
+
+                    <thead>
+                    <tr>
+                        <th>Mức đánh giá</th>
+                        <th>Số lượng</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr>
+                        <td>5⭐</td>
+                        <td>${reviewStats['5']}</td>
+                    </tr>
+
+                    <tr>
+                        <td>4⭐</td>
+                        <td>${reviewStats['4']}</td>
+                    </tr>
+
+                    <tr>
+                        <td>3⭐</td>
+                        <td>${reviewStats['3']}</td>
+                    </tr>
+
+                    <tr>
+                        <td>2⭐</td>
+                        <td>${reviewStats['2']}</td>
+                    </tr>
+
+                    <tr>
+                        <td>1⭐</td>
+                        <td>${reviewStats['1']}</td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Trung bình</b></td>
+                        <td>
+                            <fmt:formatNumber
+                                    value="${averageRating}"
+                                    minFractionDigits="1"
+                                    maxFractionDigits="1"/>
+                            ⭐
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
 
     </div>

@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import com.example.web_console_handheld.dao.ReviewDao;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class AdminDashboard extends HttpServlet {
         OrderDao orderDao = new OrderDao();
         UserDao userDao = new UserDao();
         DashboardStatisticsDao statisticsDao = new DashboardStatisticsDao();
+        ReviewDao reviewDao = new ReviewDao();
 
         // 🛠️ ĐÃ SỬA: Thay thế việc gọi getAll().size() bằng hàm count thuần từ Database
         int totalProducts = productDao.countAll();
@@ -38,6 +40,14 @@ public class AdminDashboard extends HttpServlet {
 
         int totalUsers = userDao.countAll();
         double totalRevenue = orderDao.getTotalRevenue();
+
+        int totalReviews = reviewDao.countAllReviews();
+
+        double averageRating =
+                reviewDao.getAverageRatingAllProducts();
+
+        Map<String,Integer> reviewStats =
+                reviewDao.getReviewRatingStatistics();
 
         List<Order> recentOrders = orderDao.getRecentOrders(5);
 
@@ -79,6 +89,9 @@ public class AdminDashboard extends HttpServlet {
         request.setAttribute("totalRevenue", totalRevenue);
         request.setAttribute("recentOrders", recentOrders);
         request.setAttribute("activePage", "dashboard");
+        request.setAttribute("totalReviews", totalReviews);
+        request.setAttribute("averageRating", averageRating);
+        request.setAttribute("reviewStats", reviewStats);
         request.getRequestDispatcher("/Assets/component/adminPage/adminDashboard.jsp").forward(request, response);
     }
 }

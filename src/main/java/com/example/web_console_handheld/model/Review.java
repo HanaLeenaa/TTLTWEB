@@ -15,8 +15,13 @@ public class Review {
     private String username;
     private int order_id;
     private String productName;
+    private String admin_reply;
+    private LocalDateTime reply_date;
 
-    public Review(int ID, int products_id, int users_id, int rating, String review_text, String imgReviews, LocalDateTime reviewDate, boolean status, String username, int order_id, String productName) {
+    public Review(int ID, int products_id, int users_id, int rating, String review_text,
+                  String imgReviews, LocalDateTime reviewDate, boolean status,
+                  String username, int order_id, String productName,
+                  String admin_reply, LocalDateTime reply_date) {
         this.ID = ID;
         this.products_id = products_id;
         this.users_id = users_id;
@@ -28,6 +33,8 @@ public class Review {
         this.username = username;
         this.order_id = order_id;
         this.productName = productName;
+        this.admin_reply= admin_reply;
+        this.reply_date = reply_date;
     }
     public Review() {}
 
@@ -130,5 +137,21 @@ public class Review {
         return reviewDate != null
                 ? reviewDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
                 : "";
+    }
+
+    public String getAdmin_reply() {
+        return admin_reply;
+    }
+
+    public void setAdmin_reply(String admin_reply) {
+        this.admin_reply = admin_reply;
+    }
+
+    public LocalDateTime getReply_date() {
+        return reply_date;
+    }
+
+    public void setReply_date(LocalDateTime reply_date) {
+        this.reply_date = reply_date;
     }
 }

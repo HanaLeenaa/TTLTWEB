@@ -2473,6 +2473,10 @@ CREATE TABLE IF NOT EXISTS shipment (
     REFERENCES orders(ID)
     ON DELETE CASCADE
     );
+    
+ALTER TABLE reviews
+    ADD admin_reply TEXT,
+ADD reply_date DATETIME;
 
 
 SET FOREIGN_KEY_CHECKS = 1;
