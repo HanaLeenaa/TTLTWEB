@@ -127,7 +127,12 @@ public class AddReviewServlet extends HttpServlet {
                 comment,
                 imageName);
 
-        request.getSession().setAttribute("success", "Đánh giá thành công");
-        response.sendRedirect(request.getHeader("Referer"));
+        request.getSession().setAttribute("successReview", "Đánh giá của bạn đã được gửi thành công!");
+
+        response.sendRedirect(
+                request.getContextPath()
+                        + "/product-detail?id="
+                        + productId
+                        + "&review=true");
     }
 }

@@ -45,13 +45,20 @@ public class OrderHistoryDetailServlet extends HttpServlet {
             Order order = dao.getOrderById(orderId);
             List<OrderItem> orderItems = dao.getOrderItemsByOrderId(orderId);
 
+            if (!orderItems.isEmpty()) {
+                request.setAttribute("reviewProductId",
+                        orderItems.get(0).getProduct_id());
+            }
+
+            if (order == null){
+                response.sendRedirect(request.getContextPath() + "/profile?tab=orders");
             // Kiểm tra xem đơn hàng có tồn tại trong DB không
-            if (order == null) {
-                PrintWriter out = response.getWriter();
-                out.println("<script type='text/javascript'>");
-                out.println("alert('Không tìm thấy đơn hàng mang mã số #" + orderId + " trong hệ thống!');");
-                out.println("window.location.href='" + request.getContextPath() + "/profile?tab=orders';");
-                out.println("</script>");
+//             if (order == null) {
+//                 PrintWriter out = response.getWriter();
+//                 out.println("<script type='text/javascript'>");
+//                 out.println("alert('Không tìm thấy đơn hàng mang mã số #" + orderId + " trong hệ thống!');");
+//                 out.println("window.location.href='" + request.getContextPath() + "/profile?tab=orders';");
+//                 out.println("</script>");
                 return;
             }
 
