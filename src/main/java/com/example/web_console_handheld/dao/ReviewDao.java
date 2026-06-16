@@ -189,4 +189,89 @@ public class ReviewDao extends BaseDao {
         );
     }
 
+    public List<Review> getAllReviews() {
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT
+                    r.*,
+                    u.username,
+                    p.name AS productName
+                FROM reviews r
+                JOIN users u ON r.users_id = u.ID
+                JOIN products p ON r.products_id = p.ID
+                ORDER BY r.reviewDate DESC
+            """)
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+
+    public List<Review> searchReviews(String keyword) {
+
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT
+                    r.*,
+                    u.username,
+                    p.name AS productName
+                FROM reviews r
+                JOIN users u ON r.users_id = u.ID
+                JOIN products p ON r.products_id = p.ID
+                WHERE
+                    u.username LIKE :kw
+                    OR p.name LIKE :kw
+                ORDER BY r.reviewDate DESC
+            """)
+                        .bind("kw","%"+keyword+"%")
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+
+    public List<Review> getReviewsByRating(int rating){
+
+        return get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT
+                    r.*,
+                    u.username,
+                    p.name AS productName
+                FROM reviews r
+                JOIN users u ON r.users_id = u.ID
+                JOIN products p ON r.products_id = p.ID
+                WHERE r.rating = :rating
+                ORDER BY r.reviewDate DESC
+            """)
+                        .bind("rating", rating)
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+
+    public void hideReview(int reviewId){
+
+        get().withHandle(handle ->
+                handle.createUpdate("""
+                UPDATE reviews
+                SET status = 0
+                WHERE ID = :id
+            """)
+                        .bind("id", reviewId)
+                        .execute()
+        );
+    }
+
+    public void showReview(int reviewId){
+
+        get().withHandle(handle ->
+                handle.createUpdate("""
+                UPDATE reviews
+                SET status = 1
+                WHERE ID = :id
+            """)
+                        .bind("id", reviewId)
+                        .execute()
+        );
+    }
+
 }

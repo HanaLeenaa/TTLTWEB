@@ -3,8 +3,6 @@ CREATE DATABASE dulieubanhang
   COLLATE utf8mb4_unicode_ci;
 USE dulieubanhang;
 
-
-
 -- 1. XÓA BẢNG CŨ
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -12,7 +10,7 @@ DROP TABLE IF EXISTS history, bill, payments, order_items, orders, reviews,
     gallary, products, otp_tokens, brands, categories, users, admin, about,
     discount, video, blog, banner, contact, icon, logo, wishlist, import_receipts,
     import_receipt_items, stock_movements, product_view_history, search_history,
-    cart_items;
+    cart_items, shipment, vouchers, user_vouchers;
 
 -- 2. TẠO CÁC BẢNG
 CREATE TABLE admin (
@@ -2379,12 +2377,11 @@ CREATE TABLE IF NOT EXISTS contact_message (
     email VARCHAR(255),
     phone VARCHAR(50),
     message TEXT,
+    reply TEXT,
+    is_read TINYINT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'NEW'
     );
-
-ALTER TABLE contact_message ADD COLUMN reply TEXT;
-ALTER TABLE contact_message ADD COLUMN is_read TINYINT DEFAULT 0;
 
 
 -- ===================== CHÂU (16/05) =====================
@@ -2422,16 +2419,6 @@ ALTER TABLE orders ADD COLUMN payment_method VARCHAR(50);
 ALTER TABLE orders ADD COLUMN payment_status VARCHAR(20);
 ALTER TABLE orders ADD COLUMN transaction_no VARCHAR(100);
 
-
--- ===================== HÂN (30/05) =====================
-ALTER TABLE products ADD COLUMN parent_id INT DEFAULT NULL;
-ALTER TABLE products ADD COLUMN color_name VARCHAR(50) DEFAULT NULL;
-ALTER TABLE products ADD COLUMN color_code VARCHAR(10) DEFAULT NULL;
-
-
-
-SET FOREIGN_KEY_CHECKS = 1;
-
 -- ==================== NHƯ (02/06) ======================
 -- ============== Chức năng voucher ======================
 CREATE TABLE vouchers (
@@ -2467,21 +2454,25 @@ CREATE TABLE user_vouchers (
 
 ALTER TABLE orders
     ADD voucher_id INT NULL,
-    ADD discount_amount DECIMAL(12,2) DEFAULT 0; -- Số tiền giảm của voucher
+    ADD discount_amount DECIMAL(12,2) DEFAULT 0, -- Số tiền giảm của voucher
     ADD final_amount DECIMAL(12,2) DEFAULT 0; -- Số tiền sau khi áp voucher
------------------Châu 1/6------------------
+-- ------ Châu 1/6------------------
 ALTER TABLE users
     ADD COLUMN forgot_password_first_attempt DATETIME NULL;
 
---------------------------Châu 2/6 (test vận chuyển) ---------------------------
-CREATE TABLE shipment (shipment_id INT AUTO_INCREMENT PRIMARY KEY,
-                          order_id INT NOT NULL,
-                          ghn_order_code VARCHAR(100),
-                          shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
-                          shipping_status VARCHAR(50)DEFAULT 'WAITING_PICKUP',
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                          CONSTRAINT fk_shipment_order
-                              FOREIGN KEY(order_id)
-                                  REFERENCES orders(ID)
-                                  ON DELETE CASCADE
-);
+-- - Châu 2/6 (test vận chuyển) ---------------------------
+CREATE TABLE IF NOT EXISTS shipment (
+                                        shipment_id INT AUTO_INCREMENT PRIMARY KEY,
+                                        order_id INT NOT NULL,
+                                        ghn_order_code VARCHAR(100),
+    shipping_fee DECIMAL(12,2) NOT NULL DEFAULT 0,
+    shipping_status VARCHAR(50) DEFAULT 'WAITING_PICKUP',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shipment_order
+    FOREIGN KEY(order_id)
+    REFERENCES orders(ID)
+    ON DELETE CASCADE
+    );
+
+
+SET FOREIGN_KEY_CHECKS = 1;

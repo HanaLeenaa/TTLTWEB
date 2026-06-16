@@ -111,6 +111,13 @@
             </a>
         </li>
 
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/reviews"
+               class="${activePage == 'reviews' ? 'active' : ''}">
+                <i class="fa-solid fa-star"></i> Quản lý đánh giá
+            </a>
+        </li>
+
         <%-- Kiểm tra logic loại trừ Staff Kho (role = 2) một cách chặt chẽ --%>
         <c:if test="${sessionScope.admin.role != 2 && sessionScope.admin.role != '2'}">
             <li>
