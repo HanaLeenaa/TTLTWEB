@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
-
         .container {
             width: 1200px;
             margin: auto;
@@ -38,25 +37,21 @@
             box-shadow: 0 0 10px #cbcbcb;
             margin: 10px 0;
         }
-
         .title p {
             font-size: 20px;
             font-weight: 700;
             margin: 0;
         }
-
         .product-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 30px;
         }
-
         .product-name {
             flex: 1;
             font-weight: 500;
         }
-
         .product-price {
             min-width: 120px;
             text-align: right;
@@ -124,7 +119,6 @@
             color: #fff;
             border: none;
             cursor: pointer;
-
         }
         .btn-order:hover {
             opacity: 0.9;
@@ -137,7 +131,6 @@
             color: #e95221;
             cursor: pointer;
         }
-
         #deleteAllBtn {
             display: none;
             margin-top: 6px;
@@ -147,7 +140,6 @@
             color: red;
             cursor: pointer;
         }
-
         #deleteAllBtn:hover {
             text-decoration: underline;
         }
@@ -161,24 +153,20 @@
         .back-btn:hover {
             text-decoration: underline;
         }
-
         .product-info{
             display:flex;
             flex-direction:column;
             gap:4px;
         }
-
         .stock-error{
             color:#e53935;
             font-size:14px;
             font-weight:500;
         }
-
         .btn-order:disabled{
             background:#ccc;
             cursor:not-allowed;
         }
-
         .cart-error{
             background:#ffebee;
             color:#d32f2f;
@@ -187,7 +175,6 @@
             margin-bottom:16px;
             font-weight:500;
         }
-
     </style>
 </head>
 <body>
@@ -210,18 +197,15 @@
         </div>
     </div>
 
-
     <c:if test="${not empty sessionScope.cartError}">
         <div class="cart-error">
-                ${sessionScope.cartError}
+            ${sessionScope.cartError}
         </div>
-
         <c:remove var="cartError" scope="session"/>
     </c:if>
 
     <table class="cart-table">
         <tbody id="cart-items">
-        <%-- CHUẨN HÓA: Quét trực tiếp requestScope do Servlet đẩy sang, triệt tiêu c:set lỗi --%>
         <c:choose>
             <c:when test="${empty requestScope.cart}">
                 <tr>
@@ -251,48 +235,57 @@
                         </td>
 
                         <td class="product-cell" style="width: 80%;">
-                                    <div class="product-row">
-                                        <div class="product-info">
-                                            <span class="product-name">${item.product.name}</span>
-                                            
-                                            <%-- ĐOẠN HIỂN THỊ LỖI KHO REALTIME (Gộp từ develop qua) --%>
-                                            <c:if test="${not empty item.error}">
-                                                <p class="stock-error" style="color: red; font-size: 0.85rem; margin: 4px 0 0 0;">
-                                                    ${item.error}
-                                                </p>
-                                            </c:if>
-                                        </div>
+                            <div class="product-row">
+                                <div class="product-info">
+                                    <span class="product-name">${item.product.name}</span>
 
-                                        <%-- CHUẨN HÓA: Đọc chính xác thuộc tính định dạng chuỗi từ Product model của bạn --%>
-                                        <span class="product-price">
-                                            <fmt:formatNumber value="${item.product.price}" type="number" groupingUsed="true"/>đ
-                                        </span>
+                                    <c:if test="${not empty item.error}">
+                                        <p class="stock-error" style="color: red; font-size: 0.85rem; margin: 4px 0 0 0;">
+                                            ${item.error}
+                                        </p>
+                                    </c:if>
+                                </div>
 
-                                        <div class="quantity">
-                                            <%-- Nút giảm số lượng của bạn --%>
-                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
-                                                <input type="hidden" name="action" value="update">
-                                                <input type="hidden" name="productId" value="${item.product.ID}">
-                                                <input type="hidden" name="productName" value="${item.product.name}">
+                                <span class="product-price">
+                                    <fmt:formatNumber value="${item.product.price}" type="number" groupingUsed="true"/>đ
+                                </span>
+
+                                <div class="quantity">
+                                    <%-- Nút giảm số lượng: Đã tích hợp cấu hình chống âm số lượng --%>
+                                    <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="productId" value="${item.product.ID}">
+                                        <input type="hidden" name="productName" value="${item.product.name}">
+
+                                        <c:choose>
+                                            <%-- Nếu số lượng lớn hơn 1, cho phép bấm giảm về Backend như bình thường --%>
+                                            <c:when test="${item.quantity > 1}">
                                                 <input type="hidden" name="quantity" value="${item.quantity - 1}">
                                                 <button type="submit" class="qty-btn">−</button>
-                                            </form>
+                                            </c:when>
+                                            <%-- Nếu số lượng đã chạm mức đáy bằng 1, khóa chức năng nút (disabled) --%>
+                                            <c:otherwise>
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="button" class="qty-btn" disabled style="opacity: 0.4; cursor: not-allowed;">−</button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </form>
 
-                                            <span class="qty-number" data-id="${item.product.ID}">
-                                                ${item.quantity}
-                                            </span>
+                                    <span class="qty-number" data-id="${item.product.ID}">
+                                        ${item.quantity}
+                                    </span>
 
-                                            <%-- Nút tăng số lượng của bạn --%>
-                                            <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
-                                                <input type="hidden" name="action" value="update">
-                                                <input type="hidden" name="productId" value="${item.product.ID}">
-                                                <input type="hidden" name="productName" value="${item.product.name}">
-                                                <input type="hidden" name="quantity" value="${item.quantity + 1}">
-                                                <button type="submit" class="qty-btn">+</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
+                                    <%-- Nút tăng số lượng --%>
+                                    <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="productId" value="${item.product.ID}">
+                                        <input type="hidden" name="productName" value="${item.product.name}">
+                                        <input type="hidden" name="quantity" value="${item.quantity + 1}">
+                                        <button type="submit" class="qty-btn">+</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
 
                         <td style="width: 5%; text-align: center;">
                             <form action="${pageContext.request.contextPath}/cartAction" method="post" style="margin:0;">
@@ -318,9 +311,9 @@
         </tbody>
     </table>
 
-<form id="mainForm" action="${pageContext.request.contextPath}/payment" method="get">
+    <form id="mainForm" action="${pageContext.request.contextPath}/payment" method="get">
         <button type="submit" class="btn-order" ${hasStockError ? 'disabled' : ''}>Đặt hàng</button>
-</form>
+    </form>
 </div>
 
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp" />

@@ -1,7 +1,7 @@
 package com.example.web_console_handheld.controller;
 
 import com.example.web_console_handheld.dao.CartDao;
-import com.example.web_console_handheld.model.CartItem; // Nhớ import model CartItem của bạn vào
+import com.example.web_console_handheld.model.CartItem;
 import com.example.web_console_handheld.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,21 +21,20 @@ public class CartActionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8"); // Đảm bảo không bị lỗi font tiếng Việt khi nhận tên
+        // Đảm bảo không bị lỗi font tiếng Việt khi nhận tên sản phẩm
+        request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("auth");
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         String action = request.getParameter("action");
         String prodIdParam = request.getParameter("productId");
         String qtyParam = request.getParameter("quantity");
-
-        // CHÚ Ý: Hứng thêm tên sản phẩm từ form của cart.jsp gửi lên
         String productName = request.getParameter("productName");
 
         int productId = (prodIdParam != null && !prodIdParam.trim().isEmpty()) ? Integer.parseInt(prodIdParam.trim()) : 0;
@@ -43,14 +42,26 @@ public class CartActionServlet extends HttpServlet {
 
         try {
             switch (action) {
-                case "add" -> cartDao.addToCart(user.getId(), productId, productName, quantity);
-                // SỬA DÒNG NÀY: Truyền thêm productName vào hàm update
-                case "update" -> cartDao.updateQuantity(user.getId(), productId, productName, quantity);
+                case "add" -> {
+                    if (quantity > 0) {
+                        cartDao.addToCart(user.getId(), productId, productName, quantity);
+                    }
+                }
+                case "update" -> {
+                    // 🌟 PHÒNG THỦ LỖI ÂM SỐ LƯỢNG:
+                    // Nếu số lượng truyền lên giảm xuống dưới 1, tự động xóa sản phẩm khỏi giỏ hàng
+                    if (quantity < 1) {
+                        cartDao.removeItem(user.getId(), productId);
+                    } else {
+                        // Ngược lại, nếu số lượng hợp lệ (>= 1) thì tiến hành cập nhật bình thường
+                        cartDao.updateQuantity(user.getId(), productId, productName, quantity);
+                    }
+                }
                 case "remove" -> cartDao.removeItem(user.getId(), productId);
                 case "clear" -> cartDao.clearCart(user.getId());
             }
 
-            // Đoạn logic đồng bộ số lượng lên Header cũ giữ nguyên...
+            // Đồng bộ tính toán lại số lượng giỏ hàng hiển thị trên Header Badge
             List<CartItem> updatedCart = cartDao.getCartByUser(user.getId());
             int newCartSize = 0;
             if (updatedCart != null) {
@@ -61,10 +72,11 @@ public class CartActionServlet extends HttpServlet {
             session.setAttribute("cartSize", newCartSize);
 
         } catch (Exception e) {
-            System.out.println("Lỗi xử lý Database trong CartAction: " + e.getMessage());
+            System.err.println("❌ Lỗi xử lý Database trong CartAction: " + e.getMessage());
             e.printStackTrace();
         }
 
+        // Redirect sạch sẽ về lại trang giỏ hàng để cập nhật giao diện mới nhất
         response.sendRedirect(request.getContextPath() + "/cart");
     }
 }
