@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -89,6 +90,7 @@
             color: white;
             text-decoration: none;
             border-radius: 8px;
+            margin-right: auto;
         }
 
         .back-btn:hover {
@@ -98,7 +100,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .cancel-order-btn {
             background: #dc3545;
@@ -114,6 +117,36 @@
         .cancel-order-btn:hover {
             background: #bb2d3b;
         }
+
+        .review-btn{
+            background:#ff9800;
+            color:white;
+            text-decoration:none;
+            padding:12px 22px;
+            border-radius:8px;
+            font-size:15px;
+            font-weight:600;
+        }
+
+        .review-btn:hover{
+            background:#f57c00;
+        }
+
+        .order-table td {
+            vertical-align: top;
+        }
+
+        .product-info span {
+            display: block;
+            word-break: break-word;
+            max-width: 300px;
+        }
+
+        .order-table td:last-child {
+            vertical-align: top;
+            width: 140px;
+        }
+
     </style>
 
 </head>
@@ -166,6 +199,7 @@
             <th>Đơn giá</th>
             <th>Số lượng</th>
             <th>Thành tiền</th>
+            <th>Thao tác</th>
         </tr>
         </thead>
 
@@ -185,6 +219,16 @@
                 <td>
                     <fmt:formatNumber value="${item.product_price * item.quantity}" type="number"/>đ
                 </td>
+
+                <td class="action-cell">
+                    <c:if test="${order.status == 'Đã giao'}">
+                        <a class="review-btn"
+                           href="${pageContext.request.contextPath}/product-detail?id=${item.product_id}&review=true#review-section">
+                            Đánh giá
+                        </a>
+                    </c:if>
+                </td>
+
             </tr>
         </c:forEach>
         </tbody>
@@ -199,6 +243,17 @@
     <a class="back-btn" href="${pageContext.request.contextPath}/profile?tab=orders">
         ← Quay lại lịch sử mua hàng
     </a>
+
+        <c:if test="${order.status == 'Đã giao'}">
+
+            <a class="review-btn"
+               href="${pageContext.request.contextPath}/product-detail?id=${reviewProductId}&review=true#review-section">
+
+                Đánh giá sản phẩm
+
+            </a>
+
+        </c:if>
 
     <%--NÚT HỦY ĐƠN--%>
     <c:if test="${order.status == 'Chờ xác nhận'

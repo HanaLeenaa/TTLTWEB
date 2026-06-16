@@ -41,6 +41,11 @@ public class OrderHistoryDetailServlet extends HttpServlet {
             Order order = dao.getOrderById(orderId);
             List<OrderItem> orderItems = dao.getOrderItemsByOrderId(orderId);
 
+            if (!orderItems.isEmpty()) {
+                request.setAttribute("reviewProductId",
+                        orderItems.get(0).getProduct_id());
+            }
+
             if (order == null){
                 response.sendRedirect(request.getContextPath() + "/profile?tab=orders");
                 return;
