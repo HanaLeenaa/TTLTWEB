@@ -329,22 +329,13 @@
                     </button>
                 </form>
 
-                <form method="post" action="${pageContext.request.contextPath}/buy-now" id="form-buy-now">
-                    <input type="hidden" name="productId" id="buy-productId" value="${product.ID}">
-                    <input type="hidden" name="quantity" id="quantity-buy" value="1">
-                    <c:choose>
-                        <c:when test="${product.stock > 0}">
-                            <button type="submit" class="btn-buy btn">
-                                Mua ngay
-                            </button>
-                        </c:when>
-                        <c:otherwise>
-                            <button type="button" class="btn-buy btn"
-                                    disabled style="opacity:0.6; cursor: not-allowed;">
-                                Mua ngay
-                            </button>
-                        </c:otherwise>
-                    </c:choose>
+                <form action="${pageContext.request.contextPath}/buy-now" method="post" id="form-buy-now">
+                    <input type="hidden" name="id" value="${product.ID}" />
+                    <input type="hidden" name="quantity" id="quantity-buynow" value="1">
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-buy-now">Mua ngay</button>
+                    </div>
                 </form>
 
                 <div class="back-row">
@@ -459,17 +450,14 @@
                 <h3>${avg}/5</h3>
                     <div class="stars">
 
-                        <!-- sao đầy -->
                         <c:forEach begin="1" end="${fullStars}">
                             <i class="fas fa-star" style="color:#ffc107;"></i>
                         </c:forEach>
 
-                        <!-- sao nửa -->
                         <c:if test="${hasHalf}">
                             <i class="fas fa-star-half-alt" style="color:#ffc107;"></i>
                         </c:if>
 
-                        <!-- sao rỗng -->
                         <c:forEach begin="1" end="${5 - fullStars - (hasHalf ? 1 : 0)}">
                             <i class="far fa-star" style="color:#ddd;"></i>
                         </c:forEach>
@@ -607,12 +595,7 @@
 
 <script>
     function changeProductVariant(element) {
-        // 1. Lấy ra ID của biến thể sản phẩm màu sắc được người dùng click
         const variantId = element.getAttribute('data-id');
-
-        // 2. Chuyển hướng trình duyệt sang URL của sản phẩm mới ngay lập tức
-        // Server (Servlet) nhận ID mới này sẽ tự động truy vấn lại Database,
-        // lôi chuẩn bộ ảnh phụ Gallery và thông số của màu mới ra để render lại trang!
         window.location.href = "${pageContext.request.contextPath}/product-detail?id=" + variantId;
     }
 </script>
@@ -641,10 +624,20 @@
 <script>
     let qty = 1;
 
+    document.addEventListener("DOMContentLoaded", function() {
+        // Đảm bảo khởi tạo đồng bộ khi vừa load trang
+        updateQuantity();
+    });
+
     function updateQuantity() {
         document.getElementById("qty-display").innerText = qty;
         document.getElementById("quantity-cart").value = qty;
-        document.getElementById("quantity-buy").value = qty;
+
+        // Thêm dòng này để cập nhật trực tiếp vào ô hidden của Form Mua Ngay
+        let buyNowInput = document.getElementById("quantity-buynow");
+        if(buyNowInput) {
+            buyNowInput.value = qty;
+        }
     }
 
     function increase() {

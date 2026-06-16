@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -148,16 +147,14 @@
         }
 
     </style>
-
 </head>
 <body>
 
-<!-- HEADER -->
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<%--thông báo hủy đơn thành công--%>
+<%-- Thông báo hủy đơn thành công --%>
 <c:if test="${not empty sessionScope.success}">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -176,19 +173,31 @@
 
     <div class="order-info-box">
         <p><strong>Mã đơn hàng:</strong> #${order.ID}</p>
-        <p><strong>Ngày đặt:</strong> ${order.createAt}</p>
+
+        <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${order.createAt}" pattern="dd/MM/yyyy HH:mm:ss" /></p>
+
+        <p><strong>Người nhận:</strong> ${order.receiver_name} - ${order.receiver_phone}</p>
         <p><strong>Địa chỉ nhận:</strong> ${order.receiver_address}</p>
         <p><strong>Phương thức thanh toán:</strong> ${order.payment_method}</p>
         <p><strong>Trạng thái thanh toán:</strong> ${order.payment_status}</p>
-        <p><strong>Trạng thái:</strong> ${order.status}</p>
-        <p><strong>Ghi chú đơn hàng:</strong> ${order.receiver_note}</p>
+        <p><strong>Trạng thái đơn hàng:</strong> <span style="font-weight: bold; color: #e85221;">${order.status}</span></p>
+        <p><strong>Ghi chú đơn hàng:</strong> ${not empty order.receiver_note ? order.receiver_note : 'Không có ghi chú'}</p>
+
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+
         <p>
-            <strong>Giảm giá:</strong>
+            <strong>Phí vận chuyển:</strong>
+            <fmt:formatNumber value="${order.shippingFee}" type="number"/> đ
+        </p>
+        <p>
+            <strong>Giảm giá voucher:</strong>
             <fmt:formatNumber value="${order.discount_amount}" type="number"/> đ
         </p>
         <p>
-            <strong>Tổng tiền:</strong>
-            <fmt:formatNumber value="${order.final_amount}" type="number"/> đ
+            <strong>Tổng tiền thanh toán:</strong>
+            <span style="font-size: 18px; color: #e85221; font-weight: bold;">
+                <fmt:formatNumber value="${order.final_amount}" type="number"/> đ
+            </span>
         </p>
     </div>
 
@@ -235,7 +244,7 @@
     </table>
 
     <div class="total-box">
-        Tổng cộng: <fmt:formatNumber value="${order.final_amount}" type="number"/>đ
+        Tổng cộng: <fmt:formatNumber value="${order.final_amount}" type="number"/> đ
     </div>
 
     <div class="action-buttons">
@@ -280,10 +289,7 @@
     </div>
 </div>
 
-
-<!-- FOOTER -->
 <jsp:include page="/Assets/component/recycleFiles/footer.jsp"/>
-
 
 <script>
     function confirmCancelOrder() {
@@ -292,7 +298,7 @@
             text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#e53935',
+            confirmButtonColor: '#dc3545',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Có, hủy đơn',
             cancelButtonText: 'Không'
