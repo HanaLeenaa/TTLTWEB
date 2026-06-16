@@ -75,11 +75,11 @@ public class OrderDao {
     public Order getOrderById(int orderId) {
         Order order = null;
         String sql = """
-            SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id  AS pay_transaction
-            FROM orders o
-            LEFT JOIN payments p ON o.ID = p.orders_id
-            WHERE o.ID = ?
-        """;
+        SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status, p.transaction_id AS pay_transaction
+        FROM orders o
+        LEFT JOIN payments p ON o.ID = p.orders_id
+        WHERE o.ID = ?
+    """;
 
         try (
                 Connection conn = DBConnection.getConnection();
@@ -112,6 +112,7 @@ public class OrderDao {
                 }
             }
         } catch (Exception e) {
+            System.out.println("❌ Lỗi tại hàm getOrderById:");
             e.printStackTrace();
         }
         return order;
@@ -674,11 +675,12 @@ public class OrderDao {
     public List<Order> getOrdersByUserIdPaging(int userId, int offset, int limit) {
         List<Order> list = new ArrayList<>();
         String sql = """
-        SELECT *
-        FROM orders
-        WHERE user_id = ?
-        ORDER BY order_date DESC
-        LIMIT ? OFFSET ?
+    SELECT o.*, p.payment_method AS pay_method, p.payment_status AS pay_status
+    FROM orders o
+    LEFT JOIN payments p ON o.ID = p.orders_id
+    WHERE o.user_id = ?
+    ORDER BY o.order_date DESC
+    LIMIT ? OFFSET ?
     """;
 
         try (Connection conn = DBConnection.getConnection();
@@ -688,26 +690,29 @@ public class OrderDao {
             ps.setInt(2, limit);
             ps.setInt(3, offset);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setID(rs.getInt("ID"));
+                    order.setUser_Id(rs.getInt("user_id"));
+                    order.setCreateAt(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setPrice(rs.getLong("total_amount"));
+                    order.setDiscount_amount(rs.getLong("discount_amount"));
+                    order.setFinal_amount(rs.getLong("final_amount"));
+                    order.setReceiver_address(rs.getString("address_order"));
 
-            while (rs.next()) {
-                Order order = new Order();
-                order.setID(rs.getInt("ID"));
-                order.setUser_Id(rs.getInt("user_id"));
-                order.setCreateAt(rs.getTimestamp("order_date"));
-                order.setStatus(rs.getString("status"));
-                order.setPrice(rs.getLong("total_amount"));
-                order.setReceiver_address(rs.getString("address_order"));
+                    // Lấy đúng tên trường từ bí danh Alias (AS) trong SQL
+                    order.setPayment_method(rs.getString("pay_method"));
+                    order.setPayment_status(rs.getString("pay_status"));
 
-                order.setPayment_method(rs.getString("payment_method"));
-
-                list.add(order);
+                    list.add(order);
+                }
             }
-
         } catch (Exception e) {
+            System.out.println("❌ Lỗi tại hàm getOrdersByUserIdPaging:");
             e.printStackTrace();
         }
-
         return list;
     }
 

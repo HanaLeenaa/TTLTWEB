@@ -175,6 +175,11 @@ public class ConfirmOrderServlet extends HttpServlet {
                 days = dts.estimateDays(fromDistrict, toDistrict);
                 if (days <= 0) days = 3;
                 System.out.println("===> KẾT QUẢ API VẬN CHUYỂN THÀNH CÔNG: Fee=" + shippingFee + ", Days=" + days);
+
+                if (Boolean.TRUE.equals(buyNowMode)) {
+                    session.removeAttribute("buyNowMode");
+                    session.removeAttribute("pendingOrderItems");
+                }
             } catch (Exception apiEx) {
                 System.out.println("===> CẢNH BÁO: API Vận chuyển bị lỗi, tự động chuyển sang dữ liệu dự phòng!");
                 apiEx.printStackTrace();
