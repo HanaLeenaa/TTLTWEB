@@ -183,11 +183,40 @@
             border-radius:6px;
             font-size:14px;
         }
+
+        .toast-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            z-index: 99999;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+        }
+        .toast-success.hide {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
     </style>
 </head>
 <body>
 
 <jsp:include page="/Assets/component/recycleFiles/header.jsp"/>
+
+<c:if test="${not empty sessionScope.successReview}">
+    <div id="review-success-toast" class="toast-success">
+            ${sessionScope.successReview}
+    </div>
+
+    <c:remove var="successReview" scope="session"/>
+</c:if>
 
 <main>
     <section class="product-details">
@@ -412,7 +441,7 @@
 </div>
 
 <%--review--%>
-<div class="review-section">
+<div class="review-section" id="review-section">
     <div class="container">
         <h2>Đánh giá & nhận xét <span id="product_name">${product.name}</span></h2>
 
@@ -492,11 +521,11 @@
 
         <div id="reviewModal" class="review-modal">
             <div class="review-modal-box">
-            <form action="${pageContext.request.contextPath}/add-review"
-                  method="post"
-                  enctype="multipart/form-data">
+                <form action="${pageContext.request.contextPath}/add-review"
+                      method="post"
+                      enctype="multipart/form-data">
 
-                <input type="hidden" name="productId" value="${product.ID}">
+                    <input type="hidden" name="productId" value="${product.ID}">
                 <h3>Đánh giá sản phẩm</h3>
 
                 <label>Số sao:</label>
@@ -683,6 +712,62 @@
         }
     });
 </script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+        if (params.get("review") === "true") {
+
+            const canReview = ${canReview};
+
+            setTimeout(function () {
+
+                if (canReview) {
+
+                    document
+                        .getElementById("review-section")
+                        .scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                    openReviewModal();
+                }
+
+            }, 500);
+        }
+    });
+</script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const toast = document.getElementById("review-success-toast");
+
+        if (toast) {
+
+            const reviewSection = document.getElementById("review-section");
+            if (reviewSection) {
+                reviewSection.scrollIntoView({ behavior: "smooth" });
+            }
+
+            setTimeout(() => {
+                toast.classList.add("hide");
+            }, 2500);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3200);
+        }
+    });
+
+</script>
+
+
 
 </body>
 </html>

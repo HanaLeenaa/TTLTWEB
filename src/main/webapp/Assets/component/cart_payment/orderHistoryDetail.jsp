@@ -89,6 +89,7 @@
             color: white;
             text-decoration: none;
             border-radius: 8px;
+            margin-right: auto;
         }
 
         .back-btn:hover {
@@ -98,7 +99,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .cancel-order-btn {
             background: #dc3545;
@@ -114,6 +116,36 @@
         .cancel-order-btn:hover {
             background: #bb2d3b;
         }
+
+        .review-btn{
+            background:#ff9800;
+            color:white;
+            text-decoration:none;
+            padding:12px 22px;
+            border-radius:8px;
+            font-size:15px;
+            font-weight:600;
+        }
+
+        .review-btn:hover{
+            background:#f57c00;
+        }
+
+        .order-table td {
+            vertical-align: top;
+        }
+
+        .product-info span {
+            display: block;
+            word-break: break-word;
+            max-width: 300px;
+        }
+
+        .order-table td:last-child {
+            vertical-align: top;
+            width: 140px;
+        }
+
     </style>
 </head>
 <body>
@@ -176,28 +208,38 @@
             <th>Đơn giá</th>
             <th>Số lượng</th>
             <th>Thành tiền</th>
+            <th>Thao tác</th>
         </tr>
         </thead>
 
         <tbody>
         <c:forEach var="item" items="${orderItems}">
-                    <tr>
-                        <td>
-                            <div class="product-info">
-                                <img src="${pageContext.request.contextPath}${item.product_image}" alt="${item.product_name}">
-                                <span>${item.product_name}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <fmt:formatNumber value="${item.product_price}" type="number"/> đ
-                        </td>
-                        <td>${item.quantity}</td>
-                        <td>
-                            <%-- ĐÃ FIX: Nhân trực tiếp giá gốc với số lượng, không gọi thuộc tính total_price --%>
-                            <fmt:formatNumber value="${item.product_price * item.quantity}" type="number"/> đ
-                        </td>
-                    </tr>
-                </c:forEach>
+            <tr>
+                <td>
+                    <div class="product-info">
+                        <img src="${item.product_image}" alt="${item.product_name}">
+                        <span>${item.product_name}</span>
+                    </div>
+                </td>
+                <td>
+                    <fmt:formatNumber value="${item.product_price}" type="number"/>đ
+                </td>
+                <td>${item.quantity}</td>
+                <td>
+                    <fmt:formatNumber value="${item.product_price * item.quantity}" type="number"/>đ
+                </td>
+
+                <td class="action-cell">
+                    <c:if test="${order.status == 'Đã giao'}">
+                        <a class="review-btn"
+                           href="${pageContext.request.contextPath}/product-detail?id=${item.product_id}&review=true#review-section">
+                            Đánh giá
+                        </a>
+                    </c:if>
+                </td>
+
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 
@@ -206,19 +248,44 @@
     </div>
 
     <div class="action-buttons">
-        <a class="back-btn" href="${pageContext.request.contextPath}/profile?tab=orders">
-            ← Quay lại lịch sử mua hàng
-        </a>
 
-        <%-- NÚT HỦY ĐƠN --%>
-        <c:if test="${order.status == 'Chờ xác nhận' || order.status == 'Đã xác nhận'}">
-            <form id="cancelOrderForm" action="${pageContext.request.contextPath}/cancel-order" method="post">
-                <input type="hidden" name="orderId" value="${order.ID}">
-                <button type="button" class="cancel-order-btn" onclick="confirmCancelOrder()">
-                    Hủy đơn hàng
-                </button>
-            </form>
+    <a class="back-btn" href="${pageContext.request.contextPath}/profile?tab=orders">
+        ← Quay lại lịch sử mua hàng
+    </a>
+
+        <c:if test="${order.status == 'Đã giao'}">
+
+            <a class="review-btn"
+               href="${pageContext.request.contextPath}/product-detail?id=${reviewProductId}&review=true#review-section">
+
+                Đánh giá sản phẩm
+
+            </a>
+
         </c:if>
+
+    <%--NÚT HỦY ĐƠN--%>
+    <c:if test="${order.status == 'Chờ xác nhận'
+                || order.status == 'Đã xác nhận'
+                || order.status == 'Đang giao'}">
+
+        <form id="cancelOrderForm"
+              action="${pageContext.request.contextPath}/cancel-order"
+              method="post">
+
+            <input type="hidden"
+                    name="orderId"
+                    value="${order.ID}">
+
+            <button type="button"
+                    class="cancel-order-btn"
+                    onclick="confirmCancelOrder()">
+                Hủy đơn hàng
+            </button>
+
+        </form>
+
+    </c:if>
     </div>
 </div>
 
